@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="用C++和SFML写游戏-事件的处理（4）"/><meta name="keywords" content="SFML, 用C++和SFML写游戏, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2019/08/21/用C-和SFML写游戏-管理我们的事件流（4）/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>用C++和SFML写游戏-事件的处理（4） - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">用C++和SFML写游戏-事件的处理（4）
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-08-21
+        </span><span class="post-visits"
+             data-url="/2019/08/21/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E7%AE%A1%E7%90%86%E6%88%91%E4%BB%AC%E7%9A%84%E4%BA%8B%E4%BB%B6%E6%B5%81%EF%BC%884%EF%BC%89/"
+             data-title="用C++和SFML写游戏-事件的处理（4）">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、窗口事件"><span class="toc-text">一、窗口事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、键盘事件"><span class="toc-text">二、键盘事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、鼠标事件"><span class="toc-text">三、鼠标事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、手柄事件"><span class="toc-text">四、手柄事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五、-事件的使用"><span class="toc-text">五、 事件的使用</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>处理好来自用户的<strong>事件</strong>是一个很重要的话题。</p>
+<p>首先我们来认识一下什么是<strong>事件</strong>？</p>
+<p>一般来说，事件是在某些情况下被触发的<strong>对象</strong>。它们依赖于操作系统，但是 <strong>SFML</strong> 为我们提供了一个很好的对象来处理事件，它是独立于操作系统的方式。<strong>sf::Event</strong> 类，这个类包含了各种事件。</p>
+<p>建议阅读 <strong>SFML</strong> 官方文档去好好了解 <strong>SFML</strong> 事件的类型，地址是<a href="https://www.sfml-dev.org/tutorials/2.5/window-events.php。" target="_blank" rel="noopener">https://www.sfml-dev.org/tutorials/2.5/window-events.php。</a> 注意 <strong>sf::Event</strong> 是一个联合体（union），使用的时候要恰当的选择我们需要的事件类型。</p>
+<p>逻辑上，我们可以将事件分成四种类型：</p>
+<ul>
+<li>窗口</li>
+<li>键盘</li>
+<li>鼠标</li>
+<li>手柄</li>
+</ul>
+<a id="more"></a>
+<p>&lt;/br&gt;</p>
+<h3 id="一、窗口事件"><a href="#一、窗口事件" class="headerlink" title="一、窗口事件"></a>一、窗口事件</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>相关成员</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Event::Closed</td>
+<td>None</td>
+<td>当操作系统检测单用户想要关闭窗口时触发</td>
+</tr>
+<tr>
+<td>Event::Resized</td>
+<td>Event::size 表示新窗口的大小</td>
+<td>当操作系统检测单用户想要改变窗口大小时触发，或者调用<code>Window::setSize()</code></td>
+</tr>
+<tr>
+<td>Event::LostFocus Event::GainedFocus</td>
+<td>None</td>
+<td>当窗口失去/得到焦点时触发，失去焦点的窗口不会收到键盘事件</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>&lt;/br&gt;</p>
+<h3 id="二、键盘事件"><a href="#二、键盘事件" class="headerlink" title="二、键盘事件"></a>二、键盘事件</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>相关成员</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Event::KeyPressed Event::KeyReleased</td>
+<td>Event::key 表示的事当前按住/松开的按键</td>
+<td>在得到焦点的窗口中，当一个按钮被按下或者松开的时候触发</td>
+</tr>
+<tr>
+<td>Event::TextEntered</td>
+<td>Event::text 表示的是一个字符的UTF-32 unicode</td>
+<td>任何时候一个字符输入的时候触发</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>&lt;/br&gt;</p>
+<h3 id="三、鼠标事件"><a href="#三、鼠标事件" class="headerlink" title="三、鼠标事件"></a>三、鼠标事件</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>相关成员</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Event::MouseMoved</td>
+<td>Event::mouseMove 表示鼠标新位置</td>
+<td>当鼠标在窗口内移动时触发</td>
+</tr>
+<tr>
+<td>Event::MouseButtonPressed Event::MouseButtonReleased</td>
+<td>Event::mouseButton 表示的是按下/松开的鼠标按钮以及它的位置</td>
+<td>当鼠标上的按钮按下/松开的时候触发。目前支持5种类型的按钮：左、中、右、额外的按钮1和按钮2</td>
+</tr>
+<tr>
+<td>Event::MouseWheelMoved</td>
+<td>Event::mouseWheel 表示的是滚轮以及鼠标位置</td>
+<td>当鼠标上的滚轮滚动时触发</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>&lt;/br&gt;</p>
+<h3 id="四、手柄事件"><a href="#四、手柄事件" class="headerlink" title="四、手柄事件"></a>四、手柄事件</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>相关成员</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Event::JoystickConnected Event::JoystickDisconnected</td>
+<td>Event::joystickConnect 表示的是手柄连接/断开连接时的ID</td>
+<td>当手柄连接或者断开连接时触发</td>
+</tr>
+<tr>
+<td>Event::JoystickButtonPressed Event::JoystickButtonReleased</td>
+<td>Event::joystickButton 表示的是手柄上按钮按下的数量以及手柄ID</td>
+<td>当手柄上的按钮按下时触发，SFML为我们提供了最多8个手柄，每个手柄32个按钮的支持</td>
+</tr>
+<tr>
+<td>Event::JoystickMoved</td>
+<td>Event::joystickMove 表示的是移动操纵杆的轴，操纵杆轴的位置以及手柄ID</td>
+<td>移动操纵杆的轴时会触发此操作</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>&lt;/br&gt;</p>
+<p>对于窗口事件来说，我们通常用  <code>bool Window::pollEvent(sf::Event&amp; event)</code> 函数，如果有事件将要被使用的话，函数会返回 <code>true</code>， <code>event</code>参数会对应某个具体事件。==需要注意的是，同一时间下可能会有多个事件需要被处理，因此我们需要确保捕获到每一个事件。==代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (window.isOpen()) &#123;</span><br><span class="line">    sf::Event event;</span><br><span class="line">    <span class="keyword">while</span> (window.pollEvent(event)) &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 刷新帧</span></span><br><span class="line">    <span class="comment">// 绘制帧</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行上面这份代码之后，我们可以做出移动窗口，改变窗口大小或者是最小化窗口这些操作，但是有一个问题，那就是我们无法关闭窗口。当我们点击窗口的关闭按钮时，<strong>SFML</strong> 不会去关闭窗口，这一操作需要我们去实现。</p>
+<p>&lt;/br&gt;</p>
+<h3 id="五、-事件的使用"><a href="#五、-事件的使用" class="headerlink" title="五、 事件的使用"></a>五、 事件的使用</h3><p>通过 <code>Window::pollEvent()</code> 捕获事件之后，我们可以通过 <code>Event::type</code> 检查事件类型。事件类型是 <code>Event::EventTyp</code>，它是 <code>Event</code> 类中的一个枚举类型。使用方法如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sf::Event event;</span><br><span class="line"><span class="keyword">while</span> (window.pollEvent(event)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (event.type == sf::Event::EventType::Closed) &#123;</span><br><span class="line">        window.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用 <code>Window::close()</code> 可以关闭窗口。</p>
+<p>如果我们想要使用更多的事件，我们的可以使用 <code>switch</code> 语法。如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">sf::Event event;</span><br><span class="line"><span class="keyword">while</span> (window.pollEvent(event)) &#123;</span><br><span class="line">    <span class="keyword">switch</span> (event.type) &#123;</span><br><span class="line">        <span class="keyword">case</span> sf::Event::EventType::Closed:</span><br><span class="line">            window.close();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> sf::Event::EventType::KeyPressed:</span><br><span class="line">            <span class="comment">// 改变窗口标题当空格键按下的时候</span></span><br><span class="line">            <span class="keyword">if</span> (event.key.code == sf::Keyboard::Key::Space)</span><br><span class="line">                window.setTitle(<span class="string">"Space Pressed"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> sf::Event::EventType::KeyReleased:</span><br><span class="line">            <span class="comment">// 再次改变窗口标题当空格键松开的时候</span></span><br><span class="line">            <span class="keyword">if</span> (event.key.code == sf::Keyboard::Key::Space)</span><br><span class="line">                window.setTitle(<span class="string">"Space Released"</span>);</span><br><span class="line">            <span class="comment">// 当 Esc 键松开的时候关闭窗口</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (event.key.code == sf::Keyboard::Key::Escape)</span><br><span class="line">                window.close();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这份代码的意思很容易理解，通过空格键可以改变窗口的标题，松开 Esc 键时关闭窗口。注意到 <code>Event::key</code> 包含了 <code>code</code> 成员，它是 <code>Keyboard::Key</code> 类型中的一个枚举类型。用上面这种方法可以处理其他事件类型。</p>
+<p>然而，<code>Event::EventType::TextEntered</code>的使用有点意思。按键被按下/松开的时候可以被检测到且可以使用一种相对简单的方式去处理。但是当键入一些特殊字符的时候，事情变得有点复杂起来。例如，输入 <code>!</code> 号的时候在大多数键盘中是使用 <code>shift+1</code>的。幸好 <strong>SFML</strong> 为我们提供了一个简单的方式去处理，仅当按下表示字符的组合键时才会发生事件，这意味着按下一个键（例如 <code>shift</code>）时不会触发事件。</p>
+<p>下面这个例子使用了 <code>TextEntered</code> 事件组合了一个字符串，然后按下 <code>Enter</code> 键时这个字符串会显示在窗口标题中。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">sf::String buffer;</span><br><span class="line"><span class="keyword">while</span> (window.isOpen()) &#123;</span><br><span class="line">    sf::Event event;</span><br><span class="line">    <span class="keyword">while</span> (window.pollEvent(event)) &#123;</span><br><span class="line">        <span class="keyword">switch</span> (event.type) &#123;</span><br><span class="line">            <span class="keyword">case</span> sf::Event::EventType::Closed:</span><br><span class="line">	            window.close();</span><br><span class="line">    	        <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> sf::Event::EventType::TextEntered:</span><br><span class="line">                buffer += event.text.unicode;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> sf::Event::EventType::KeyReleased:</span><br><span class="line">                <span class="keyword">if</span> (event.key.code == sf::Keyboard::Key::Return) &#123;</span><br><span class="line">                    window.setTitle(buffer);</span><br><span class="line">                    buffer.clear();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里使用 <code>sf::String</code> 类型能够避免不同语言之间的字符编码转换。</p>
+<p><img src="http://cdn.sshpark.com.cn/20190822193455.gif" width="400px" /></p>
+<p>&lt;/br&gt;</p>
+<p>代码已上传到 <strong><a href="https://github.com/sshpark/LearnSFML/tree/master/blog4" target="_blank" rel="noopener">Github</a></strong> </p>
+<p>这一节简单介绍了 <strong>SFML</strong> 中的事件处理，下一节将会学习图像以及精灵（sprite）的简单使用。😃</p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/SFML/">SFML</a>
+            <a href="/tags/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F/">用C++和SFML写游戏</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/08/25/%E7%94%A8C++%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E7%BA%B9%E7%90%86%E5%8F%8A%E7%B2%BE%E7%81%B5%EF%BC%885.1%EF%BC%89/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">用C++和SFML写游戏-纹理及精灵（5.1）</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/06/06/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E7%A7%BB%E5%8A%A8%E6%88%91%E4%BB%AC%E7%9A%84Player%EF%BC%883%EF%BC%89/">
+        <span class="next-text nav-default">用C++和SFML写游戏-移动我们的Player（3）</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

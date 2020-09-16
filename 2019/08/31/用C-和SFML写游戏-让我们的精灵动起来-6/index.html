@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="用C++和SFML写游戏-让我们的精灵动起来（6）"/><meta name="keywords" content="SFML, 用C++和SFML写游戏, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2019/08/31/用C-和SFML写游戏-让我们的精灵动起来-6/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>用C++和SFML写游戏-让我们的精灵动起来（6） - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">用C++和SFML写游戏-让我们的精灵动起来（6）
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-08-31
+        </span><span class="post-visits"
+             data-url="/2019/08/31/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E8%AE%A9%E6%88%91%E4%BB%AC%E7%9A%84%E7%B2%BE%E7%81%B5%E5%8A%A8%E8%B5%B7%E6%9D%A5-6/"
+             data-title="用C++和SFML写游戏-让我们的精灵动起来（6）">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、获取时间"><span class="toc-text">一、获取时间</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sf-Time-和-sf-Clock"><span class="toc-text">sf::Time 和 sf::Clock</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、让精灵动起来"><span class="toc-text">二、让精灵动起来</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#步骤"><span class="toc-text">步骤</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、创建动画基类"><span class="toc-text">三、创建动画基类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、使用-Animator"><span class="toc-text">四、使用 Animator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#展示部分"><span class="toc-text">展示部分</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五、多个动画效果"><span class="toc-text">五、多个动画效果</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>在游戏中使用动画效果的话能够使我们的对象更加栩栩如生。例如，在有一个篝火精灵，如果它仅仅是一张静态的火焰图片，那么我们看到的火焰似乎没有在燃烧。然而，我们可以通过多张图片让它动起来，这也是我们这篇文章将要介绍的。这里，将会讲到：</p>
+<ul>
+<li>获取时间</li>
+<li>动画精灵</li>
+<li>创建<strong>动画</strong>基类</li>
+</ul>
+<a id="more"></a>
+<p>&lt;/br&gt;</p>
+<h3 id="一、获取时间"><a href="#一、获取时间" class="headerlink" title="一、获取时间"></a>一、获取时间</h3><p>在 <strong>SFML</strong> 中时间是一个很重要的东西。它的重要性在系列的<a href="http://www.sshpark.com.cn/2019/06/05/%E7%94%A8C++%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-Game%E7%B1%BB%E7%9A%84%E5%88%9B%E5%BB%BA%EF%BC%882%EF%BC%89/" target="_blank" rel="noopener">第二篇</a>中也提到过。游戏世界中变化基于时间而不是帧数的话，那么我们就不会因为电脑性能不同而产生游戏中物体移动速度不一样的bug。这里再来复习一下相关的时间函数。</p>
+<p>&lt;/br&gt;</p>
+<h4 id="sf-Time-和-sf-Clock"><a href="#sf-Time-和-sf-Clock" class="headerlink" title="sf::Time 和 sf::Clock"></a>sf::Time 和 sf::Clock</h4><p><code>sf::Time</code>类是我们的时间单位，在 <strong>SFML</strong> 中，我们可以使用 <code>sf::seconds()</code>， <code>sf::milliseconds()</code>， <code>sf::microseconds()</code> 去初始化我们的时间对象（秒、毫秒、微秒）。使用 <code>Time::asSeconds()</code>， <code>Time::asMilliseconds()</code>， <code>Time::asMicroseconds()</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sf::Time time = sf::seconds(<span class="number">5</span>) + sf::milliseconds(<span class="number">100</span>);</span><br><span class="line"><span class="keyword">if</span> (time &gt; sf::seconds(<span class="number">5.09</span>))</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"It works"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
+<p>&lt;/br&gt;</p>
+<p><code>sf::Clock</code> 类能够让我们去获取<strong>已经过去的时间长短</strong>，时间的计算是基于操作系统时钟的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sf::Clock clock;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 运行一段代码</span></span><br><span class="line"></span><br><span class="line">sf::Time timePassed = clock.getElapsedTime();</span><br></pre></td></tr></table></figure>
+<p>除此之外，<code>Clock::restart()</code> 也能够获取<strong>已经过去的时间长短</strong>，但同时它会将时钟重置。</p>
+<p>&lt;/br&gt;</p>
+<p>通过上面的介绍，相信大家已经明白如何获取一帧的时间了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sf::Time deltaTime;</span><br><span class="line">sf::Clock clock;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (window.isOpen()) &#123;</span><br><span class="line">    <span class="comment">// 获取两帧之间的时间</span></span><br><span class="line">    deltaTime = clock.restart();</span><br><span class="line">    <span class="keyword">float</span> dtAsSeconds = deltaTime.asSeconds();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Handle input</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Update frame</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Render frame</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h3 id="二、让精灵动起来"><a href="#二、让精灵动起来" class="headerlink" title="二、让精灵动起来"></a>二、让精灵动起来</h3><p>实现动画的传统方式是利用多张图片在短时间内绘制出来，进而实现动画效果。虽然这种方法目前仍然被大量采用，但是我们还有更多优雅的做法。这里，我们只探讨传统的做法，在很多情况下，它足以为我们的精灵赋予生命。</p>
+<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><p>首先，我们需要一个对象的多张图片以便我们去实现它。通常，我们会将它放在一张图片里，这张图片保存了这个对象的不同动作。如下图所示，我们的精灵大小是 32*32 ，总共有 8 帧。</p>
+<p><img src="http://cdn.sshpark.com.cn/20190831155105.png" width="500px" /></p>
+<p>下面的代码显示了我们如何使用</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sf::<span class="function">Vector2i <span class="title">spriteSize</span><span class="params">(<span class="number">32</span>, <span class="number">32</span>)</span></span>;</span><br><span class="line">sf::<span class="function">Sprite <span class="title">sprite</span><span class="params">(AssetManager::GetTexture(<span class="string">"crystal.png"</span>))</span></span>;</span><br><span class="line"><span class="comment">// 设置第一帧的图片</span></span><br><span class="line">sprite.setTextureRect(sf::IntRect(<span class="number">0</span>, <span class="number">0</span>, spriteSize.x, spriteSize.y));</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> framesNum = <span class="number">8</span>;</span><br><span class="line"><span class="keyword">float</span> animationDuration = <span class="number">1</span>; <span class="comment">// 1 秒</span></span><br></pre></td></tr></table></figure>
+<p><code>AssetManager</code>类是我们上一篇文章中介绍的资源管理器。然后，上面的代码是显示了第一帧图片，8 帧显示完全需要 1 秒，也就是每隔 0.125 秒显示。</p>
+<p>那么，完整的显示应该这么写：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(window.isOpen()) &#123;</span><br><span class="line">    <span class="comment">// 返回两帧经过的时间</span></span><br><span class="line">    sf::Time deltaTime = clock.restart();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 累计经过的总时间</span></span><br><span class="line">    elapsedTime += deltaTime;</span><br><span class="line">    <span class="keyword">float</span> timeAsSeconds = elapsedTime.asSeconds();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> animFrame = <span class="keyword">static_cast</span>&lt;<span class="keyword">int</span>&gt;((timeAsSeconds / animatorDuration) * framesNum) % framesNum;</span><br><span class="line">    <span class="comment">// 截取显示的图片</span></span><br><span class="line">    sprite.setTextureRect(sf::IntRect(animFrame*spriteSize.x, <span class="number">0</span>, spriteSize.x, spriteSize.y));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先，我们获取了上一帧到当前帧经过的时间，然后将其累加到 <code>elapsedTime</code>。最后两行代码决定了当前帧应该显示哪张图片。</p>
+<p><code>(timeAsSeconds / animatorDuration) * framesNum</code> 得到的是绘制到第几帧。因为每 <code>animatorDuration/framesNum</code> 绘制一帧。最后取整对 <code>framesNum</code> 取模得到第几帧（因为我们时间是一直累计的）。</p>
+<p><strong>效果如下：</strong></p>
+<p><img src="http://cdn.sshpark.com.cn/20190831163323.gif" width="300px" /></p>
+<p>&lt;/br&gt;</p>
+<h3 id="三、创建动画基类"><a href="#三、创建动画基类" class="headerlink" title="三、创建动画基类"></a>三、创建动画基类</h3><p>但是，如果我们希望对其他的精灵类也取得同样的效果的话该怎么办？写一份跟上面一模一样的代码？显然，我们是不推荐这种做法的，因此，这里做个抽象，创建一个动画类（animator）。</p>
+<p>这里，我们的动画类（animator）应该具备以下特点：</p>
+<ul>
+<li>能让精灵实现动画</li>
+<li>能够设置动画的周期以及一个周期需要的帧数</li>
+<li>能够设置多个动画效果（animation）</li>
+<li>能够切换动画效果（animation）</li>
+<li>每个精灵有其对应的动画类</li>
+<li>简单易用</li>
+<li>能够自动选择当前显示的帧</li>
+</ul>
+<p>因为我们对于每个动画类（animator）能够有多种类型动画效果（animation）。因此，动画效果使用结构体实现能够减少代码量。</p>
+<p>动画效果（animation）需要有<strong>周期时间，帧列表，纹理，循环信息（是否是循环？）以及一个名称</strong>。因此<code>Animation</code>代码为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Animation</span> &#123;</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> m_Name;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> m_TextureName;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;sf::IntRect&gt; m_Frames;</span><br><span class="line">    sf::Time m_Duration;</span><br><span class="line">    <span class="keyword">bool</span> m_looping;</span><br><span class="line"></span><br><span class="line">    Animation(<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; name, <span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; textureName, </span><br><span class="line">        sf::Time <span class="keyword">const</span>&amp; duration, <span class="keyword">bool</span> looping)</span><br><span class="line">    : m_Name(name), m_TextureName(textureName),</span><br><span class="line">    m_Duration(duration), m_looping(looping) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">AddFrames</span><span class="params">(sf::Vector2i <span class="keyword">const</span>&amp; startFrom, </span></span></span><br><span class="line"><span class="function"><span class="params">        sf::Vector2i <span class="keyword">const</span>&amp; frameSize, <span class="keyword">unsigned</span> <span class="keyword">int</span> frames)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        sf::Vector2i current = startFrom;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; frames; i++) &#123;</span><br><span class="line">            m_Frames.push_back(sf::IntRect(current.x, current.y, frameSize.x, frameSize.y));</span><br><span class="line">            current.x += frameSize.x;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>AddFrames()</code> 方法能够将图片按照水平方向切割成每一帧存入<code>m_Frames</code>。</p>
+<p>现在来看看 <code>Animator</code>类的实现。这个类能够为精灵添加<code>Animation</code>。首先的话它能够<strong>创建和存储</strong>动画效果<code>Animation</code>，其次，由于<code>Animation</code>是基于时间变化的，它还需要一个<code>Animatot::Update()</code>方法去<strong>更新</strong>。最后，一个不是很重要的方法<code>Animator::SwitchAnimation()</code>能够切换动画效果。基于这些想法，我们的 <code>Animator</code> 类如下所示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="comment">// 通过名字查找已经添加过的动画效果 Animation</span></span><br><span class="line">    Animator::<span class="function">Animation* <span class="title">FindAnimation</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; name)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">SwitchAnimation</span><span class="params">(Animator::Animation* animation)</span></span>;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// sprite 的引用</span></span><br><span class="line">    sf::Sprite&amp; m_Sprite;</span><br><span class="line">    sf::Time m_CurrentTime;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">list</span>&lt;Animator::Animation&gt; m_Animations;</span><br><span class="line">    Animator::Animation* m_CurrentAnimation;</span><br></pre></td></tr></table></figure>
+<p>先不看 <code>FindAnimation()</code> 和 <code>SwitchAnimation()</code> 这两个方法，后面会提到。</p>
+<p>先来看看里面定义的数据， <strong>Sprite</strong> 不是定义在 <code>Animitor</code> 里面的实例，是一个引用。这意味着我们的精灵是在外部定义的，然后在 <code>Animitor</code> 的构造方法中获取这个引用。</p>
+<p>其次，<code>m_CurrentTime</code> 是<strong>时间累加器</strong>，作用跟前面提到的一样。<code>m_Animations</code> 保存了所有动画效果，这里不用 <code>vector</code> 而是用 <code>list</code> 是因为 <code>vector</code> 不能不能保存指针或者引用类型。</p>
+<font color="orange">再来看看其中的公有成员：</font>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Animation</span> &#123;</span>...&#125;;</span><br><span class="line"></span><br><span class="line">    Animator(sf::Sprite&amp; sprite);</span><br><span class="line"></span><br><span class="line">    Animator::<span class="function">Animation&amp; <span class="title">CreateAnimation</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; name,</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; textureName, sf::Time <span class="keyword">const</span>&amp; duration, <span class="keyword">bool</span> loop = <span class="literal">false</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Update</span><span class="params">(sf::Time <span class="keyword">const</span>&amp; dt)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 是否切换成功</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">SwitchAnimation</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; name)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">GetCurrentAnimationName</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>Animation</code> 定义在里面是因为它在外部并不会经常被用到，接下来是 <code>Animator</code> 的构造函数，传入的是 <strong>Sprite</strong> 的引用去初始化里面的 <code>m_Sprite</code> 字段。</p>
+<p><code>Animator::CreateAnimation()</code> 通过给定的参数创建一个<strong>动画效果</strong>。</p>
+<p><code>Animator::Update()</code> 能够在某一时刻获取正确显示的帧</p>
+<p><code>Animator::SwitchAnimation()</code>  能够为精灵切换动画效果</p>
+<p>&lt;/br&gt;</p>
+<p>接下来看看实现具体实现</p>
+<p>构造函数 <code>Animator()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Animator::Animator(sf::Sprite&amp; sprite)</span><br><span class="line">    : m_Sprite(sprite), m_CurrentTime(), m_CurrentAnimation(<span class="literal">nullptr</span>) &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Animator::CreateAnimation()</code>，创建动画效果并存入 <code>m_Animations</code> 中。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Animator::Animation&amp; Animator::CreateAnimation(<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; name,</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; textureName, sf::Time <span class="keyword">const</span>&amp; duration, <span class="keyword">bool</span> loop) &#123;</span><br><span class="line">    </span><br><span class="line">    m_Animations.push_back(</span><br><span class="line">        Animator::Animation(name, textureName, duration, loop));</span><br><span class="line">	<span class="comment">// 如果当前没有动画效果，则使用刚添加动画效果</span></span><br><span class="line">    <span class="keyword">if</span> (m_CurrentAnimation == <span class="literal">nullptr</span>)</span><br><span class="line">        SwitchAnimation(&amp;m_Animations.back());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> m_Animations.back();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>void Animator::SwitchAnimation()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Animator::SwitchAnimation(Animator::Animation* animation) &#123;</span><br><span class="line">    <span class="comment">// 改变精灵的纹理</span></span><br><span class="line">    <span class="keyword">if</span> (animation != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        m_Sprite.setTexture(AssetManager::GetTexture(animation-&gt;m_TextureName));</span><br><span class="line">    &#125;</span><br><span class="line">    m_CurrentAnimation = animation;</span><br><span class="line">    m_CurrentTime = sf::Time::Zero; <span class="comment">// 重置时间</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>bool Animator::SwitchAnimation()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 是否切换成功</span></span><br><span class="line"><span class="keyword">bool</span> Animator::SwitchAnimation(<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; name) &#123;</span><br><span class="line">    <span class="keyword">auto</span> animation = FindAnimation(name);</span><br><span class="line">    <span class="keyword">if</span> (animation != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        SwitchAnimation(animation);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Animator::Animation* Animator::FindAnimation()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Animator::Animation* Animator::FindAnimation(<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; name) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> it = m_Animations.begin(); it != m_Animations.end(); it++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (it-&gt;m_Name == name) &#123;</span><br><span class="line">            <span class="keyword">return</span> &amp;*it;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>std::string Animator::GetCurrentAnimationName()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">string</span> Animator::GetCurrentAnimationName() <span class="keyword">const</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (m_CurrentAnimation != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> m_CurrentAnimation-&gt;m_Name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>void Animator::Update()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Animator::Update(sf::Time <span class="keyword">const</span>&amp; dt) &#123;</span><br><span class="line">    <span class="keyword">if</span> (m_CurrentAnimation == <span class="literal">nullptr</span>) <span class="keyword">return</span> ;</span><br><span class="line"></span><br><span class="line">    m_CurrentTime += dt;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当前帧</span></span><br><span class="line">    <span class="keyword">float</span> scaledTime = m_CurrentTime.asSeconds() / m_CurrentAnimation-&gt;m_Duration.asSeconds();</span><br><span class="line">    <span class="keyword">int</span> numFrames = m_CurrentAnimation-&gt;m_Frames.size();</span><br><span class="line">    <span class="keyword">int</span> currentFrame = <span class="keyword">static_cast</span>&lt;<span class="keyword">int</span>&gt;(scaledTime * numFrames);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果动画在进行，则计算当前帧</span></span><br><span class="line">    <span class="keyword">if</span> (m_CurrentAnimation-&gt;m_Looping) &#123;</span><br><span class="line">        currentFrame %= numFrames;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (currentFrame &gt;= numFrames) &#123; <span class="comment">// 如果当前帧不小于总的帧数，设为最后一帧</span></span><br><span class="line">        currentFrame = numFrames<span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 设置为当前帧</span></span><br><span class="line">    m_Sprite.setTextureRect(m_CurrentAnimation-&gt;m_Frames[currentFrame]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&lt;/br&gt;</p>
+<h3 id="四、使用-Animator"><a href="#四、使用-Animator" class="headerlink" title="四、使用 Animator"></a>四、使用 Animator</h3><p>还是使用上面的图片来实现动画精灵</p>
+<p><img src="http://cdn.sshpark.com.cn/20190831155105.png" width="500px" /></p>
+<p><strong>初始化部分</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sf::<span class="function">Vector2i <span class="title">spriteSize</span><span class="params">(<span class="number">118</span>, <span class="number">114</span>)</span></span>;</span><br><span class="line">sf::Sprite sprite;</span><br><span class="line"><span class="function">Animator <span class="title">animator</span><span class="params">(sprite)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个动画效果并获取它的引用</span></span><br><span class="line"><span class="keyword">auto</span>&amp; idleAnimation = animator.CreateAnimation(<span class="string">"Idle"</span>, <span class="string">"crystal.png"</span>,</span><br><span class="line">        sf::seconds(<span class="number">1</span>), <span class="literal">true</span>);</span><br><span class="line"><span class="comment">// 为动画添加帧</span></span><br><span class="line">idleAnimation.AddFrames(sf::Vector2i(<span class="number">0</span>, <span class="number">0</span>), spriteSize, <span class="number">8</span>);</span><br></pre></td></tr></table></figure>
+<p>创建动画之前必须要有一个 <strong>sprite</strong> 实例，这个例子中我们添加了一个动画效果。动画效果的名字是 <strong>“Idle”</strong>，使用的是 <strong>“crystal.png”</strong> 图片，设置它的动画周期为 1 秒且正在展示动画中。</p>
+<h4 id="展示部分"><a href="#展示部分" class="headerlink" title="展示部分"></a>展示部分</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sf::Clock clock;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(window.isOpen()) &#123;</span><br><span class="line"></span><br><span class="line">    sf::Time dt = clock.restart();</span><br><span class="line"></span><br><span class="line">    animator.Update(dt);</span><br><span class="line"></span><br><span class="line">    window.clear();</span><br><span class="line">    window.draw(sprite);</span><br><span class="line">    window.display();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>效果跟前面的是一样的。</p>
+<p>&lt;/br&gt;</p>
+<h3 id="五、多个动画效果"><a href="#五、多个动画效果" class="headerlink" title="五、多个动画效果"></a>五、多个动画效果</h3><p>创建一个动画效果的话很直观。那么如果是多个动画效果呢？</p>
+<p>我们假设有这么一个场景，并且我们有两张图片：<em>spriteSheet.png</em> 和 <em>myTexture.png</em>，然后我们希望有 4 种动画效果。</p>
+<p>代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Animator <span class="title">animator</span><span class="params">(sprite)</span></span>;</span><br><span class="line"><span class="comment">// Idle 动画 8 帧 / 1 秒</span></span><br><span class="line"><span class="keyword">auto</span>&amp; idleAnimation = animator.CreateAnimation(<span class="string">"Idle"</span>, <span class="string">"spriteSheet.png"</span>, sf::seconds(<span class="number">1</span>), <span class="literal">true</span>);</span><br><span class="line">idleAnimation.AddFrames(sf::Vector2i(<span class="number">0</span>, <span class="number">0</span>), spriteSize, <span class="number">8</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// IdleShort 动画 8 帧 / 0.5 秒</span></span><br><span class="line"><span class="keyword">auto</span>&amp; idleAnimationShort = animator.CreateAnimation(<span class="string">"IdleShort"</span>, <span class="string">"spriteSheet.png"</span>, sf::seconds(<span class="number">0.5f</span>), <span class="literal">true</span>);</span><br><span class="line">idleAnimationShort.AddFrames(sf::Vector2i(<span class="number">0</span>, <span class="number">0</span>), spriteSize, <span class="number">8</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// IdleSmall 动画 5 帧 / 1.5 秒</span></span><br><span class="line"><span class="keyword">auto</span>&amp; idleAnimationSmall = animator.CreateAnimation(<span class="string">"IdleSmall"</span>, <span class="string">"myTexture.png"</span>, sf::seconds(<span class="number">1.5f</span>), <span class="literal">true</span>);</span><br><span class="line">idleAnimationSmall.AddFrames(sf::Vector2i(<span class="number">64</span>, <span class="number">0</span>), spriteSize, <span class="number">3</span>);</span><br><span class="line">idleAnimationSmall.AddFrames(sf::Vector2i(<span class="number">64</span>, <span class="number">32</span>), spriteSize, <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// IdleSmall 动画 8 帧 / 0.5 秒，不在执行动画状态</span></span><br><span class="line"><span class="keyword">auto</span>&amp; idleAnimationOnce = animator.CreateAnimation(<span class="string">"IdleOnce"</span>, <span class="string">"myTexture.png"</span>, sf::seconds(<span class="number">0.5f</span>), <span class="literal">false</span>);</span><br><span class="line">idleAnimationOnce.AddFrames(sf::Vector2i(<span class="number">0</span>, <span class="number">0</span>), spriteSize, <span class="number">8</span>);</span><br></pre></td></tr></table></figure>
+<p>下面是通过键盘事件切换动画效果</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">sf::Event ev;</span><br><span class="line"><span class="keyword">while</span> (window.pollEvent(ev)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (ev.type == sf::Event::KeyPressed) &#123;</span><br><span class="line">        <span class="keyword">if</span> (ev.key.code == sf::KeyBoard::Key::Num1)</span><br><span class="line">            animator.SwitchAnimation(<span class="string">"Idle"</span>);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (ev.key.code == sf::KeyBoard::Key::Num2)</span><br><span class="line">            animator.SwitchAnimation(<span class="string">"IdleShort"</span>);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (ev.key.code == sf::KeyBoard::Key::Num3)</span><br><span class="line">            animator.SwitchAnimation(<span class="string">"IdleSmall"</span>);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (ev.key.code == sf::KeyBoard::Key::Num4)</span><br><span class="line">            animator.SwitchAnimation(<span class="string">"IdleOnce"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<p>从上面的例子可以看到，<code>Animator</code> 类使得动画更易于管理，更重要的是，它具有极高的可扩展性。 </p>
+<p>示例代码在 <a href="https://github.com/sshpark/LearnSFML/tree/master/blog6" target="_blank" rel="noopener">Github</a></p>
+<p>接下来我们将会介绍 <strong>摄像机</strong> 和 <strong>OpenGL</strong>，尽请期待😃。</p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/SFML/">SFML</a>
+            <a href="/tags/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F/">用C++和SFML写游戏</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/09/05/%E7%94%A8%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%80%9D%E6%83%B3%E5%AE%9E%E7%8E%B0-Logistic-%E5%9B%9E%E5%BD%92/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">用神经网络思想实现 Logistic 回归</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/08/28/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E7%BA%B9%E7%90%86%E5%8F%8A%E7%B2%BE%E7%81%B5%EF%BC%885-2%EF%BC%89/">
+        <span class="next-text nav-default">用C++和SFML写游戏-纹理及精灵（5.2）</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

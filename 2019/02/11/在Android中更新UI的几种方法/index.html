@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="在Android后台线程中更新UI的几种方法"/><meta name="keywords" content="Android, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2019/02/11/在Android中更新UI的几种方法/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>在Android后台线程中更新UI的几种方法 - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">在Android后台线程中更新UI的几种方法
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-02-11
+        </span><span class="post-visits"
+             data-url="/2019/02/11/%E5%9C%A8Android%E4%B8%AD%E6%9B%B4%E6%96%B0UI%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/"
+             data-title="在Android后台线程中更新UI的几种方法">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Threads-and-Runnables"><span class="toc-text">Threads and Runnables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Handlers-and-Messages"><span class="toc-text">Handlers and Messages</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AsyncTask"><span class="toc-text">AsyncTask</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Anko’s-doAsync"><span class="toc-text">Anko’s doAsync</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>先来解释一下为什么要在子线程中更新UI。</p>
+<p>没有人愿意使用经常卡顿的<code>APP</code>，用户希望他们的<code>App</code>用起来流畅而不卡顿。当然每个开发者也希望这样——没有人会在构建自己的<code>App</code>时会说，“这个<code>App</code>跑的太快了，也许我应该放慢一点速度”；</p>
+<p><img src="http://cdn.sshpark.com.cn/屏幕快照 2019-02-11 下午11.58.59.png" width="100px" height="100px"/></p>
+<p>尽管没有人希望这样做， 那么为什么还会有的<code>App</code>用起来会那么卡呢？ 你之前可能已经看过我所说的这些<code>App</code>。</p>
+<p>可以列出一些导致某些<code>App</code>卡顿的原因，但是我敢打赌排在前10位的原因之一就是主线程上有太多的东西。 它有可能是被<code>I/O</code>处理或者复杂的计算(或者两者兼之)所拖累，这很糟糕。</p>
+<p>难道这意味着我们的<code>App</code>中不应该有<code>I/O</code>处理或者复杂的计算吗？显然不是，但是我们应该知道要把这些放在哪里，而不是全部放在主线程中。<br><a id="more"></a><br>那么前面的主线程是什么鬼。</p>
+<p><img src="http://cdn.sshpark.com.cn/20190212001021.gif" width="100px" height="100px"/></p>
+<p>是这样的，当我们启动一个<code>App</code>的时候， <code>Android</code>系统会启动一个<code>Linux Process</code>，该<code>Process</code>包含一个<code>Thread</code>，称为<code>UI Thread</code> 或 <code>Main Thread</code>。通常一个应用的所有组件都运行在这一个 <code>Process</code>中。当然，你可以通过修改 4大组件在<code>Manifest.xml</code>中的代码块(<code>&lt;activity&gt;&lt;service&gt;&lt;provider&gt;&lt;receiver&gt;</code>)中的 <code>android:process</code> 属性指定其运行在不同 的<code>process</code>中 。当一个组件在启动的时候，如果该<code>process</code>已经存在了，那么该组件就直接通过这个<code>process</code>被启动起来，井且运行在这个<code>process</code>的<code>UIThread</code>中 。简单来说，它是负责用户界面的线程。处理的逻辑有，系统事件处理、用户输入事件处理、UI绘制、Service、 Alarm等。</p>
+<p><code>Android</code>默认约定当UI线程阻塞超过20秒将会引起<code>ANR(Application Not Responding)</code>异常。但是实际上，不要说20秒，即使是5秒甚至是2秒，用户都会感到不爽。因此避免在UI线程执行一些耗时操作很有必要。</p>
+<p>这里介绍4种常用的操作多线程的方法</p>
+<ol>
+<li><strong>Threads and Runnables</strong>, 来自于java</li>
+<li><strong>AsyncTask</strong>, <code>Android</code>框架的一部分</li>
+<li><strong>Handlers and Messages</strong>, 还是<code>Android</code>框架的一部分</li>
+<li><strong>Anko’s doAsync</strong>, 用kotlin编写的第三方库</li>
+</ol>
+<p><br></p>
+<h2 id="Threads-and-Runnables"><a href="#Threads-and-Runnables" class="headerlink" title="Threads and Runnables"></a>Threads and Runnables</h2><p>通过一个例子更能理解它的使用方法。</p>
+<p>用<code>Android Studio</code>新建一个项目，名字随意。项目实现的效果是每<strong>2秒</strong>就更新一次界面上的数字</p>
+<p>主界面上只用两个控件，一个<code>TextView</code>，一个<code>Button</code></p>
+<p><br></p>
+<p><code>/app/res/layout/activity_main.xml</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">android.support.constraint.ConstraintLayout</span></span></span><br><span class="line"><span class="tag">        <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">xmlns:app</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">tools:context</span>=<span class="string">".MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">"TextView"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textSize</span>=<span class="string">"20dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">"@+id/tv"</span> <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginTop</span>=<span class="string">"69dp"</span> <span class="attr">android:layout_marginEnd</span>=<span class="string">"14dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="string">"@+id/bn"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">"Button"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">"@+id/bn"</span> <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginTop</span>=<span class="string">"43dp"</span> <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="string">"@+id/tv"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="string">"parent"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">android.support.constraint.ConstraintLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果把更新界面的逻辑放在主线程中，虽然不一定会导致<code>ANR</code>异常，但是会有明显的卡顿。这里就要使用<code>Java</code>创建子线程的方法了。</p>
+<p>分成下面几步：</p>
+<ol>
+<li><p>创建一个实现<code>Runnable</code>接口的类</p>
+</li>
+<li><p>把你更新UI的逻辑放在这个类的重写方法<code>run</code>中</p>
+</li>
+<li><p>创建一个<code>Thread</code>对象，然后将刚才在<strong>步骤1</strong>中创建的<code>Runnable</code>对象传递给<code>Thread</code>的构造函数。</p>
+</li>
+<li><p>调用<code>Thread</code>的 <strong>start</strong> 方法。</p>
+</li>
+<li><p>每当变量<code>i</code>的值发生更改时，我们就更新<code>TextView</code>。</p>
+</li>
+</ol>
+<p><br></p>
+<p><strong>代码清单1.1</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.com.sshpark.mvpdemo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle</span><br><span class="line"><span class="keyword">import</span> kotlinx.android.synthetic.main.activity_main.*</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 绑定Button事件</span></span><br><span class="line">        bn.setOnClickListener &#123;</span><br><span class="line">            <span class="keyword">val</span> runnable = Worker()</span><br><span class="line">            <span class="keyword">val</span> thread = Thread(runnable)</span><br><span class="line">            thread.start()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Runnable 对象</span></span><br><span class="line">    <span class="keyword">inner</span> <span class="class"><span class="keyword">class</span> <span class="title">Worker</span>: <span class="type">Runnable &#123;</span></span></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">            killSomeTime()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新UI的逻辑</span></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">killSomeTime</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>..<span class="number">20</span>) &#123;</span><br><span class="line">            Thread.sleep(<span class="number">2000</span>)</span><br><span class="line">            println(<span class="string">"i: <span class="variable">$i</span>"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然也可以写成<code>lambda</code>形式。代码更加简洁</p>
+<p><strong>代码清单1.2</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bn.setOnClickListener &#123;</span><br><span class="line">	Thread(Runnable &#123;</span><br><span class="line">		killSomeTime()</span><br><span class="line">	&#125;).start()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>清单1.2</strong>使用<code>Kotlin lambda</code>表达式创建<code>Runnable</code>匿名对象。 它被传递给<code>Thread</code>类的构造函数。</p>
+<p>我们不需要编写<code>run</code>方法。因为<code>Runnable</code>是一个<code>SAM</code>类(具有单个抽象方法的类)。 在<code>lambda</code>表达式中使用<code>SAM</code>类时，不需要显式地编写抽象方法的名称。</p>
+<p>如果我们想做的只是打印到控制台，那么我们的代码现在应该可以正常工作了。 但是请记住，我们需要将<code>TextField</code>的值设置为<code>i</code>的当前值。</p>
+<p>后台线程不允许更改 UI 中的任何内容。 这个责任只属于 <strong>UI 线程</strong>。 因此，我们需要解决的下一个问题是如何回到 <strong>UI 线程</strong>，以便更新<code>TextView</code>。 有几种方法可以做到这一点，但是最简单的方法是调用<code>Activity</code>类的<code>runOnUiThread</code>方法。</p>
+<p>代码清单1.3展示了完整的<code>MainActivity.kt</code></p>
+<p><strong>代码清单1.3</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.com.sshpark.mvpdemo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle</span><br><span class="line"><span class="keyword">import</span> kotlinx.android.synthetic.main.activity_main.*</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 绑定Button事件</span></span><br><span class="line">        bn.setOnClickListener &#123;</span><br><span class="line">            Thread(Runnable &#123;</span><br><span class="line">                killSomeTime()</span><br><span class="line">            &#125;).start()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新UI的逻辑</span></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">killSomeTime</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>..<span class="number">20</span>) &#123;</span><br><span class="line">            runOnUiThread(Runnable &#123;</span><br><span class="line">                tv.text = i.toString()</span><br><span class="line">            &#125;)</span><br><span class="line">            Thread.sleep(<span class="number">2000</span>)</span><br><span class="line">            println(<span class="string">"i: <span class="variable">$i</span>"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>运行效果：</strong></p>
+<p><img src="http://cdn.sshpark.com.cn/20190212134129.gif" height="400px" alt="图片1"></p>
+<p><br></p>
+<h2 id="Handlers-and-Messages"><a href="#Handlers-and-Messages" class="headerlink" title="Handlers and Messages"></a>Handlers and Messages</h2><p>与<code>Thread</code>不同，<code>Handler</code>类是<code>Android</code>框架的一部分ーー不是<code>Java</code>的一部分。 处理程序对象主要用于管理线程。</p>
+<p><code>Android</code>主线程包含一个消息队列 (MessageQueue)，该消息队列里面可以存入一系列的<code>Message</code>或<code>Runnable</code>对象。通过一个<code>Handler</code>你可以往这个消息队列发送<code>Message</code>或者<code>Runnable</code>对象，并且处理这些对象。每次你新创建一个 <code>Handle</code>对象，它会绑定于创建它的线程(也就是 UI 线程)，以及该线程的消息队列，从这时起，这个<code>handler</code>就会开始把<code>Message</code>或<code>Runnable</code>对象传递到消息队列中，并在它们出队列的时候执行它们。</p>
+<p>基本思想是获得一个对主线程的<code>Handler</code>的引用，然后，当我们在后台线程(在这里我们不能做任何 UI 更改)中的时候，向<code>Handler</code>对象发送一条<code>Message</code>。 使用<code>Message</code>对象在后台线程和主线程之间传输数据。</p>
+<p>要使用<code>Handler</code>对象，需要执行以下操作:</p>
+<ol>
+<li><p>获取与<code>UI Thread</code>关联的<code>Handler</code>对象。</p>
+</li>
+<li><p>将可能引起<code>ANR</code>异常的代码放在子线程中</p>
+</li>
+<li><p>在子线程中需要更改 UI 中的一些东西的时候，执行以下操作:</p>
+<p>a. 创建一个 Message 对象，最好的方法是调用<code>Message.obtain()</code></p>
+<p>b. 通过调用<code>sendMessage</code>方法向<code>Handler</code>对象发送消息。 消息对象可以携带数据。<code>Message</code>对象的<code>data</code>属性</p>
+<p>是<code>Bundle</code>对象，因此您可以对它使用各种<code>putXXX ()</code>方法(例如，putString()、 putInt()、 putBundle()、putFloat()</p>
+<p>等)。</p>
+</li>
+<li><p>在<code>Handler</code>对象的<code>handleMessage</code>回调中进行 UI 更改。</p>
+</li>
+</ol>
+<p><br></p>
+<p>这里继续使用前面的项目，修改<code>MainActivity.kt</code>中的代码。</p>
+<p><strong>代码清单2.1</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.com.sshpark.mvpdemo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle</span><br><span class="line"><span class="keyword">import</span> android.os.Handler</span><br><span class="line"><span class="keyword">import</span> android.os.Message</span><br><span class="line"><span class="keyword">import</span> kotlinx.android.synthetic.main.activity_main.*</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">lateinit</span> <span class="keyword">var</span> mHandler: Handler</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line"></span><br><span class="line">        mHandler = <span class="keyword">object</span> : Handler() &#123;</span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">handleMessage</span><span class="params">(msg: <span class="type">Message</span>?)</span></span> &#123;</span><br><span class="line">                tv.text = msg?.<span class="keyword">data</span>?.getString(<span class="string">"counter"</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        bn.setOnClickListener &#123;</span><br><span class="line">            Thread(Runnable &#123;</span><br><span class="line">                killSomeTime()</span><br><span class="line">            &#125;).start()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">killSomeTime</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>..<span class="number">20</span>) &#123;</span><br><span class="line">            <span class="keyword">var</span> msg = Message.obtain()</span><br><span class="line">            msg.<span class="keyword">data</span>.putString(<span class="string">"counter"</span>, i.toString())</span><br><span class="line">            mHandler.sendMessage(msg)</span><br><span class="line"></span><br><span class="line">            Thread.sleep(<span class="number">2000</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码中将<code>Handler</code>对象声明为类的属性。在这里使用<code>lateinit</code>是因为我们还没有准备好实例化对象。</p>
+<p>第17行代码实例化<code>Handler</code>对象。 我们将获得与 <code>UI Thread</code>关联的<code>Handler</code>对象。</p>
+<p>第19行代码，在这里进行 UI 更改是安全的。这是与 UI 线程关联的处理程序。当我们调用<code>sendMessage</code>时，运行库将调用<code>handleMessage</code>回调。 此方法的<code>Message</code>参数会携带数据。</p>
+<p>第33行代码，创建了一个<code>Message</code>对象。这是我们稍后将发送给处理程序的内容。<code>Message</code>对象的<code>data</code>属性就像一个<code>bundle</code> ーー你可以把东西放进去。我们用<code>putString ()</code>方法传递了一个键值对</p>
+<p>第35行代码发送一条消息给我们的<code>Handler</code></p>
+<p>运行效果跟<strong>图1</strong>是一样的</p>
+<p><br></p>
+<h2 id="AsyncTask"><a href="#AsyncTask" class="headerlink" title="AsyncTask"></a>AsyncTask</h2><p>在后台运行代码的另一种方法是使用<code>AsyncTask</code>类。 与<code>Handler</code>类一样，<code>AsyncTask</code>也是<code>Android</code>框架的一部分。 与处理程序一样，它有一种在后台执行工作的机制，并且它还提供了一种(更简洁的)更新 UI 的方法。</p>
+<p>要使用<code>AsyncTask</code>，通常需要执行以下操作:</p>
+<ol>
+<li>继承<code>AsyncTask</code>类</li>
+<li>重写<code>AsyncTask</code>的<code>doInBackground</code>方法，以便完成后台工作。</li>
+<li>重写更多的<code>AsyncTask</code>的生命周期方法，这样就可以更新 UI 并报告后台任务的总体状态。</li>
+<li>创建<code>AsyncTask</code>子类的一个实例并调用<code>execute</code> ーー这就是你如何启动后台操作的方法。</li>
+</ol>
+<p><code>AsyncTask</code>不如简单的线程受欢迎的原因之一是它使用泛型。<code>Asynctask</code>类是参数化的。必须指定三种类型才能使用它。下面的代码展示了如何实现<code>AsyncTask</code>类。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">AsyncTask&lt;void, String, <span class="built_in">Boolean</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">doInBackground</span><span class="params">(<span class="keyword">vararg</span> p0: <span class="type">Void</span>?)</span></span> : <span class="built_in">Boolean</span> &#123;</span><br><span class="line">        publishProgress(<span class="string">"status of anything"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onProgressUpdate</span><span class="params">(<span class="keyword">vararg</span> values: <span class="type">String</span>?)</span></span> &#123;</span><br><span class="line">        <span class="comment">// 更新 UI</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onPostExecute</span><span class="params">(result: <span class="type">Boolean</span>?)</span></span> &#123;</span><br><span class="line">        println(result)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>必须指定三个泛型参数才能使用它。按出现的顺序，这三种参数类型如下:</p>
+<ol>
+<li>Params。这是我们需要传递给<code>AsyncTask</code>的信息，以便它可以执行后台任务。它可以是任何东西，比如 url 列表、 View 对象或 String。但是在我们的示例中，我们将<code>AsyncTask</code>设置为一个内部类，这样它就可以引用<code>MainActivity</code>中的任何<code>View</code>元素(这就是为什么我使用<code>Void</code>作为第一个类型参数的原因)</li>
+<li>Progess。后台任务完成的进度值的类型</li>
+<li>Result。 后台任务完成后返回结果的类型</li>
+</ol>
+<p><br></p>
+<p><code>doInBackground(Params...);</code>重写该方法就是后台线程将要完成的任务。该方法可以调用<code>publishProgress(Progess... values)</code>方法更新任务的执行进度。</p>
+<p><code>onProgressUpdate(Progess... values);</code>在<code>doInBackground()</code>方法中调用<code>publishProgess()</code>方法更新任务的执行进度后，将会触发该方法。</p>
+<p><code>onPostExecute(Result result);</code>当<code>doInBackground()</code>完成后，系统会自动调用<code>onPostExcute()</code>方法，并将<code>doInBackground()</code>方法的返回值传给该方法。</p>
+<p>修改<code>MainActivity.kt</code>中的代码。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.com.sshpark.mvpdemo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.AsyncTask</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle</span><br><span class="line"><span class="keyword">import</span> android.os.Handler</span><br><span class="line"><span class="keyword">import</span> android.os.Message</span><br><span class="line"><span class="keyword">import</span> kotlinx.android.synthetic.main.activity_main.*</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line"></span><br><span class="line">        bn.setOnClickListener &#123;</span><br><span class="line">            Worker().execute()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">inner</span> <span class="class"><span class="keyword">class</span> <span class="title">Worker</span>: <span class="type">AsyncTask</span>&lt;<span class="type">Void, String, Boolean</span>&gt;</span>() &#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">doInBackground</span><span class="params">(<span class="keyword">vararg</span> params: <span class="type">Void</span>?)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>..<span class="number">20</span>) &#123;</span><br><span class="line">                publishProgress(i.toString())</span><br><span class="line">                Thread.sleep(<span class="number">2000</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">/* 现在，我们可以安全地将 TextView 的 text 属性设置为当前值 i。 我们只从 publishProgress 中传递了一个			参数，因此如果我们想用它，那么它就是 value 参数的第0个元素。*/</span></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onProgressUpdate</span><span class="params">(<span class="keyword">vararg</span> values: <span class="type">String</span>?)</span></span> &#123;</span><br><span class="line">            tv.text = values[<span class="number">0</span>]</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onPostExecute</span><span class="params">(result: <span class="type">Boolean</span>?)</span></span> &#123;</span><br><span class="line">            println(result)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="Anko’s-doAsync"><a href="#Anko’s-doAsync" class="headerlink" title="Anko’s doAsync"></a>Anko’s doAsync</h2><p><code>Anko</code>是<strong>JetBrains</strong>在<strong>Kotlin</strong> 开发的一个<code>Android</code>库(也是开发<code>Kotlin</code>的公司)。 你可以将其用于各种各样的任务，但是在这里我们只需要<code>doAsync</code>部分。 顾名思义，<code>Anko</code>的<code>doAsync</code>可以让我们异步在后台运行代码。</p>
+<p>在使用<code>Anko</code>之前，需要将其添加到项目的<code>Gradle</code>文件的依赖项中</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">  ....</span><br><span class="line">  implementation <span class="string">'org.jetbrains.anko:anko-common:0.9'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>doAsync</code>的语法</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">doAsync &#123;</span><br><span class="line">	<span class="comment">// 后台任务</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如何在后台运行代码以及如何返回到 UI 线程的示例代码。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">doAsync &#123;</span><br><span class="line">    &#123;...&#125; <span class="comment">// 后台任务</span></span><br><span class="line">    </span><br><span class="line">    activityUiThread &#123;</span><br><span class="line">        <span class="comment">// 更新 UI</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改<code>MainActivity.kt</code>中的代码。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.com.sshpark.mvpdemo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle</span><br><span class="line"><span class="keyword">import</span> kotlinx.android.synthetic.main.activity_main.*</span><br><span class="line"><span class="keyword">import</span> org.jetbrains.anko.activityUiThread</span><br><span class="line"><span class="keyword">import</span> org.jetbrains.anko.doAsync</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line"></span><br><span class="line">        bn.setOnClickListener &#123;</span><br><span class="line">            doAsync &#123;</span><br><span class="line">                <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>..<span class="number">20</span>) &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">2000</span>)</span><br><span class="line"></span><br><span class="line">                    activityUiThread &#123;</span><br><span class="line">                        tv.text = i.toString()</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>像之前的 <code>Thread</code>、 <code>Handler</code> 和<code>AsyncTask</code>示例一样，<code>doAsync</code> 也能够很好地执行。 </p>
+<p><br></p>
+<p><strong>总结一下：</strong></p>
+<p>当你试图在主线程上做太多的事情时，<code>App</code>就会变得卡顿起来</p>
+<ol>
+<li><strong>该如何避免它？</strong> 不要在主线程上做太多耗时操作，比如读取一个大文件，从网络下载数据，做计算量大的逻辑</li>
+<li><strong>什么是主线程？</strong> 负责在你的应用程序中创建(和修改)视图元素。也就是<code>UI Thread</code></li>
+<li><strong>什么是后台线程</strong>? 任何不是主线程的线程。 通常为你的应用程序创建一个后台线程。</li>
+<li><strong>如何创建后台线程？</strong><code>Java Threads</code>，<code>Handlers</code>，<code>AsyncTask</code>，以及<code>doAsync</code></li>
+</ol>
+<p>最后，还是要多练习才能掌握好它们</p>
+<p><img src="http://cdn.sshpark.com.cn/20190212151203.png" width="120px" height="100px"></p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/Android/">Android</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/03/22/%E5%AF%B9%E5%9B%9E%E8%B0%83%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">理解c语言中的回调函数</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/01/22/Android%E9%9A%90%E5%BC%8FIntent%E4%BE%8B%E5%AD%90/">
+        <span class="next-text nav-default">Android隐式Intent例子</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

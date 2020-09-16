@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="用C++和SFML写游戏-SFML介绍（1）"/><meta name="keywords" content="SFML, 用C++和SFML写游戏, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2019/04/03/用C++和SFML写游戏-SFML介绍（1）/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>用C++和SFML写游戏-SFML介绍（1） - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">用C++和SFML写游戏-SFML介绍（1）
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-04-03
+        </span><span class="post-visits"
+             data-url="/2019/04/03/%E7%94%A8C++%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-SFML%E4%BB%8B%E7%BB%8D%EF%BC%881%EF%BC%89/"
+             data-title="用C++和SFML写游戏-SFML介绍（1）">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、SFML是什么"><span class="toc-text">一、SFML是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、安装-SFML"><span class="toc-text">二、安装 SFML</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、一个简单的小例子"><span class="toc-text">三、一个简单的小例子</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>我想大多数初学 <strong>C++</strong> 的人都有这样一个疑惑，那就是学完这门编程语言之后接下来能做什么。并且大多数初学者学习过程都应该是看着这么一个<strong>黑框框</strong>。就像是这样</p>
+<p><img src="http://cdn.sshpark.com.cn/20190404001749.png" width="500px" /></p>
+<p>这么一看学习 <strong>C++</strong> 确实是挺无聊的一件事，实际上 <strong>C++</strong> 能做的事情远比我们想象中的要多，它在游戏、科学计算、网络软件、分布式应用、操作系统、设备驱动程序和嵌入式系统等领域都有应用。应用领域非常广泛，但是缺点也很明显，开发效率低。</p>
+<p>这里我会写一个系列文章，通过 <strong>SFML（Simple and Fast Multimedia Library）</strong>来介绍 <strong>C++</strong> 在游戏方面的一些应用，以及如何用它来实现一个简单的游戏，文章内容大多数翻译自<strong>《SFML Essentials》</strong>(<del><strong>Maxime Barbier</strong>的<strong>《SFML Blueprints》，这本书写的有点复杂，换了一本入门书</strong></del>)，有兴趣的朋友可以搜一下这本书。</p>
+<h3 id="一、SFML是什么"><a href="#一、SFML是什么" class="headerlink" title="一、SFML是什么"></a>一、SFML是什么</h3><p><img src="http://cdn.sshpark.com.cn/20190404004309.png" width="400px" /></p>
+<p><strong>SFML</strong> 是多媒体库，它为PC的各个组件提供简单的界面，用来简化游戏和多媒体应用程序的开发。 主要由五个模块组成，分别是：<strong>系统，窗口，图形，音频和网络。</strong></p>
+<p><strong>SFML</strong> 是跨平台的，通过 <strong>SFML</strong>，你的应用程序可以在最常见的操作系统上进行编译和运行：Windows，Linux，macOS以及Android和iOS。</p>
+<p><strong>SFML</strong> 支持多种语言，具体可以在<a href="https://www.sfml-dev.org/download/bindings.php" target="_blank" rel="noopener">官网</a>查看支持的语言。</p>
+<h3 id="二、安装-SFML"><a href="#二、安装-SFML" class="headerlink" title="二、安装 SFML"></a>二、安装 <strong>SFML</strong></h3><p>安装过程在这里就不详细说了，官网有很详细的<a href="https://sfml-dev.org/tutorials/2.5/" target="_blank" rel="noopener">过程</a>，根据你的平台选择对应的教程安装就好了。</p>
+<p><img src="http://cdn.sshpark.com.cn/20190404173457.png" alt=""></p>
+<h3 id="三、一个简单的小例子"><a href="#三、一个简单的小例子" class="headerlink" title="三、一个简单的小例子"></a>三、一个简单的小例子</h3><p>当你把环境都配置好了以后，就可以敲一个简单的例子了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SFML/Window.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SFML/Graphics.hpp&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    sf::<span class="function">RenderWindow <span class="title">window</span><span class="params">(sf::VideoMode(<span class="number">400</span>, <span class="number">400</span>), <span class="string">"Circle"</span>)</span></span>;</span><br><span class="line">    window.setFramerateLimit(<span class="number">60</span>);</span><br><span class="line"></span><br><span class="line">    sf::<span class="function">CircleShape <span class="title">circle</span><span class="params">(<span class="number">150</span>)</span></span>;</span><br><span class="line">    circle.setFillColor(sf::Color::Blue);</span><br><span class="line">    circle.setPosition(<span class="number">10</span>, <span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (window.isOpen()) &#123;</span><br><span class="line">        sf::Event event;</span><br><span class="line">        <span class="keyword">while</span> (window.pollEvent(event)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (event.type == sf::Event::Closed</span><br><span class="line">                <span class="keyword">or</span> (event.type == sf::Event::KeyPressed </span><br><span class="line">                    <span class="keyword">and</span> event.key.code == sf::Keyboard::Escape) ) &#123;</span><br><span class="line">                window.close();</span><br><span class="line">            &#125;</span><br><span class="line">            window.clear();</span><br><span class="line">            window.draw(circle);</span><br><span class="line">            window.display();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行之后的效果如<strong>图3.1</strong>所示，在一个窗口里面绘制出了一个圆。虽然是一个很简单的功能，但是我们已经脱离了<strong>黑框框！</strong>通过后面的学习，我们能做的事情会更多。</p>
+<p><img alt="图3.1" src="http://cdn.sshpark.com.cn/20190404201354.png" width="500px" /></p>
+<p>下一篇文章我们将会搭建游戏的基本框架，<strong>Game</strong> 类的创建。😃</p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/SFML/">SFML</a>
+            <a href="/tags/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F/">用C++和SFML写游戏</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/04/06/%E8%81%8A%E8%81%8AAndroid%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84MVP%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">聊聊Android开发中的MVP设计模式</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/03/31/Offer%E6%94%B6%E5%89%B2-%E7%BC%96%E7%A8%8B%E7%BB%83%E4%B9%A0%E8%B5%9B98/">
+        <span class="next-text nav-default">[Offer收割]编程练习赛98</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

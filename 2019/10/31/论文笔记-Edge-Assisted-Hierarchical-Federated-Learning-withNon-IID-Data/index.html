@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="[论文笔记] Edge-Assisted Hierarchical Federated Learning withNon-IID Data"/><meta name="keywords" content="论文笔记, 联邦学习, 边缘计算, Non-IID, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2019/10/31/论文笔记-Edge-Assisted-Hierarchical-Federated-Learning-withNon-IID-Data/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>[论文笔记] Edge-Assisted Hierarchical Federated Learning withNon-IID Data - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">[论文笔记] Edge-Assisted Hierarchical Federated Learning withNon-IID Data
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-10-31
+        </span><span class="post-visits"
+             data-url="/2019/10/31/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-Edge-Assisted-Hierarchical-Federated-Learning-withNon-IID-Data/"
+             data-title="[论文笔记] Edge-Assisted Hierarchical Federated Learning withNon-IID Data">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#原文地址"><span class="toc-text">原文地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过程"><span class="toc-text">过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HierFAVG-算法过程"><span class="toc-text">HierFAVG 算法过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验结果"><span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>提出了一种分层的联邦学习以及对应算法（HierFAVG）降低<strong>通信延时</strong>问题，与传统的 <strong>FAVG(Federated Averaging)</strong> 做对比。</p>
+<a id="more"></a>
+<h2 id="原文地址"><a href="#原文地址" class="headerlink" title="原文地址"></a>原文地址</h2><p><a href="https://arxiv.org/pdf/1905.06641.pdf" target="_blank" rel="noopener">Edge-Assisted Hierarchical Federated Learning withNon-IID Data</a></p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>将 ML 或 DL 模型应用在边缘设备上是一个革命性的突破。然而，传统的模型训练是在计算中心完成的，近几年出于隐私保护问题，用户数据将不会上传至计算中心，数据保留在用户手中。在不上传数据的情况下，FL （联邦学习）提出了让各个设备协同训练一个<strong>共享模型</strong>，然后上传模型的更新信息到云中心进行模型聚合。但是，这种做法在通信消耗上出现了瓶颈。</p>
+<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><p>分层结构如下：</p>
+<p><img src="http://cdn.sshpark.com.cn/20191031004503.png" width="700px" /></p>
+<p>客户端的更新参数不是直接发送至<strong>云中心</strong>，而是发送至<strong>边缘服务器</strong>，然后<strong>边缘服务器</strong>再发送至云中心。</p>
+<p>原因如下：</p>
+<ol>
+<li>云中心比边缘服务器能够处理更多的用户连接，能够处理大量数据进行模型聚合。</li>
+<li>客户端与边缘服务器的通信延时更低。</li>
+</ol>
+<h2 id="HierFAVG-算法过程"><a href="#HierFAVG-算法过程" class="headerlink" title="HierFAVG 算法过程"></a>HierFAVG 算法过程</h2><p>客户端每经过 $\tau_1$ 轮的更新就在边缘服务器上进行模型聚合操作，边缘服务器每经过 $\tau_2$ 轮的聚合就在云中心进行模型聚合。也就是说每经过 $\tau_1 \tau_2$ 轮的更新就与云中心通信。</p>
+<p>我们记 $\mathcal{w}_i^l(t)$ 为第 t 轮本地更新的模型参数，那么有：</p>
+<p><img src="http://cdn.sshpark.com.cn/20191031005851.png" width="500px" /></p>
+<p>算法过程如下：</p>
+<p><img src="http://cdn.sshpark.com.cn/20191031192459.png" width="500px" /></p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p>$T_\alpha$ 表示达到准确率 $\alpha$ 需要的时间</p>
+<p>$N_\alpha$ 表示达到准确率 $\alpha$ 需要的通信次数</p>
+<p><br></p>
+<p><img src="http://cdn.sshpark.com.cn/20191031194331.png" width="500px" /></p>
+<p>如上表所示，当 $\tau_1 \tau_2$ 固定为 60 的时候，无论是 Edge-IID 还是 Edge-NIID，与云中心的通信次数都<strong>随着 $\tau_1$ 的减少而减少</strong>。这是因为<strong>随着 $\tau_1$ 的减少</strong>模型的收敛速度更快了，如图1所示。</p>
+<p>同时实验也表明了通过适当的增加 $\tau_2$ 可以降低与云中心的通信次数。但是这对于NIID不是那么使用，当 $\tau_1=60, \tau_2 = 64$ 的时候，模型无法收敛到预期精度。</p>
+<p><img alt="图 1" src="http://cdn.sshpark.com.cn/20191031195551.png" width="500px" /></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>文章提出了一种分层的联邦学习体系结构，并辅以训练算法 <strong>HierFAVG</strong>。对于两个云模型聚合之间相同数量的本地更新，优先选择较小的边缘聚合间隔 $\tau_1$ 。 此外，当边缘云之间的数据分布为 <strong>IID</strong> 时，可以通过增加 $\tau_2$ 来减少通信开销。 尽管研究表明在选择 $\tau_1, \tau_2$ 值时需要权衡取舍，但仍需进一步研究以充分表征和优化这些关键参数。</p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/">论文笔记</a>
+            <a href="/tags/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/">联邦学习</a>
+            <a href="/tags/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97/">边缘计算</a>
+            <a href="/tags/Non-IID/">Non-IID</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/12/17/LeetCode-Weekly-Contest-167/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">LeetCode Weekly Contest 167</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/10/24/Gossip-Learning/">
+        <span class="next-text nav-default">[论文笔记] Gossip Learning</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

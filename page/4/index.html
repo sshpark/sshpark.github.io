@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="多思考，少跟风"/><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/page/4/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><section id="posts" class="posts"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2019/02/11/%E5%9C%A8Android%E4%B8%AD%E6%9B%B4%E6%96%B0UI%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/">在Android后台线程中更新UI的几种方法</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-02-11
+        </span><span class="post-visits"
+             data-url="/2019/02/11/%E5%9C%A8Android%E4%B8%AD%E6%9B%B4%E6%96%B0UI%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/"
+             data-title="在Android后台线程中更新UI的几种方法">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>先来解释一下为什么要在子线程中更新UI。</p>
+<p>没有人愿意使用经常卡顿的<code>APP</code>，用户希望他们的<code>App</code>用起来流畅而不卡顿。当然每个开发者也希望这样——没有人会在构建自己的<code>App</code>时会说，“这个<code>App</code>跑的太快了，也许我应该放慢一点速度”；</p>
+<p><img src="http://cdn.sshpark.com.cn/屏幕快照 2019-02-11 下午11.58.59.png" width="100px" height="100px"/></p>
+<p>尽管没有人希望这样做， 那么为什么还会有的<code>App</code>用起来会那么卡呢？ 你之前可能已经看过我所说的这些<code>App</code>。</p>
+<p>可以列出一些导致某些<code>App</code>卡顿的原因，但是我敢打赌排在前10位的原因之一就是主线程上有太多的东西。 它有可能是被<code>I/O</code>处理或者复杂的计算(或者两者兼之)所拖累，这很糟糕。</p>
+<p>难道这意味着我们的<code>App</code>中不应该有<code>I/O</code>处理或者复杂的计算吗？显然不是，但是我们应该知道要把这些放在哪里，而不是全部放在主线程中。<br>
+          <div class="read-more">
+            <a href="/2019/02/11/%E5%9C%A8Android%E4%B8%AD%E6%9B%B4%E6%96%B0UI%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2019/01/22/Android%E9%9A%90%E5%BC%8FIntent%E4%BE%8B%E5%AD%90/">Android隐式Intent例子</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-01-22
+        </span><span class="post-visits"
+             data-url="/2019/01/22/Android%E9%9A%90%E5%BC%8FIntent%E4%BE%8B%E5%AD%90/"
+             data-title="Android隐式Intent例子">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p><code>Android</code>平台<code>Intent</code>分为两种：显示<code>Intent</code>和隐式<code>Intent</code></p>
+<p>显式<code>Intent</code>会准确地告诉<code>Android</code>运行时需要激活哪个组件。举个例子，如果我想让别人帮忙买包饼干。显示<code>Intent</code>会说，<strong>可以帮我去xxx街的xxx便利店买包饼干吗</strong>。而隐式<code>Intent</code>则
+          <div class="read-more">
+            <a href="/2019/01/22/Android%E9%9A%90%E5%BC%8FIntent%E4%BE%8B%E5%AD%90/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2019/01/10/%E5%B0%86%E4%B8%80%E4%B8%AA%E5%AD%97-32-bit-%E6%8C%89%E5%AD%97%E8%8A%82%E5%8F%8D%E8%BD%AC%E7%9A%84%E6%96%B9%E6%B3%95/">将一个字(32 bit)按字节反转的方法</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-01-10
+        </span><span class="post-visits"
+             data-url="/2019/01/10/%E5%B0%86%E4%B8%80%E4%B8%AA%E5%AD%97-32-bit-%E6%8C%89%E5%AD%97%E8%8A%82%E5%8F%8D%E8%BD%AC%E7%9A%84%E6%96%B9%E6%B3%95/"
+             data-title="将一个字(32 bit)按字节反转的方法">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>什么意思呢？就是将 ABCD 变成 DCBA。这里的ABCD代表字节。</p>
+<p>这个方法是在<strong>嵌入式系统课程</strong>中学到的，效率很高，该方法只用了一个临时变量而且不使用循环语句。<br>
+          <div class="read-more">
+            <a href="/2019/01/10/%E5%B0%86%E4%B8%80%E4%B8%AA%E5%AD%97-32-bit-%E6%8C%89%E5%AD%97%E8%8A%82%E5%8F%8D%E8%BD%AC%E7%9A%84%E6%96%B9%E6%B3%95/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2018/12/04/kuangbin%E5%B8%A6%E4%BD%A0%E9%A3%9E-%E4%B8%93%E9%A2%98%E4%BA%8C%E5%8D%81%E4%B8%80-%E6%A6%82%E7%8E%87-%E6%9C%9F%E6%9C%9B/">[kuangbin带你飞]专题二十一 概率&期望</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-12-04
+        </span><span class="post-visits"
+             data-url="/2018/12/04/kuangbin%E5%B8%A6%E4%BD%A0%E9%A3%9E-%E4%B8%93%E9%A2%98%E4%BA%8C%E5%8D%81%E4%B8%80-%E6%A6%82%E7%8E%87-%E6%9C%9F%E6%9C%9B/"
+             data-title="[kuangbin带你飞]专题二十一 概率&期望">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h3 id="A-Dangerous-Maze"><a href="#A-Dangerous-Maze" class="headerlink" title=" A Dangerous Maze"></a><a href="https://vjudge.net/problem/LightOJ-1027" target="_blank" rel="noopener"> A Dangerous Maze</a></h3><h3 id="B-Discovering-Gold"><a href="#B-Discovering-Gold" class="headerlink" title="B - Discovering Gold"></a><a href="https://vjudge.net/problem/LightOJ-1030" target="_blank" rel="noopener">B - Discovering Gold</a></h3><p>给你一个数N，代表有N个点，每个点上有一定数量的黄金，你有一个6面的骰子，投到x就走x步，如果超过了N，就再投一次，让你求获得黄金数量的期望值。<br>
+          <div class="read-more">
+            <a href="/2018/12/04/kuangbin%E5%B8%A6%E4%BD%A0%E9%A3%9E-%E4%B8%93%E9%A2%98%E4%BA%8C%E5%8D%81%E4%B8%80-%E6%A6%82%E7%8E%87-%E6%9C%9F%E6%9C%9B/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2018/12/01/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%EF%BC%88UserCF%EF%BC%89/">协同过滤推荐算法简单实现（UserCF）</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-12-01
+        </span><span class="post-visits"
+             data-url="/2018/12/01/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%EF%BC%88UserCF%EF%BC%89/"
+             data-title="协同过滤推荐算法简单实现（UserCF）">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p><strong>想要了解一个算法，最好的做好就是自己实现一遍。</strong>前面简单讲了什么是<a href="http://sshpark.com.cn/2018/11/26/笔记：协同过滤推荐算法">协同过滤</a>，那么在本文，将会尝试实现它。本文实现的是<strong>基于用户的协同过滤算法</strong> ——这种算法给用户推荐和他兴趣相似的其他用户喜欢的物品。感谢<a href="http://product.dangdang.com/22775361.html" target="_blank" rel="noopener">《推荐系统实践》</a>一书的对这方面详细描述。<br>
+          <div class="read-more">
+            <a href="/2018/12/01/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%EF%BC%88UserCF%EF%BC%89/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2018/11/26/%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/">笔记：协同过滤推荐算法</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-11-26
+        </span><span class="post-visits"
+             data-url="/2018/11/26/%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/"
+             data-title="笔记：协同过滤推荐算法">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>随着电子商务的兴起，推荐系统得到了广泛的应用，同时也推进了对推荐算法的研究。例如：淘宝、京东、Amazon等都采用了智能的推荐系统。<strong>协同过滤（Collaborative filtering）</strong>算法是诞生最早的一种推荐算法，并被广泛采用。其主要思想是“利用群众的智慧”对信息进行过滤和筛选。协同过滤相对于集体智慧而言，它从一定程度上保留了个体的特征。<br>
+          <div class="read-more">
+            <a href="/2018/11/26/%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2018/11/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E8%B4%A5%E8%80%85%E6%A0%91/">数据结构：败者树</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-11-22
+        </span><span class="post-visits"
+             data-url="/2018/11/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E8%B4%A5%E8%80%85%E6%A0%91/"
+             data-title="数据结构：败者树">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p><img src="http://cdn.sshpark.com.cn/20190409233530.jpg" alt=""></p>
+<p>败者树是计算机科学学科里的一种数据结构，可用于外部排序中提高效率。实际上是一棵完全二叉树。</p>
+<p><font color="red">败者树的中间结点记录的败者的标号</font><br>
+          <div class="read-more">
+            <a href="/2018/11/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E8%B4%A5%E8%80%85%E6%A0%91/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2018/10/20/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85hadoop-hbase/">ubuntu下安装hadoop, hbase</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-10-20
+        </span><span class="post-visits"
+             data-url="/2018/10/20/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85hadoop-hbase/"
+             data-title="ubuntu下安装hadoop, hbase">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>安装环境以及软件版本：</p>
+<ul>
+<li>Ubuntu 16.04.1 LTS</li>
+<li>Hadoop 2.9.1</li>
+<li>HBase 1.4.8
+          <div class="read-more">
+            <a href="/2018/10/20/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85hadoop-hbase/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2018/02/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">数据结构：树状数组</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-02-03
+        </span><span class="post-visits"
+             data-url="/2018/02/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/"
+             data-title="数据结构：树状数组">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>先来一段来自<a href="https://baike.baidu.com/item/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/313739" target="_blank" rel="noopener">百度百科</a>的介绍</p>
+<blockquote>
+<p>树状数组(Binary Indexed Tree(B.I.T), Fenwick Tree)是一个查询和修改复杂度都为log(n)的数据结构。主要用于查询任意两位之间的所有元素之和，但是每次只能修改一个元素的值；经过简单修改可以在log(n)的复杂度下进行范围修改，但是这时只能查询其中一个元素的值(如果加入多个辅助数组则可以实现区间修改与区间查询)。<br>
+          <div class="read-more">
+            <a href="/2018/02/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2017/08/11/Sublime-Text3-%E9%85%8D%E7%BD%AEC-%E9%99%84oj%E5%88%B7%E9%A2%98%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF/">Sublime Text3 配置C++(附oj刷题常用模板)</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-08-11
+        </span><span class="post-visits"
+             data-url="/2017/08/11/Sublime-Text3-%E9%85%8D%E7%BD%AEC-%E9%99%84oj%E5%88%B7%E9%A2%98%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF/"
+             data-title="Sublime Text3 配置C++(附oj刷题常用模板)">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h2 id="下载对应平台的sublime"><a href="#下载对应平台的sublime" class="headerlink" title="下载对应平台的sublime"></a>下载对应平台的sublime</h2><p><a href="http://www.sublimetext.com" target="_blank" rel="noopener">sublime最新版下载</a>, 字体样式个人喜欢<code>Consolas</code>, 另附注册码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">—– BEGIN LICENSE —–  </span><br><span class="line">TwitterInc  </span><br><span class="line">200 User License  </span><br><span class="line">EA7E-890007  </span><br><span class="line">1D77F72E 390CDD93 4DCBA022 FAF60790  </span><br><span class="line">61AA12C0 A37081C5 D0316412 4584D136  </span><br><span class="line">94D7F7D4 95BC8C1C 527DA828 560BB037  </span><br><span class="line">D1EDDD8C AE7B379F 50C9D69D B35179EF  </span><br><span class="line">2FE898C4 8E4277A8 555CE714 E1FB0E43  </span><br><span class="line">D5D52613 C3D12E98 BC49967F 7652EED2  </span><br><span class="line">9D2D2E61 67610860 6D338B72 5CF95C69  </span><br><span class="line">E36B85CC 84991F19 7575D828 470A92AB  </span><br><span class="line">—— END LICENSE ——</span><br></pre></td></tr></table></figure>
+<h2 id="Mac下配置"><a href="#Mac下配置" class="headerlink" title="Mac下配置"></a>Mac下配置</h2><p>选择<code>Tools &gt; Build System &gt; New Build System</code>创建一个编译模板，名字命名为<code>C++11</code></p>
+<p><img src="http://cdn.sshpark.com.cn/20170812150246958137367.png" alt="20170812150246958137367.png"></p>
+<p>文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;cmd&quot;: [&quot;g++&quot;, &quot;$&#123;file&#125;&quot;, &quot;-o&quot;, &quot;$&#123;file_path&#125;&#x2F;$&#123;file_base_name&#125;&quot;],</span><br><span class="line">    &quot;file_regex&quot;: &quot;^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$&quot;,</span><br><span class="line">    &quot;working_dir&quot;: &quot;$&#123;file_path&#125;&quot;,</span><br><span class="line">    &quot;selector&quot;: &quot;source.c, source.c++&quot;,</span><br><span class="line"></span><br><span class="line">    &quot;variants&quot;:</span><br><span class="line">    [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;Run&quot;,</span><br><span class="line">            &quot;cmd&quot;: [&quot;bash&quot;, &quot;-c&quot;, &quot;g++ -std&#x3D;c++11 &#39;$&#123;file&#125;&#39; -o &#39;a&#39; &amp;&amp; open -a terminal &#39;$&#123;file_path&#125;&#x2F;a&#39;&quot;]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置中的<code>open -a terminal</code>指的是从终端打开该文件， 如果不需要，可以将其去掉。<br> 编写一个简单的<code>c++</code>程序测试一下<br> <img src="http://cdn.sshpark.com.cn/20170812150247043771743.png" alt="20170812150247043771743.png"></p>
+<p><br></p>
+<h1 id="Windows下配置"><a href="#Windows下配置" class="headerlink" title="Windows下配置"></a>Windows下配置</h1><h2 id="c-环境设置"><a href="#c-环境设置" class="headerlink" title="c++环境设置"></a>c++环境设置</h2><ol>
+<li>在系统环境变量<code>Path</code>中添加<code>MinGW &gt; bin</code>所在目录，<br> <a href="https://sourceforge.net/projects/mingw/files/latest/download?source=files" target="_blank" rel="noopener">点击下载MinGW</a><br> <img src="http://cdn.sshpark.com.cn/20170814150272417980528.png" alt="20170814150272417980528.png"></li>
+<li>同样在<code>Tools &gt; Build System &gt; New Build System</code>新建编译模板，保存为<code>C++11.sublime-build</code><br> <strong>内容为：</strong></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">C++.sublime-build</span><br><span class="line"></span><br><span class="line">&#123;   </span><br><span class="line">  &quot;encoding&quot;: &quot;utf-8&quot;,  </span><br><span class="line">  &quot;working_dir&quot;: &quot;$file_path&quot;,  </span><br><span class="line">  &quot;shell_cmd&quot;: &quot;g++ -Wall \&quot;$file_name\&quot; -o \&quot;$file_base_name\&quot;&quot;,   </span><br><span class="line">  &quot;file_regex&quot;: &quot;^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$&quot;,            </span><br><span class="line">  &quot;selector&quot;: &quot;source.c++&quot;,     </span><br><span class="line">  &quot;variants&quot;:   </span><br><span class="line">  [     </span><br><span class="line">    &#123;           </span><br><span class="line">      &quot;name&quot;: &quot;Run&quot;,            </span><br><span class="line">      &quot;shell_cmd&quot;: &quot;g++ -Wall  \&quot;$file\&quot; -o \&quot;$file_base_name\&quot; &amp;&amp; start cmd &#x2F;c \&quot;\&quot;$&#123;file_path&#125;&#x2F;$&#123;file_base_name&#125;\&quot; &amp; pause\&quot;&quot;     </span><br><span class="line">    &#125;   </span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h1 id="oj刷题常用模版"><a href="#oj刷题常用模版" class="headerlink" title="oj刷题常用模版"></a>oj刷题常用模版</h1><p>sublime中可以添加代码片段</p>
+<blockquote>
+<p>  创建方法：Tools （工具）&gt; Developer &gt; New Snippet（新片段）</p>
+</blockquote>
+<p>1、在新建的文件中添加如下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">&lt;snippet&gt;</span><br><span class="line">    &lt;content&gt;</span><br><span class="line">    &lt;![CDATA[</span><br><span class="line">#pragma comment(linker, &quot;&#x2F;STACK:1024000000,1024000000&quot;)</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;cstdlib&gt;</span><br><span class="line">#include &lt;cmath&gt;</span><br><span class="line">#include &lt;cctype&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;cstring&gt;</span><br><span class="line">#include &lt;algorithm&gt;</span><br><span class="line">#include &lt;stack&gt;</span><br><span class="line">#include &lt;queue&gt;</span><br><span class="line">#include &lt;set&gt;</span><br><span class="line">#include &lt;map&gt;</span><br><span class="line">#include &lt;ctime&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;fstream&gt;</span><br><span class="line">#include &lt;list&gt;</span><br><span class="line">#include &lt;iomanip&gt;</span><br><span class="line">#include &lt;numeric&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">typedef long long ll;</span><br><span class="line">typedef unsigned long long ull;</span><br><span class="line">#define ms(s) memset(s, 0, sizeof(s))</span><br><span class="line">const int inf &#x3D; 0x3f3f3f3f;</span><br><span class="line">#define LOCAL</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main(int argc, char * argv[]) </span><br><span class="line">&#123;</span><br><span class="line">    #ifdef LOCAL</span><br><span class="line">    freopen(&quot;&#x2F;Users&#x2F;huangjiaming&#x2F;Documents&#x2F;Algorithm&#x2F;oj&#x2F;data.in&quot;, &quot;r&quot;, stdin);</span><br><span class="line">    &#x2F;&#x2F;freopen(&quot;&#x2F;Users&#x2F;huangjiaming&#x2F;Documents&#x2F;Algorithm&#x2F;oj&#x2F;data.out&quot;, &quot;w&quot;, stdout);</span><br><span class="line">    #endif</span><br><span class="line"></span><br><span class="line">    $&#123;1:&#x2F;* code *&#x2F;&#125;</span><br><span class="line"></span><br><span class="line">    while (~scanf(&quot;%d&quot;, $&#123;2:&#x2F;* var *&#x2F;&#125;))</span><br><span class="line">    &#123;</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;]]&gt;</span><br><span class="line">    &lt;&#x2F;content&gt;</span><br><span class="line">    &lt;!-- Optional: Set a tabTrigger to define how to trigger the snippet --&gt;</span><br><span class="line">    &lt;tabTrigger&gt;acm&lt;&#x2F;tabTrigger&gt;</span><br><span class="line">    &lt;!-- Optional: Set a scope to limit where the snippet will trigger --&gt;</span><br><span class="line">    &lt;scope&gt;source.c++&lt;&#x2F;scope&gt;</span><br><span class="line">&lt;&#x2F;snippet&gt;</span><br></pre></td></tr></table></figure>
+<p>2、保存为<code>acm.sublime-snippet</code><br> 3、使用方法，在你的c++文件中输入<code>acm</code>关键字，再按下Tap键</p>
+<h2 id="效果如下"><a href="#效果如下" class="headerlink" title="效果如下"></a>效果如下</h2><p><img src="http://cdn.sshpark.com.cn/20170812150247176496944.gif" alt="20170812150247176496944.gif"></p>
+
+        </div></article>
+      <nav class="pagination"><a class="prev" href="/page/3/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">上一页</span>
+      </a>
+    </nav></section></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

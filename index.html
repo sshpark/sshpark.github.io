@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="多思考，少跟风"/><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><section id="posts" class="posts"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2020/08/26/MAML-%E6%A8%A1%E5%9E%8B%E6%97%A0%E5%85%B3%E7%9A%84%E5%85%83%E5%AD%A6%E4%B9%A0/">MAML: 模型无关的元学习</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-08-26
+        </span><span class="post-visits"
+             data-url="/2020/08/26/MAML-%E6%A8%A1%E5%9E%8B%E6%97%A0%E5%85%B3%E7%9A%84%E5%85%83%E5%AD%A6%E4%B9%A0/"
+             data-title="MAML: 模型无关的元学习">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>元学习是目前人工智能领域一个令人振奋的研究领域。大量的研究结果表明元学习已经在人工智能领域上取得了重大突破。基于优化方法的元学习中，MAML可以说是当中最有名的了，它是一种相当通用的优化算法，可以与基于梯度更新的算法兼容。</p>
+          <div class="read-more">
+            <a href="/2020/08/26/MAML-%E6%A8%A1%E5%9E%8B%E6%97%A0%E5%85%B3%E7%9A%84%E5%85%83%E5%AD%A6%E4%B9%A0/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2020/04/30/%E5%AD%A6%E5%A0%82%E4%BA%91-3-0-%E5%88%B7%E8%AF%BE%E4%BB%A3%E7%A0%81/">学堂云 3.0 刷课代码</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-04-30
+        </span><span class="post-visits"
+             data-url="/2020/04/30/%E5%AD%A6%E5%A0%82%E4%BA%91-3-0-%E5%88%B7%E8%AF%BE%E4%BB%A3%E7%A0%81/"
+             data-title="学堂云 3.0 刷课代码">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在学堂云刷课的时候，不能离开这个页面，否则的话视频会暂停。</p>
+<h1 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h1><p>在当前页面调试，并将下面的 <code>js</code> 代码输入带控制台中执行，然后就可以离开页面播放了，同时也可以开<strong>多个页面</strong>刷视频。</p>
+<p>代码写的很烂（边查边写），能用就好。。。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setInterval(<span class="function"><span class="params">()</span>=&gt;</span>&#123;<span class="built_in">document</span>.getElementById(<span class="string">'video'</span>).play()&#125;, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2020/04/22/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95-Horspool-Boyer-Moore-Sunday/">字符串匹配算法-Horspool,Boyer-Moore,Sunday</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-04-22
+        </span><span class="post-visits"
+             data-url="/2020/04/22/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95-Horspool-Boyer-Moore-Sunday/"
+             data-title="字符串匹配算法-Horspool,Boyer-Moore,Sunday">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="Horspool-算法"><a href="#Horspool-算法" class="headerlink" title="Horspool 算法"></a>Horspool 算法</h1><p><strong>Boyer-Moore</strong> 算法的简化版本。每次从模式串末尾开始匹配，匹配失败的话根据转移表确定下一次匹配开始的位置。具体介绍可以看看 <a href="https://blog.csdn.net/khwkhwkhw/article/details/51288502" target="_blank" rel="noopener">Horspool(字符串匹配)算法</a>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Horspool</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* src, <span class="keyword">const</span> <span class="keyword">char</span>* pattern)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">size_t</span> n = <span class="built_in">strlen</span>(src);</span><br><span class="line">    <span class="keyword">size_t</span> m = <span class="built_in">strlen</span>(pattern);</span><br><span class="line">    <span class="keyword">size_t</span> table[m];</span><br><span class="line">    <span class="comment">// 预处理转移表</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; m; i++) table[i] = m;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; m<span class="number">-1</span>; i++)</span><br><span class="line">        table[pattern[i]-<span class="string">'a'</span>] = m<span class="number">-1</span>-i;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">size_t</span> i = m<span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= n<span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="keyword">size_t</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (k &lt;= m<span class="number">-1</span> &amp;&amp; pattern[m<span class="number">-1</span>-k] == src[i-k]) k++;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (k == m) <span class="keyword">return</span> i-m+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> i += table[src[i]-<span class="string">'a'</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Boyer-Moore-算法"><a href="#Boyer-Moore-算法" class="headerlink" title="Boyer-Moore 算法"></a>Boyer-Moore 算法</h1><p>该算法常用于文本编辑器中的搜索匹配功能，相关<strong>介绍以及实现</strong>来自这篇博客 <a href="https://www.cnblogs.com/ECJTUACM-873284962/p/7637875.html" target="_blank" rel="noopener">从入门到精通之Boyer-Moore字符串搜索算法详解</a>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX_CHAR 256</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SIZE 256</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX(x, y) (x) &gt; (y) ? (x) : (y)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BoyerMoore</span><span class="params">(<span class="keyword">char</span> *pattern, <span class="keyword">int</span> m, <span class="keyword">char</span> *<span class="built_in">text</span>, <span class="keyword">int</span> n)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> <span class="built_in">text</span>[<span class="number">256</span>], pattern[<span class="number">256</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%s%s"</span>, <span class="built_in">text</span>, pattern);</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">text</span> == <span class="number">0</span> || pattern == <span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        BoyerMoore(pattern, <span class="built_in">strlen</span>(pattern), <span class="built_in">text</span>, <span class="built_in">strlen</span>(<span class="built_in">text</span>));</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">int</span> *<span class="built_in">array</span>, <span class="keyword">int</span> n, <span class="keyword">char</span> *arrayName)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s: "</span>, arrayName);</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>, <span class="built_in">array</span>[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PreBmBc</span><span class="params">(<span class="keyword">char</span> *pattern, <span class="keyword">int</span> m, <span class="keyword">int</span> bmBc[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; MAX_CHAR; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        bmBc[i] = m;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; m - <span class="number">1</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        bmBc[pattern[i]] = m - <span class="number">1</span> - i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*  printf("bmBc[]: ");</span></span><br><span class="line"><span class="comment">    for(i = 0; i &lt; m; i++)</span></span><br><span class="line"><span class="comment">    &#123;</span></span><br><span class="line"><span class="comment">        printf("%d ", bmBc[pattern[i]]);</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment">    printf("\n"); */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">suffix_old</span><span class="params">(<span class="keyword">char</span> *pattern, <span class="keyword">int</span> m, <span class="keyword">int</span> suff[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j;</span><br><span class="line"></span><br><span class="line">    suff[m - <span class="number">1</span>] = m;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(i = m - <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">    &#123;</span><br><span class="line">        j = i;</span><br><span class="line">        <span class="keyword">while</span>(j &gt;= <span class="number">0</span> &amp;&amp; pattern[j] == pattern[m - <span class="number">1</span> - i + j]) j--;</span><br><span class="line"></span><br><span class="line">        suff[i] = i - j;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">suffix</span><span class="params">(<span class="keyword">char</span> *pattern, <span class="keyword">int</span> m, <span class="keyword">int</span> suff[])</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> f, g, i;</span><br><span class="line"></span><br><span class="line">   suff[m - <span class="number">1</span>] = m;</span><br><span class="line">   g = m - <span class="number">1</span>;</span><br><span class="line">   <span class="keyword">for</span> (i = m - <span class="number">2</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">      <span class="keyword">if</span> (i &gt; g &amp;&amp; suff[i + m - <span class="number">1</span> - f] &lt; i - g)</span><br><span class="line">         suff[i] = suff[i + m - <span class="number">1</span> - f];</span><br><span class="line">      <span class="keyword">else</span> &#123;</span><br><span class="line">         <span class="keyword">if</span> (i &lt; g)</span><br><span class="line">            g = i;</span><br><span class="line">         f = i;</span><br><span class="line">         <span class="keyword">while</span> (g &gt;= <span class="number">0</span> &amp;&amp; pattern[g] == pattern[g + m - <span class="number">1</span> - f])</span><br><span class="line">            --g;</span><br><span class="line">         suff[i] = f - g;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//   print(suff, m, "suff[]");</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PreBmGs</span><span class="params">(<span class="keyword">char</span> *pattern, <span class="keyword">int</span> m, <span class="keyword">int</span> bmGs[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j;</span><br><span class="line">    <span class="keyword">int</span> suff[SIZE];  </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算后缀数组</span></span><br><span class="line">    suffix(pattern, m, suff);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 先全部赋值为m，包含Case3</span></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; m; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        bmGs[i] = m;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Case2</span></span><br><span class="line">    j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(i = m - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(suff[i] == i + <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span>(; j &lt; m - <span class="number">1</span> - i; j++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span>(bmGs[j] == m)</span><br><span class="line">                    bmGs[j] = m - <span class="number">1</span> - i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Case1</span></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt;= m - <span class="number">2</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        bmGs[m - <span class="number">1</span> - suff[i]] = m - <span class="number">1</span> - i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//  print(bmGs, m, "bmGs[]");</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BoyerMoore</span><span class="params">(<span class="keyword">char</span> *pattern, <span class="keyword">int</span> m, <span class="keyword">char</span> *<span class="built_in">text</span>, <span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, bmBc[MAX_CHAR], bmGs[SIZE];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Preprocessing</span></span><br><span class="line">    PreBmBc(pattern, m, bmBc);</span><br><span class="line">    PreBmGs(pattern, m, bmGs);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Searching</span></span><br><span class="line">    j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(j &lt;= n - m)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(i = m - <span class="number">1</span>; i &gt;= <span class="number">0</span> &amp;&amp; pattern[i] == <span class="built_in">text</span>[i + j]; i--);</span><br><span class="line">        <span class="keyword">if</span>(i &lt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"Find it, the position is %d\n"</span>, j);</span><br><span class="line">            j += bmGs[<span class="number">0</span>];</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            j += MAX(bmBc[<span class="built_in">text</span>[i + j]] - m + <span class="number">1</span> + i, bmGs[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"No find.\n"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Sunday-算法"><a href="#Sunday-算法" class="headerlink" title="Sunday 算法"></a>Sunday 算法</h1><p>一种比 <strong>BM</strong> 算法更快的查找算法。</p>
+<p><strong>Sunday</strong> 算法是从前往后匹配，在匹配失败时关注的是文本串中参加匹配的最末位字符的下一位字符。</p>
+<ul>
+<li>如果该字符没有在模式串中出现则直接跳过，即移动位数 = 匹配串长度 + 1；</li>
+<li>否则，其移动位数 = 模式串中最右端的该字符到末尾的距离 +1。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sunday</span><span class="params">(<span class="keyword">char</span> *<span class="built_in">text</span>, <span class="keyword">char</span> *patt)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">size_t</span> pre[<span class="number">256</span>];</span><br><span class="line">    <span class="keyword">size_t</span> *shift = pre;</span><br><span class="line">    <span class="keyword">size_t</span> i, m = <span class="built_in">strlen</span>(patt), n = <span class="built_in">strlen</span>(<span class="built_in">text</span>);</span><br><span class="line">    <span class="comment">// init</span></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">256</span>; i++) *(shift+i) = m+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; m; i++) *(shift + (<span class="keyword">unsigned</span> <span class="keyword">char</span>)(*(patt+i))) = m-i;</span><br><span class="line">    i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= n-m) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">memcmp</span>(patt, <span class="built_in">text</span>+i, m) == <span class="number">0</span>) <span class="keyword">return</span> i;</span><br><span class="line">        i += shift[<span class="built_in">text</span>[i+m]];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2020/04/17/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E6%8E%A2%E7%B4%A2%E5%A3%B0%E9%9F%B3%E5%92%8C%E6%96%87%E6%9C%AC%E7%9A%84%E4%B8%96%E7%95%8C%EF%BC%888%EF%BC%89/">用C++和SFML写游戏-探索音频和文本的世界（8）</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-04-17
+        </span><span class="post-visits"
+             data-url="/2020/04/17/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E6%8E%A2%E7%B4%A2%E5%A3%B0%E9%9F%B3%E5%92%8C%E6%96%87%E6%9C%AC%E7%9A%84%E4%B8%96%E7%95%8C%EF%BC%888%EF%BC%89/"
+             data-title="用C++和SFML写游戏-探索音频和文本的世界（8）">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h1 id="1-Audio-模块概览"><a href="#1-Audio-模块概览" class="headerlink" title="1. Audio 模块概览"></a>1. Audio 模块概览</h1><p>到目前为止，我们已经用过的模块有 <strong>window，graphics 和 system</strong> 。<strong>window</strong> 模块主要用来操作窗口以及设置窗口的属性，<strong>graphics</strong> 模块为我们在屏幕绘制图形提供了一系列方便的api，在<strong>system</strong> 模块我们用到了  <code>Time</code> 类和 <code>Class</code> 类。</p>
+<p><strong>SFML</strong> 中还有两个模块 —- <strong>audio</strong> 以及 <strong>network</strong>，后续会会慢慢介绍。</p>
+<p>在 <strong>audio</strong> 模块中，我们必须掌握的两个类是 <code>Sf::Sound</code> 和 <code>sf::Music</code>。字面意思，两个类都是能够播放一个音频文件的。下面来简单介绍一下两者：</p>
+          <div class="read-more">
+            <a href="/2020/04/17/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E6%8E%A2%E7%B4%A2%E5%A3%B0%E9%9F%B3%E5%92%8C%E6%96%87%E6%9C%AC%E7%9A%84%E4%B8%96%E7%95%8C%EF%BC%888%EF%BC%89/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2020/03/02/Softmax-%E5%9B%9E%E5%BD%92%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E6%8E%A8%E5%AF%BC/">Softmax 回归反向传播推导</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-03-02
+        </span><span class="post-visits"
+             data-url="/2020/03/02/Softmax-%E5%9B%9E%E5%BD%92%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E6%8E%A8%E5%AF%BC/"
+             data-title="Softmax 回归反向传播推导">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>基础，记录一下</p>
+          <div class="read-more">
+            <a href="/2020/03/02/Softmax-%E5%9B%9E%E5%BD%92%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E6%8E%A8%E5%AF%BC/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2020/02/21/Logistic-regression-%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E6%8E%A8%E5%AF%BC/">Logistic regression 反向传播推导（带L2正则）</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-02-21
+        </span><span class="post-visits"
+             data-url="/2020/02/21/Logistic-regression-%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E6%8E%A8%E5%AF%BC/"
+             data-title="Logistic regression 反向传播推导（带L2正则）">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>做个笔记📒</p>
+          <div class="read-more">
+            <a href="/2020/02/21/Logistic-regression-%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E6%8E%A8%E5%AF%BC/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2020/01/04/SFML-2-5-1-%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80/">SFML 2.5.1 下载地址</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-01-04
+        </span><span class="post-visits"
+             data-url="/2020/01/04/SFML-2-5-1-%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80/"
+             data-title="SFML 2.5.1 下载地址">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>SFML 常用版本国内下载</p>
+          <div class="read-more">
+            <a href="/2020/01/04/SFML-2-5-1-%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2019/12/29/biweekly-contest-16/">biweekly-contest-16</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-12-29
+        </span><span class="post-visits"
+             data-url="/2019/12/29/biweekly-contest-16/"
+             data-title="biweekly-contest-16">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>好久没刷 leetcode，现在居然出了夜喵专场。比赛结束的时候已经凌晨 12 点了。这一场主要的用到的知识有动态规划，BFS。</p>
+          <div class="read-more">
+            <a href="/2019/12/29/biweekly-contest-16/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2019/12/27/%E3%80%8A%E6%95%8F%E6%8D%B7%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E3%80%8B%E7%9F%A5%E8%AF%86%E8%A6%81%E7%82%B9%E6%95%B4%E7%90%86/">《敏捷项目管理》知识要点整理</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-12-27
+        </span><span class="post-visits"
+             data-url="/2019/12/27/%E3%80%8A%E6%95%8F%E6%8D%B7%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E3%80%8B%E7%9F%A5%E8%AF%86%E8%A6%81%E7%82%B9%E6%95%B4%E7%90%86/"
+             data-title="《敏捷项目管理》知识要点整理">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>敏捷项目管理的一些知识点，内容来自课堂 PPT。</p>
+          <div class="read-more">
+            <a href="/2019/12/27/%E3%80%8A%E6%95%8F%E6%8D%B7%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E3%80%8B%E7%9F%A5%E8%AF%86%E8%A6%81%E7%82%B9%E6%95%B4%E7%90%86/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2019/12/20/torch-distributed-%E4%B8%ADCollective-functions-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F/">torch.distributed 中 Collective functions 的使用方式</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-12-20
+        </span><span class="post-visits"
+             data-url="/2019/12/20/torch-distributed-%E4%B8%ADCollective-functions-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F/"
+             data-title="torch.distributed 中 Collective functions 的使用方式">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>使用 pytorch 中的分布式包可以轻松的实现并行计算，但是在官方文档中没有 Collective functions 的示例代码，而且网络上对这方面的介绍也比较少。对并行计算不熟悉的人使用起来可能会有点小问题，因此这里通过简单的代码展示了如何去使用 Collective functions。</p>
+          <div class="read-more">
+            <a href="/2019/12/20/torch-distributed-%E4%B8%ADCollective-functions-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <nav class="pagination"><a class="next" href="/page/2/">
+        <span class="next-text">下一页</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></section></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

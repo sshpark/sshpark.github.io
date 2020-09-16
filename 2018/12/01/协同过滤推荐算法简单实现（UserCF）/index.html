@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="协同过滤推荐算法简单实现（UserCF）"/><meta name="keywords" content="协同过滤, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2018/12/01/协同过滤推荐算法简单实现（UserCF）/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>协同过滤推荐算法简单实现（UserCF） - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">协同过滤推荐算法简单实现（UserCF）
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-12-01
+        </span><span class="post-visits"
+             data-url="/2018/12/01/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%EF%BC%88UserCF%EF%BC%89/"
+             data-title="协同过滤推荐算法简单实现（UserCF）">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据集的准备"><span class="toc-text">数据集的准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#算法实现"><span class="toc-text">算法实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、求用户的相似度"><span class="toc-text">1、求用户的相似度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、计算推荐"><span class="toc-text">2、计算推荐</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、得到推荐列表"><span class="toc-text">3、得到推荐列表</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#完整代码"><span class="toc-text">完整代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#写在最后"><span class="toc-text">写在最后</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p><strong>想要了解一个算法，最好的做好就是自己实现一遍。</strong>前面简单讲了什么是<a href="http://sshpark.com.cn/2018/11/26/笔记：协同过滤推荐算法">协同过滤</a>，那么在本文，将会尝试实现它。本文实现的是<strong>基于用户的协同过滤算法</strong> ——这种算法给用户推荐和他兴趣相似的其他用户喜欢的物品。感谢<a href="http://product.dangdang.com/22775361.html" target="_blank" rel="noopener">《推荐系统实践》</a>一书的对这方面详细描述。<br><a id="more"></a><br><br></p>
+<h3 id="数据集的准备"><a href="#数据集的准备" class="headerlink" title="数据集的准备"></a>数据集的准备</h3><p>采用GroupLens提供的MovieLens数据集。MovieLens数据集有3个不同的版本，这里采用中等大小的数据集。该数据集包含6000多用户对4000多部电影的100万条评分。该数据集是一个评分数据集，用户可以给电影评5个不同等级的分数(1~5分)。<a href="http://grouplens.org/datasets/movielens/1m/" target="_blank" rel="noopener">数据集下载地址</a></p>
+<p>解压后可以看到以下文件</p>
+<p><img src="http://cdn.sshpark.com.cn/20181202161544.png" alt="数据集"></p>
+<p><br></p>
+<h3 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h3><h4 id="1、求用户的相似度"><a href="#1、求用户的相似度" class="headerlink" title="1、求用户的相似度"></a>1、求用户的相似度</h4><p>通过余弦相似度公式计算，给定用户<code>u</code>和用户<code>v</code>，令<code>N(u)</code>表示用户<code>u</code>曾经有过正反馈的物品集合，令<code>N(v)</code><br>为用户<code>v</code>曾经有过正反馈的物品集合。</p>
+<script type="math/tex; mode=display">
+W_{uv} = \frac{|N(u) \cap N(v)|}{\sqrt{|N(u)||N(v)|}}</script><p><br></p>
+<p>用下图举例说明UserCF计算用户兴趣相似度的例子。在该例中，用户A对物品{a, b, d}有过行为，用户B对物品{a, c}有过行为，</p>
+<p><img src="http://cdn.sshpark.com.cn/20181202201603.png" alt="图片来源于《推荐系统实战》"></p>
+<p>利用余弦相似度公式计算用户A和用户B的兴趣相似度为:</p>
+<script type="math/tex; mode=display">
+W_{AB} = \frac{|\{a,b,d\} \cap \{a,c\}|}{\sqrt{|\{a,b,d\}||\{a,c\}|}} = \frac{1}{\sqrt{6}}</script><p>实际上，很多用户相互之间并没有对同样的物品产生过行为，所以公式中的 $|N(u) \cap N(v)|$ 大多数时候为0。因此我们可以先找出$|N(u) \cap N(v)| \ne 0$ 的用户对，然后再做计算。</p>
+<p>相关实现如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">calc_user_sim</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; C[usernum]; <span class="comment">// 两个用户有看过同一部电影</span></span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; C_count[usernum]; <span class="comment">// 记录两个用户共同看的电影数，即|N(u) \cap N(v)|</span></span><br><span class="line">        <span class="keyword">int</span> N[usernum]; <span class="comment">// 用户看过的电影数目</span></span><br><span class="line">        <span class="built_in">memset</span>(N, <span class="number">0</span>, <span class="keyword">sizeof</span> N);</span><br><span class="line">        <span class="comment">// 计算两个用户之间看过的相同电影，计算与当前用户u看过同一部电影的其他用户v</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> movie : movies) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">auto</span> u : movie2user[movie]) &#123; <span class="comment">// movie2user指的是看过这部电影的用户有哪些</span></span><br><span class="line">                N[u]++;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">auto</span> v : movie2user[movie]) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (u == v) <span class="keyword">continue</span>;</span><br><span class="line">                    C[u].insert(v);</span><br><span class="line">                    C_count[u][v]++;</span><br><span class="line">                &#125;   </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 计算用户相似度</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> u = <span class="number">1</span>; u &lt; usernum; u++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">auto</span> related_user : C[u]) &#123;</span><br><span class="line">                W[u][related_user] = C_count[u][related_user]*<span class="number">1.0</span> / <span class="built_in">sqrt</span>(N[u]*N[related_user]);</span><br><span class="line">                <span class="comment">// printf("%d %d %lf\n", u, related_user, W[u][related_user]);</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"用户相似度计算完成...\n"</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h4 id="2、计算推荐"><a href="#2、计算推荐" class="headerlink" title="2、计算推荐"></a>2、计算推荐</h4><p>得到用户的相似度之后，UserCF算法会给用户推荐和他兴趣最相似的<code>K</code>个用户喜欢的物品。下面的公式度量了UserCF算法中用户<code>u</code>对物品<code>i</code>的感兴趣程度:</p>
+<script type="math/tex; mode=display">
+p(u, i) = \sum_{v \in S(u, K) \cap N(i)}{w_{uv}r_{vi}}</script><p>其中，$S(u, K)$包含和用户u兴趣最接近的K个用户，$N(i)$是对物品i有过行为的用户集合，$ w<em>{uv} $是用户<code>u</code>和用户<code>v</code>的兴趣相似度，$ r</em>{vi} $代表用户v对物品i的兴趣，因为使用的是单一行为的隐反馈数据，所以所有的$ r_{vi}  = 1$。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &gt; recommend(<span class="keyword">int</span> userId) &#123;</span><br><span class="line">        <span class="keyword">int</span> K = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; tmp_rank; <span class="comment">// 计算中间的计算过程，保存的是p(u, i)</span></span><br><span class="line">        <span class="built_in">vector</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &gt; rnk; <span class="comment">// 最后的返回数组</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">vector</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &gt; k_sim_users;</span><br><span class="line">        <span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; watched_movies;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> val : trainset[userId])</span><br><span class="line">            watched_movies.insert(val.first);</span><br><span class="line">		</span><br><span class="line">    	<span class="comment">// 这里做的是map按value从大到小排序操作，得到前k个相似用户</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = W[userId].<span class="built_in">begin</span>(); it != W[userId].<span class="built_in">end</span>(); it++) &#123;</span><br><span class="line">            k_sim_users.push_back(make_pair(it-&gt;first, it-&gt;second));</span><br><span class="line">        &#125;</span><br><span class="line">        sort(k_sim_users.<span class="built_in">begin</span>(), k_sim_users.<span class="built_in">end</span>(), </span><br><span class="line">            [](<span class="keyword">const</span> pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &amp;x, <span class="keyword">const</span> pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &amp;y) -&gt; <span class="keyword">double</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> x.second &gt; y.second;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = k_sim_users.<span class="built_in">begin</span>(); K &lt; n_sim_user &amp;&amp; it != k_sim_users.<span class="built_in">end</span>(); it++) &#123;</span><br><span class="line">            <span class="keyword">int</span> similar_user = it-&gt;first;</span><br><span class="line">            <span class="keyword">double</span> similarity_factor = it-&gt;second;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">auto</span> movie : trainset[similar_user]) &#123;</span><br><span class="line">                <span class="keyword">if</span> (watched_movies.<span class="built_in">find</span>(movie.first) != watched_movies.<span class="built_in">end</span>())</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">				<span class="comment">// 计算p(u, i)</span></span><br><span class="line">                tmp_rank[movie.first] += similarity_factor;</span><br><span class="line">            &#125;</span><br><span class="line">            K++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it : tmp_rank) &#123;</span><br><span class="line">            rnk.push_back(make_pair(it.first, it.second));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        sort(rnk.<span class="built_in">begin</span>(), rnk.<span class="built_in">end</span>(), </span><br><span class="line">            [](<span class="keyword">const</span> pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &amp;x, <span class="keyword">const</span> pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &amp;y) -&gt; <span class="keyword">double</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> x.second &gt; y.second;</span><br><span class="line">            &#125;);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"推荐列表前 %d 项已生成...\n"</span>, n_rec_movie);</span><br><span class="line">        <span class="keyword">return</span> rnk;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<!--more-->
+<p><br></p>
+<h4 id="3、得到推荐列表"><a href="#3、得到推荐列表" class="headerlink" title="3、得到推荐列表"></a>3、得到推荐列表</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">数据集分割成功...</span><br><span class="line">训练集大小: 700387, 测试集大小: 299822</span><br><span class="line">训练集电影数: 3649, 训练集用户数: 6040</span><br><span class="line">用户相似度计算完成...</span><br><span class="line"></span><br><span class="line">推荐列表前 10 项已生成...</span><br><span class="line">推荐给用户 23 的电影:</span><br><span class="line">电影编号    推荐系数</span><br><span class="line">    110 2.673651</span><br><span class="line">   1573 2.673130</span><br><span class="line">   3471 2.672973</span><br><span class="line">   1210 2.668150</span><br><span class="line">   3702 2.346376</span><br><span class="line">    356 2.345560</span><br><span class="line">   3527 2.344213</span><br><span class="line">    527 2.328069</span><br><span class="line">   1610 2.328069</span><br><span class="line">   1387 2.327529</span><br><span class="line"></span><br><span class="line">总用时: 258.973253s</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h3 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Node pair<span class="meta-string">&lt;int, int&gt; </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> usernum 7000</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> movienum 200000</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserBaseCF</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    UserBaseCF() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">clock_t</span> start, <span class="built_in">stop</span>;</span><br><span class="line">        start = clock();</span><br><span class="line">        generate_dataset(<span class="string">""</span>, <span class="number">7</span>); <span class="comment">// 这里填入数据文件地址</span></span><br><span class="line">        calc_user_sim();</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &gt; v = recommend(<span class="number">23</span>); </span><br><span class="line">        <span class="built_in">stop</span> = clock();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"推荐给用户 23 的电影:\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"电影编号    推荐系数\n"</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n_rec_movie; i++)</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%7d %lf\n"</span>, v[i].first, v[i].second);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n总用时: %fs\n"</span>, (<span class="keyword">double</span>)(<span class="built_in">stop</span>-start)/CLOCKS_PER_SEC);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">vector</span>&lt;Node&gt; trainset[usernum];</span><br><span class="line">    <span class="built_in">vector</span>&lt;Node&gt; testset[usernum];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> n_sim_user = <span class="number">10</span>;    <span class="comment">// 相似用户数</span></span><br><span class="line">    <span class="keyword">int</span> n_rec_movie = <span class="number">10</span>;   <span class="comment">// 推荐电影数</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; users;</span><br><span class="line">    <span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; movies;</span><br><span class="line">    <span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; movie2user[movienum];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">map</span>&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; W[usernum];</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">generate_dataset</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* filename, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        FILE* fp = fopen(filename, <span class="string">"rt"</span>);</span><br><span class="line">        <span class="keyword">int</span> userId, movieId, timestamp;</span><br><span class="line">        <span class="keyword">double</span> rating;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> train_len, test_len;</span><br><span class="line"></span><br><span class="line">        train_len = test_len = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        srand(time(<span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="built_in">fscanf</span>(fp, <span class="string">"%d::%d::%lf::%d"</span>, &amp;userId, &amp;movieId, &amp;rating, &amp;timestamp) != EOF) &#123;</span><br><span class="line">            <span class="keyword">if</span> (rand()%<span class="number">10</span> &lt; k) &#123;</span><br><span class="line">                users.insert(userId);</span><br><span class="line">                movies.insert(movieId);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 电影-用户倒排表</span></span><br><span class="line">                movie2user[movieId].insert(userId);</span><br><span class="line"></span><br><span class="line">                trainset[userId].push_back(make_pair(movieId, rating));</span><br><span class="line">                train_len++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                testset[userId].push_back(make_pair(movieId, rating));</span><br><span class="line">                test_len++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"数据集分割成功...\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"训练集大小: %d, 测试集大小: %d\n"</span>, train_len, test_len);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"训练集电影数: %lu, 训练集用户数: %lu\n"</span>, movies.<span class="built_in">size</span>(), users.<span class="built_in">size</span>());</span><br><span class="line"></span><br><span class="line">        fclose(fp);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">calc_user_sim</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// for (auto movie : movies) &#123;</span></span><br><span class="line">        <span class="comment">//     printf("%d:", movie);</span></span><br><span class="line">        <span class="comment">//     for (auto i : movie2user[movie]) </span></span><br><span class="line">        <span class="comment">//         printf("%d ", i);</span></span><br><span class="line">        <span class="comment">//     printf("\n");</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; C[usernum]; <span class="comment">// 两个用户有看过同一部电影</span></span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; C_count[usernum]; <span class="comment">// 记录两个用户共同看的电影数</span></span><br><span class="line">        <span class="keyword">int</span> N[usernum]; <span class="comment">// 用户看过的电影数目</span></span><br><span class="line">        <span class="built_in">memset</span>(N, <span class="number">0</span>, <span class="keyword">sizeof</span> N);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> movie : movies) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">auto</span> u : movie2user[movie]) &#123;</span><br><span class="line">                N[u]++;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">auto</span> v : movie2user[movie]) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (u == v) <span class="keyword">continue</span>;</span><br><span class="line">                    C[u].insert(v);</span><br><span class="line">                    C_count[u][v]++;</span><br><span class="line">                &#125;   </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// for (auto i : users) &#123;</span></span><br><span class="line">        <span class="comment">//     printf("%d:", i);</span></span><br><span class="line">        <span class="comment">//     for (auto j : C[i]) &#123;</span></span><br><span class="line">        <span class="comment">//         printf("%d ", j);</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     printf("\n");</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> u = <span class="number">1</span>; u &lt; usernum; u++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">auto</span> related_user : C[u]) &#123;</span><br><span class="line">                W[u][related_user] = C_count[u][related_user]*<span class="number">1.0</span> / <span class="built_in">sqrt</span>(N[u]*N[related_user]);</span><br><span class="line">                <span class="comment">// printf("%d %d %lf\n", u, related_user, W[u][related_user]);</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"用户相似度计算完成...\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="built_in">vector</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &gt; recommend(<span class="keyword">int</span> userId) &#123;</span><br><span class="line">        <span class="keyword">int</span> K = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; tmp_rank;</span><br><span class="line">        <span class="built_in">vector</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &gt; rnk;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">vector</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &gt; k_sim_users;</span><br><span class="line">        <span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; watched_movies;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> val : trainset[userId])</span><br><span class="line">            watched_movies.insert(val.first);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = W[userId].<span class="built_in">begin</span>(); it != W[userId].<span class="built_in">end</span>(); it++) &#123;</span><br><span class="line">            k_sim_users.push_back(make_pair(it-&gt;first, it-&gt;second));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        sort(k_sim_users.<span class="built_in">begin</span>(), k_sim_users.<span class="built_in">end</span>(), </span><br><span class="line">            [](<span class="keyword">const</span> pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &amp;x, <span class="keyword">const</span> pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &amp;y) -&gt; <span class="keyword">double</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> x.second &gt; y.second;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = k_sim_users.<span class="built_in">begin</span>(); K &lt; n_sim_user &amp;&amp; it != k_sim_users.<span class="built_in">end</span>(); it++) &#123;</span><br><span class="line">            <span class="keyword">int</span> similar_user = it-&gt;first;</span><br><span class="line">            <span class="keyword">double</span> similarity_factor = it-&gt;second;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">auto</span> movie : trainset[similar_user]) &#123;</span><br><span class="line">                <span class="keyword">if</span> (watched_movies.<span class="built_in">find</span>(movie.first) != watched_movies.<span class="built_in">end</span>())</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">                tmp_rank[movie.first] += similarity_factor;</span><br><span class="line">            &#125;</span><br><span class="line">            K++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it : tmp_rank) &#123;</span><br><span class="line">            rnk.push_back(make_pair(it.first, it.second));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        sort(rnk.<span class="built_in">begin</span>(), rnk.<span class="built_in">end</span>(), </span><br><span class="line">            [](<span class="keyword">const</span> pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &amp;x, <span class="keyword">const</span> pair&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; &amp;y) -&gt; <span class="keyword">double</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> x.second &gt; y.second;</span><br><span class="line">            &#125;);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"推荐列表前 %d 项已生成...\n"</span>, n_rec_movie);</span><br><span class="line">        <span class="keyword">return</span> rnk;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    UserBaseCF *test = <span class="keyword">new</span> UserBaseCF();</span><br><span class="line">    test-&gt;test();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>在这里，我用的是c++语言实现，其中有很多的不足之处，欢迎大家指出。如果觉得这份c++代码实现的UserCF不好理解，可以看看<a href="https://github.com/Lockvictor/MovieLens-RecSys/blob/8d4575c274f7bf87ddb80fe2b448801901070618/usercf.py" target="_blank" rel="noopener">python实现的UserCF</a>。</p>
+<p>实际中的UserCF实现要复杂很多。除此之外，还有ItemCF，算法过程差不多，这里就不做实现了。</p>
+<p>评价一个推荐算法的好坏可以通过以下指标：</p>
+<ul>
+<li><p>对用户u推荐N个物品(记为R(u))，令用户u在测试集上喜欢的物品集合为T(u)，然后可以通 </p>
+<p>过准确率/召回率评测推荐算法的精度:</p>
+<script type="math/tex; mode=display">
+Recall = \frac{\sum_{u}{|R(u) \cap T(u)|}}{\sum_{u}{|T(u)|}} \\\
+Precision = \frac{\sum_{u}{|R(u) \cap T(u)|}}{\sum_{u}{|R(u)|}}</script><p>召回率描述有多少比例的用户—物品评分记录包含在最终的推荐列表中，而准确率描述最终<br>的推荐列表中有多少比例是发生过的用户—物品评分记录</p>
+</li>
+<li><p>覆盖率反映了推荐算法发掘长尾的能力，覆盖率越高，说明推荐算法越能够将长尾中的物品推荐给用户。</p>
+<script type="math/tex; mode=display">
+Coverage = \frac{|\cup_{u \in U} R(u)|}{|I|}</script><p>覆盖率表示最终的推荐列表中包含多大比例的物品。如果所有的物品都被推荐给至少一个用户，那么覆盖率就是100%。</p>
+</li>
+</ul>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/">协同过滤</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2018/12/04/kuangbin%E5%B8%A6%E4%BD%A0%E9%A3%9E-%E4%B8%93%E9%A2%98%E4%BA%8C%E5%8D%81%E4%B8%80-%E6%A6%82%E7%8E%87-%E6%9C%9F%E6%9C%9B/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">[kuangbin带你飞]专题二十一 概率&期望</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2018/11/26/%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/">
+        <span class="next-text nav-default">笔记：协同过滤推荐算法</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

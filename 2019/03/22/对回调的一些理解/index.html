@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="理解c语言中的回调函数"/><meta name="keywords" content="Android, C, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2019/03/22/对回调的一些理解/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>理解c语言中的回调函数 - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">理解c语言中的回调函数
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-03-22
+        </span><span class="post-visits"
+             data-url="/2019/03/22/%E5%AF%B9%E5%9B%9E%E8%B0%83%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/"
+             data-title="理解c语言中的回调函数">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#通过一个例子简单介绍回调函数的使用"><span class="toc-text">通过一个例子简单介绍回调函数的使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#题外话（Kotlin中使用接口实现回调）"><span class="toc-text">题外话（Kotlin中使用接口实现回调）</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>来看看维基百科中如何定义回调函数</p>
+<blockquote>
+<p>在计算机程序设计中，回调函数，或简称回调，是指通过函数参数传递到其它代码的，某一块可执行代码的引用。这一设计允许了底层代码调用在高层定义的子程序。</p>
+</blockquote>
+<p>这段话不是那么好理解，不同语言实现回调的方式有些许不同。其实可以这样理解，回调就是 <strong>在一个函数中调用另外一个函数</strong>。</p>
+<p>在 <strong>c</strong> 语言中，回调是使用函数指针来实现的。 函数指针——顾名思义，是指向一个函数的指针。通常函数指针有两个方面的用途，一个是<strong>转换表</strong>（jump table），另一个是<strong>作为参数传递给一个函数</strong>。</p>
+<p>下面是两个函数指针的声明</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> (*f)(<span class="keyword">int</span>, <span class="keyword">float</span>);</span><br><span class="line"><span class="keyword">int</span> *(*g[])(<span class="keyword">int</span>, <span class="keyword">float</span>);</span><br></pre></td></tr></table></figure>
+<p>前者把 <strong>f</strong> 声明为一个函数指针，它所指的函数接受两个参数，分别是一个整型值和浮点型值，并返回一个整型值。后者把 <strong>g</strong> 声明为一个数组，数组的元素类型是一个函数指针，它所指向的函数接受两个参数，分别是一个整型值和浮点型值，并返回一个整型指针。</p>
+<p>需要注意的是，简单声明一个函数指针并不意味着它马上就可以使用。和其他指针一样，对函数指针执行间接访问之前必须把它初始化为指向某个函数。下面的代码段说明了一种初始化函数指针的方法。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*pf)(<span class="keyword">int</span>) = f;</span><br></pre></td></tr></table></figure>
+<p>第 2 个声明创建了函数指针 <strong>pf</strong>，并把它初始化为指向函数 <strong>f</strong>。函数指针的初始化也可以通过一条赋值语句来完成。在函数指针的初始化之前具有 <strong>f</strong> 的原型是很重要的，否则编译器就无法检查 <strong>f</strong> 的类型是否与 <strong>pf</strong> 所指向的类型一致。</p>
+<p><br></p>
+<a id="more"></a>
+<h3 id="通过一个例子简单介绍回调函数的使用"><a href="#通过一个例子简单介绍回调函数的使用" class="headerlink" title="通过一个例子简单介绍回调函数的使用"></a>通过一个例子简单介绍回调函数的使用</h3><p>大家应该都对 <strong>c</strong> 语言的库函数 <strong>qsort</strong> 有所了解，<strong>qsort</strong> 声明如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">qsort</span><span class="params">(<span class="keyword">void</span> *base, <span class="keyword">size_t</span> nitems, <span class="keyword">size_t</span> <span class="built_in">size</span>, <span class="keyword">int</span> (*compar)(<span class="keyword">const</span> <span class="keyword">void</span> *, <span class="keyword">const</span> <span class="keyword">void</span>*))</span></span></span><br></pre></td></tr></table></figure>
+<p>可以看到，它的第三个参数是一个函数指针，传入两个没有定义指针指向的类型的参数<strong>a</strong>， <strong>b</strong>，返回一个整型值。实际上这里使用了回调函数。通过回调函数，<strong>qsort</strong> 可以在运行时调用用户定义的函数（底层代码调用在高层定义的子程序）。</p>
+<p>这里我们设计一个简单的 <strong>sort</strong> 函数，来理解回调过程</p>
+<p>1、定义函数指针</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*compar)</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> *a, <span class="keyword">const</span> <span class="keyword">int</span> *b)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>2、自定义 <strong>sort</strong> 函数，为了简单，这里使用<strong>冒泡排序</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> *<span class="title">sort</span><span class="params">(<span class="keyword">int</span> *nums, <span class="keyword">int</span> n, compar cmp)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> *target = <span class="built_in">malloc</span>(n*<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!target) perror(<span class="string">"Memory error"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memcpy</span>(target, num, n * <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = i+<span class="number">1</span>; j &lt; n; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cmp(target[i], target[j]) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                target[i] ^= target[j] ^= target[i] ^= target[j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> target;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3、实现函数回调</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*compar)</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> *a, <span class="keyword">const</span> <span class="keyword">int</span> *b)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义实现回调函数的"调用函数"</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> *<span class="title">sort</span><span class="params">(<span class="keyword">int</span> *nums, <span class="keyword">int</span> n, compar cmp)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> *target = <span class="built_in">malloc</span>(n*<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!target) perror(<span class="string">"Memory error"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memcpy</span>(target, num, n * <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = i+<span class="number">1</span>; j &lt; n; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cmp(target[i], target[j]) &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">                target[i] ^= target[j] ^= target[i] ^= target[j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> target;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义回调函数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cmp1</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a &lt; b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a[<span class="number">10</span>] = &#123;<span class="number">1</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">10</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> *x = bubble_sort(a, <span class="number">7</span>, cmp1);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">7</span>; i++)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>, x[i]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>运行结果：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 1 3 4 4 5 10</span><br></pre></td></tr></table></figure>
+<p>调用函数向其函数中传递 <code>int (*compar)(const int *a, const int *b);</code>这是 <code>int cmp1(int a, int b)</code> 函数的入口地址，即 <strong>PC</strong> 指针可以通过移动到该地址执行<code>int cmp1(int a, int b)</code>函数，可以通过类比数组来理解。</p>
+<p>实现函数调用中，函数调用了“调用函数”，再在其中进一步调用被“调用函数”。相比于主函数直接调用“被调函数”，这种方法为使用者，而不是开发者提供了灵活的接口。另外，函数入口可以像变量一样设定同样为开发者提供了灵活性。</p>
+<p><br></p>
+<h3 id="题外话（Kotlin中使用接口实现回调）"><a href="#题外话（Kotlin中使用接口实现回调）" class="headerlink" title="题外话（Kotlin中使用接口实现回调）"></a>题外话（Kotlin中使用接口实现回调）</h3><p>在<strong>Android</strong>开发中，也经常会遇到回调的使用。由于<strong>Kotlin</strong>语言没有函数指针的概念，实现回调的话可以通过接口来实现。在这里，我们声明一个接口，而不是一个函数指针，这个接口有一个方法，当被调用方完成它的任务时，这个方法将被调用。</p>
+<p>通过一个例子来说明这一点：</p>
+<p>假如我们要实现这个这样一个功能。</p>
+<p>当前有一个<strong>MainActivity</strong>和一个<strong>LocalFileFragment</strong>，点击<strong>MainActivity</strong>中的全选按钮能够让<strong>LocalFileFragment</strong>改变全选状态。</p>
+<p>实现步骤如下：</p>
+<ol>
+<li>在<strong>LocalFileFragment</strong>中创建接口</li>
+<li>在<strong>LocalFileFragment</strong>中声明接口</li>
+<li>在<strong>MainActivity</strong>中实现这个接口</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LocalFileFragment</span>: <span class="type">Fragment</span></span>() &#123;</span><br><span class="line">    <span class="comment">// 声明接口</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> mListener: OnFileCheckedListener? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 定义接口</span></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">OnFileCheckedListener</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">changeStatus</span><span class="params">()</span></span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绑定接口实现</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">setOnFileCheckedListener</span><span class="params">(listener: <span class="type">OnFileCheckedListener</span>)</span></span> &#123;</span><br><span class="line">        mListener = listener</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomething</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (...) mListener.changeStatus()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span>: <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="comment">// 实现回调接口</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> mListener = <span class="keyword">object</span> : LocalFileFragment.OnFileCheckedListener &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">changeStatus</span><span class="params">()</span></span> &#123;</span><br><span class="line">            Log.d(<span class="string">"MainActivity"</span>, <span class="string">"Change Status!"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomething</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> mLocalFileFragment = LocalFileFragment()</span><br><span class="line"></span><br><span class="line">        mLocalFileFragment.setOnFileCheckedListener(mListener)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/Android/">Android</a>
+            <a href="/tags/C/">C</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/03/31/Offer%E6%94%B6%E5%89%B2-%E7%BC%96%E7%A8%8B%E7%BB%83%E4%B9%A0%E8%B5%9B98/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">[Offer收割]编程练习赛98</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/02/11/%E5%9C%A8Android%E4%B8%AD%E6%9B%B4%E6%96%B0UI%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/">
+        <span class="next-text nav-default">在Android后台线程中更新UI的几种方法</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

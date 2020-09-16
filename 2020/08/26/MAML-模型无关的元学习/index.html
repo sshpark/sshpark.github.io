@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="元学习是目前人工智能领域一个令人振奋的研究领域。大量的研究结果表明元学习已经在人工智能领域上取得了重大突破。基于优化方法的元学习中，MAML可以说是当中最有名的了，它是一种相当通用的优化算法，可以与基于梯度更新的算法兼容。"/><meta name="keywords" content="元学习, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2020/08/26/MAML-模型无关的元学习/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>MAML: 模型无关的元学习 - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">MAML: 模型无关的元学习
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-08-26
+        </span><span class="post-visits"
+             data-url="/2020/08/26/MAML-%E6%A8%A1%E5%9E%8B%E6%97%A0%E5%85%B3%E7%9A%84%E5%85%83%E5%AD%A6%E4%B9%A0/"
+             data-title="MAML: 模型无关的元学习">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#什么是元学习"><span class="toc-text">什么是元学习</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MAML-算法"><span class="toc-text">MAML 算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#MAML-算法的流程"><span class="toc-text">MAML 算法的流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MAML-的简单例子"><span class="toc-text">MAML 的简单例子</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#生成训练数据"><span class="toc-text">生成训练数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#单层神经网络"><span class="toc-text">单层神经网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MAML-实现"><span class="toc-text">MAML 实现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MAML-算法的缺点"><span class="toc-text">MAML 算法的缺点</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="什么是元学习"><a href="#什么是元学习" class="headerlink" title="什么是元学习"></a>什么是元学习</h1><p>元学习是目前人工智能领域一个令人振奋的研究领域。大量的研究结果表明元学习已经在人工智能领域上取得了重大突破。在正式介绍元学习之前，先来看看传统的人工智能模型是如何工作的。</p>
+<p>近几年来，深度学习迅速发展，出现了生成式对抗网络（GAN）和胶囊网络（capsule network）等优秀的算法。但深度神经网络存在的一个问题是，我们需要有一个很大的训练集来训练我们的模型，当我们只有很少的数据集时，它很大程度上会失败。再比如说，我们训练了一个深度学习模型来执行任务 A，现在，当我们有一个新的任务 B，并且与 A 密切相关，但是我们不能使用相同的模型。我们需要为任务 B 从头开始训练模型，因此对于每个任务，我们都需要从头开始训练模型，忽略了任务间的相关性。</p>
+<p>事实上，人脑中的学习机制具备一种能力。在面对不同的任务时，人脑的学习机制并不相同。即使面对一个新的任务，人们往往也可以很快找到其学习方式。这种可以动态调整学习方式的能力，称为<strong>元学习</strong>。元学习产生了一个多功能的人工智能模型，它可以学习执行各种任务，而不需要从头开始训练它们。对于一个新的相关任务，它可以利用从以前的任务中获得的学习能力而不必从头开始训练它们。</p>
+<h1 id="MAML-算法"><a href="#MAML-算法" class="headerlink" title="MAML 算法"></a>MAML 算法</h1><p>深度学习模型通过梯度的反向传播进行学习。然而，基于梯度的优化既不能应对少量的训练样本，也不能在少量的优化步骤内收敛。那么有没有一种方法可以调整优化算法，让模型在少量样本的情况下就能很好的学习？这就是基于优化方法（optimization-based）的元学习算法。</p>
+<p>基于优化方法的元学习中，<a href="https://arxiv.org/abs/1703.03400" target="_blank" rel="noopener">MAML</a>可以说是当中最有名的了，它是一种相当通用的优化算法，可以与<strong>基于梯度更新</strong>的算法兼容。</p>
+<p>其主要思想是：训练模型的初始化参数（initial parameter），使模型能在来自新任务的少量数据上对参数执行数次（1次或多次）的梯度更新后能得到最佳的表现。</p>
+<h2 id="MAML-算法的流程"><a href="#MAML-算法的流程" class="headerlink" title="MAML 算法的流程"></a>MAML 算法的流程</h2><p>假设所有的任务都来 自于一个任务空间，其分布为 $p(\mathcal{T})$，我们可以在这个任务空间的所有任务上学习一种通用的表示，这种表示可以经过梯度下降方法在一个特定的单任务上进行精调（fine-tune）。假设一个模型为 $f(\theta)$，如果我们让这个模型适应到一个新任务 $\mathcal{T}(m)$上， 通过一步或多步的梯度下降更新，学习到的任务适配参数为</p>
+<script type="math/tex; mode=display">
+\theta_{m}^{\prime}=\theta-\alpha \nabla_{\theta} \mathcal{L}_{\mathcal{T}_{m}}\left(f_{\theta}\right)</script><p>其中 $\alpha$ 为学习率。这里 $\theta_{m}^{\prime}$ 可以理解为关于 $\theta$ 的函数，而不是真正的参数更新。</p>
+<p>MAML的目标是<strong>学习一个参数 $\theta$</strong> 使得其经过一个梯度迭代就可以在新任务上达到最好的性能。</p>
+<script type="math/tex; mode=display">
+\min _{\theta} \sum_{\mathcal{T}_{m} \sim p(\mathcal{T})} \mathcal{L}_{\mathcal{T}_{m}}\left(f\left(\theta_{m}^{\prime}\right)\right)=\sum_{\mathcal{T}_{m} \sim p(\mathcal{T})} \mathcal{L}_{\mathcal{T}_{m}}\left(f\left({\theta}-\alpha \nabla_{\theta} \mathcal{L}_{\mathcal{T}_{m}}\left(f_{\theta}\right)\right)\right)</script><p>在所有任务上的元优化（Meta-Optimization）也采用梯度下降来进行优化，即</p>
+<script type="math/tex; mode=display">
+\theta \leftarrow \theta-\beta \nabla_{\theta} \sum_{m=1}^{M} \mathcal{L}_{\mathcal{T}_{m}}\left(f_{\theta_{m}^{\prime}}\right)</script><p>其中 $\beta$ 为元学习率，这里为一个真正的参数更新步骤。这里需要计算关于 $\theta$ 的二阶梯度，但用一级近似通常也可以达到比较好的性能。</p>
+<p>算法描述如下：</p>
+<p><img src="http://cdn.sshpark.com.cn/20200826235916.png" style="zoom:50%;" /></p>
+<p>算法步骤：</p>
+<ol>
+<li><p>随机初始化参数 $\theta$</p>
+</li>
+<li><p>从任务分布空间 $p(\mathcal{T})$ 选取若干个任务</p>
+<p>在监督学习任务中，任务定义为  <script type="math/tex">\mathscr{T}_{i} \triangleq\left\{p_{i}(\mathbf{x}), p_{i}(\mathbf{y} \mid \mathbf{x}), \mathscr{L}_{i}\right\}</script><br>其中<script type="math/tex">p_{i}(\mathbf{x}), p_{i}(\mathbf{y} \mid \mathbf{x})</script>对应了真实的数据生成分布（通常无法得到，但是能够在训练的过程中反映出来），$\mathscr{L}_{i}$ 表示的是损失函数。不同任务的区别可能是这三个中的某个或者多个不同。</p>
+</li>
+<li><p>更新任务 <script type="math/tex">\mathcal{T}_{i}</script> 的参数得到 <script type="math/tex">\theta_{i}^{\prime}</script></p>
+</li>
+<li><p>根据内循环得到的 $\theta_{i}^{\prime}$ 在其任务$\mathcal{T}_i$  上对应的测试集上计算损失（loss），并对初始化参数 $\theta$ 进行梯度更新</p>
+</li>
+</ol>
+<p>算法过程如下图所示：</p>
+<p><img src="http://cdn.sshpark.com.cn/20200903143037.png" style="zoom:50%;" /></p>
+<p>$\theta$ 是初始化参数，也就是元学习的目标，通过不同任务的更新方向去更新 $\theta$，使得 $\theta$ 达到一个敏感（sensitive）位置，也就是说任务在这个位置只需要做一步或者几步的梯度下降就会引起损失函数的较大变化，迅速达到该任务的“最优”位置。</p>
+<h2 id="MAML-的简单例子"><a href="#MAML-的简单例子" class="headerlink" title="MAML 的简单例子"></a>MAML 的简单例子</h2><p>为了理解 MAML 算法是如何寻找一个更好且鲁棒的初始化参数 $\theta$ 去泛化这些任务的。我们从头实现一个 MAML 算法。</p>
+<p>为了方便理解，这里我们考虑一个二分类任务，随机生成一些训练数据，并用一个单层的神经网络去做训练。</p>
+<h3 id="生成训练数据"><a href="#生成训练数据" class="headerlink" title="生成训练数据"></a>生成训练数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sample_points</span><span class="params">(k)</span>:</span></span><br><span class="line">  x = np.random.rand(k, <span class="number">50</span>)</span><br><span class="line">  y = np.random.choice([<span class="number">0</span>, <span class="number">1</span>], size=k, p = [<span class="number">.5</span>, <span class="number">.5</span>]).reshape([<span class="number">-1</span>, <span class="number">1</span>])</span><br><span class="line">  <span class="keyword">return</span> x, y</span><br></pre></td></tr></table></figure>
+<p>测试一下函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x, y = sample_points(<span class="number">10</span>)</span><br><span class="line">print(x[<span class="number">0</span>])</span><br><span class="line">print(y[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[0.42100647 0.69403514 0.67855943 0.57774404 0.15666203 0.91099776</span><br><span class="line"> 0.01246907 0.08118128 0.07718763 0.57900541 0.35844089 0.03127173</span><br><span class="line"> 0.5760209  0.71506323 0.94122599 0.95702823 0.35303246 0.35338326</span><br><span class="line"> 0.35029937 0.62252008 0.66232719 0.11546544 0.69487415 0.36424861</span><br><span class="line"> 0.46909378 0.12574337 0.82647021 0.40940772 0.99659183 0.27186814</span><br><span class="line"> 0.56939123 0.02092227 0.01067603 0.9077246  0.85177498 0.5933496</span><br><span class="line"> 0.48722737 0.66599244 0.01389198 0.9820469  0.11796959 0.94809311</span><br><span class="line"> 0.8243121  0.27004836 0.30353558 0.87978769 0.59162869 0.07974159</span><br><span class="line"> 0.27372265 0.41991061]</span><br><span class="line">[0]</span><br></pre></td></tr></table></figure>
+<h3 id="单层神经网络"><a href="#单层神经网络" class="headerlink" title="单层神经网络"></a>单层神经网络</h3><p>为了简单以及方便理解，我们使用只有单层的神经网络来预测输出。如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = np.matmul(X, theta)</span><br><span class="line">YHat = sigmoid(a)</span><br></pre></td></tr></table></figure>
+<p>所以，我们使用MAML来寻找这个最优的参数值theta，这个参数值是可以在各个任务中通用的。这样对于一个新的任务，我们只进行几次梯度下降，在较少的时间内从几个数据点中学习。</p>
+<h3 id="MAML-实现"><a href="#MAML-实现" class="headerlink" title="MAML 实现"></a>MAML 实现</h3><p>现在，我们定义一个名为MAML的类，在这个类中我们实现了MAML算法。在 <strong>init</strong> 方法中，我们将初始化所有必要的变量。然后我们定义我们的 <code>sigmoid</code> 激活函数。接下来我们定义我们的训练函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MAML</span><span class="params">(object)</span>:</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 初始化任务数</span></span><br><span class="line">    self.num_tasks = <span class="number">10</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 初始化每个任务的样本数</span></span><br><span class="line">    self.num_samples = <span class="number">10</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 算法迭代次数</span></span><br><span class="line">    self.epochs = <span class="number">10000</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 内循环的学习率</span></span><br><span class="line">    self.alpha = <span class="number">0.0001</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 外循环的学习率</span></span><br><span class="line">    self.beta = <span class="number">0.0001</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 随机初始化初始参数</span></span><br><span class="line">    self.theta = np.random.normal(size=<span class="number">50</span>).reshape(<span class="number">50</span>, <span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(self, a)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1.0</span> / (<span class="number">1</span> + np.exp(-a) )</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> e <span class="keyword">in</span> range(self.epochs):</span><br><span class="line">      self.theta_ = []</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">for</span> i <span class="keyword">in</span> range(self.num_tasks):</span><br><span class="line">        XTrain, YTrain = sample_points(self.num_samples)</span><br><span class="line">  </span><br><span class="line">        a = np.matmul(XTrain, self.theta)</span><br><span class="line">        </span><br><span class="line">        YHat = self.sigmoid(a)</span><br><span class="line">        <span class="comment"># 交叉熵损失函数</span></span><br><span class="line">        loss = ((np.matmul(-YTrain.T, np.log(YHat)) - np.matmul((<span class="number">1</span>-YTrain.T), np.log(<span class="number">1</span>-YHat))) / self.num_samples)[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">        <span class="comment"># 梯度下降</span></span><br><span class="line">        gradient = np.matmul(XTrain.T, (YHat - YTrain)) / self.num_samples</span><br><span class="line">        self.theta_.append(self.theta - self.alpha*gradient)</span><br><span class="line">      <span class="comment"># 初始化 meta 梯度</span></span><br><span class="line">      meta_gradient = np.zeros(self.theta.shape)</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">for</span> i <span class="keyword">in</span> range(self.num_tasks):</span><br><span class="line">        <span class="comment"># 任务的测试集</span></span><br><span class="line">        XTest, YTest = sample_points(<span class="number">10</span>)</span><br><span class="line">        a = np.matmul(XTest, self.theta_[i])</span><br><span class="line">        YPred = self.sigmoid(a)</span><br><span class="line">        </span><br><span class="line">        meta_gradient += np.matmul(XTest.T, (YPred - YTest)) / self.num_samples</span><br><span class="line">			<span class="comment"># 更新外循环的原参数 \theta      </span></span><br><span class="line">      self.theta = self.theta-self.beta*meta_gradient/self.num_tasks</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> e%<span class="number">1000</span>==<span class="number">0</span>:</span><br><span class="line">        print(<span class="string">"Epoch &#123;&#125;: Loss &#123;&#125;\n"</span>.format(e,loss))</span><br><span class="line">        print(<span class="string">'Updated Model Parameter Theta\n'</span>)</span><br><span class="line">        print(<span class="string">'Sampling Next Batch of Tasks \n'</span>)</span><br><span class="line">        print(<span class="string">'---------------------------------\n'</span>)</span><br></pre></td></tr></table></figure>
+<p>测试</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">model = MAML()</span><br><span class="line">model.train()</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">Epoch 0: Loss 1.144232040593275</span><br><span class="line"></span><br><span class="line">Updated Model Parameter Theta</span><br><span class="line"></span><br><span class="line">Sampling Next Batch of Tasks </span><br><span class="line"></span><br><span class="line">---------------------------------</span><br><span class="line"></span><br><span class="line">Epoch 1000: Loss 0.6450955930326157</span><br><span class="line"></span><br><span class="line">Updated Model Parameter Theta</span><br><span class="line"></span><br><span class="line">Sampling Next Batch of Tasks </span><br><span class="line"></span><br><span class="line">---------------------------------</span><br><span class="line"></span><br><span class="line">Epoch 2000: Loss 0.646503969137526</span><br><span class="line"></span><br><span class="line">Updated Model Parameter Theta</span><br><span class="line"></span><br><span class="line">Sampling Next Batch of Tasks </span><br><span class="line"></span><br><span class="line">---------------------------------</span><br><span class="line"></span><br><span class="line">Epoch 3000: Loss 1.3089942317460603</span><br><span class="line"></span><br><span class="line">Updated Model Parameter Theta</span><br><span class="line"></span><br><span class="line">Sampling Next Batch of Tasks </span><br><span class="line"></span><br><span class="line">---------------------------------</span><br><span class="line"></span><br><span class="line">Epoch 4000: Loss 0.551582623398733</span><br><span class="line"></span><br><span class="line">Updated Model Parameter Theta</span><br><span class="line"></span><br><span class="line">Sampling Next Batch of Tasks </span><br><span class="line"></span><br><span class="line">---------------------------------</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h1 id="MAML-算法的缺点"><a href="#MAML-算法的缺点" class="headerlink" title="MAML 算法的缺点"></a>MAML 算法的缺点</h1><p><a href="https://arxiv.org/abs/1810.09502" target="_blank" rel="noopener">How to train your MAML</a> 指出了 maml 存在的 5 个问题并给出了改进建议，以下是 maml 存在的 5 个问题</p>
+<ol>
+<li>Training Instabilit</li>
+<li>Second Order Derivative Cost</li>
+<li>Absence of Batch Normalization Statistic Accumulation</li>
+<li>Shared (across step) Batch Normalization Bias</li>
+<li>Shared Inner Loop (across step and across parameter) Learning Rate</li>
+</ol>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/%E5%85%83%E5%AD%A6%E4%B9%A0/">元学习</a>
+            </div>
+        
+        <nav class="post-nav"><a class="next" href="/2020/04/30/%E5%AD%A6%E5%A0%82%E4%BA%91-3-0-%E5%88%B7%E8%AF%BE%E4%BB%A3%E7%A0%81/">
+        <span class="next-text nav-default">学堂云 3.0 刷课代码</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="用C++和SFML写游戏-纹理及精灵（5.2）"/><meta name="keywords" content="SFML, 用C++和SFML写游戏, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2019/08/28/用C-和SFML写游戏-纹理及精灵（5-2）/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>用C++和SFML写游戏-纹理及精灵（5.2） - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">用C++和SFML写游戏-纹理及精灵（5.2）
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-08-28
+        </span><span class="post-visits"
+             data-url="/2019/08/28/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E7%BA%B9%E7%90%86%E5%8F%8A%E7%B2%BE%E7%81%B5%EF%BC%885-2%EF%BC%89/"
+             data-title="用C++和SFML写游戏-纹理及精灵（5.2）">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、什么是精灵"><span class="toc-text">一、什么是精灵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、Transformables-和-Drawables"><span class="toc-text">二、Transformables 和 Drawables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、Sprite-类的其他属性"><span class="toc-text">三、Sprite 类的其他属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、资源管理"><span class="toc-text">四、资源管理</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>上一篇<a href="http://www.sshpark.com.cn/2019/08/25/用C++和SFML写游戏-纹理及精灵（5.1）" target="_blank" rel="noopener">文章</a>介绍了纹理的使用。这一节将会介绍 <strong>精灵</strong> 以及资源管理。</p>
+<h3 id="一、什么是精灵"><a href="#一、什么是精灵" class="headerlink" title="一、什么是精灵"></a>一、什么是精灵</h3><p>在这之前你可能听说过<strong>精灵</strong>的概念。实际上，精灵是贴有纹理的<strong>“画布”</strong>。说到这里，有人可能会说，前面的 <code>Shpae</code>类不是也一样的吗？答案是的，但是精灵有一点不同。</p>
+<p>最重要的不同点是，精灵总是绘制在纹理矩形中，而 <code>Shape</code> 可以不必这样，精灵总是与一个纹理关联的，它不能单独存在。除此之外， <code>Sprite</code>类有一个类似与 <code>Shape::setFillColor()</code>的函数 <code>Sprite::setColor()</code>。当它们都与一个纹理（Texture）相关联的时候，效果是一样的，但是如果 <code>Sprite</code> 没有与纹理（Texture）关联的话，它不会被指定的颜色绘制，相反的是 <code>Shape</code> 是可以被指定颜色绘制的。</p>
+<p>那么问题来了？为什么我们要使用精灵而不是 <code>Shape</code>呢？从上面的描述来看，精灵似乎是弱化版的<code>Shape</code>。真正的原因是因为精灵简单有用。</p>
+<a id="more"></a>
+<p>观察一下代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个带纹理的shape</span></span><br><span class="line">sf::<span class="function">RectangleShape <span class="title">rectShape</span><span class="params">(sf::Vector2f(<span class="number">100</span>, <span class="number">100</span>))</span></span>;</span><br><span class="line">rectShape.setTexture(&amp;texture);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建精灵</span></span><br><span class="line">sf::<span class="function">Sprite <span class="title">sp</span><span class="params">(texture)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>可以很明显的看到创建一个精灵是一个更加简单的过程。实际上，这也是 <code>Sprite</code>类在 <strong>SFML </strong> 中被使用的主要目的——尽可能快速，轻松地在屏幕上渲染纹理。</p>
+<p>&lt;/br&gt;</p>
+<h3 id="二、Transformables-和-Drawables"><a href="#二、Transformables-和-Drawables" class="headerlink" title="二、Transformables 和 Drawables"></a>二、Transformables 和 Drawables</h3><p><code>Sprite</code> 类起源于这两个类 —— <code>Transformable</code> 和 <code>Drawable</code>。</p>
+<p><code>Drawable</code>类是一个接口，它有一个抽象方法 <code>Drawable::deaw()</code>，它的子类必须实现这个方法，进而使得子类是可以被绘制到画布上的（例如 <code>RenderWindow</code>）</p>
+<p><code>Transformable</code> 拥有位置、旋转、缩放以及原点等属性。可以通过<code>Transformable::setPosition()</code>，<code>Transformable::getPosition()</code>，<code>Transformable::move()</code> 等方法去访问这些属性。</p>
+<p>这些方法我们在 <code>Shape</code> 类中也使用过，因为 <code>Shape</code> 继承了这两个类。类似的，我们可以通过继承这两个类来实现自己的精灵。</p>
+<p>&lt;/br&gt;</p>
+<h3 id="三、Sprite-类的其他属性"><a href="#三、Sprite-类的其他属性" class="headerlink" title="三、Sprite 类的其他属性"></a>三、Sprite 类的其他属性</h3><p>在实现碰撞检测（Collision Detection）时，不可避免地需要知道场景中物体的尺寸或者边界。我们称之为“包围盒技术”（Bounding Box）。常见的包围盒有：Sphere、AABB、OBB、FDH等</p>
+<p><code>Sprite</code> 使用了AABB包围盒<strong>（Axis-aligned bounding box）</strong>的方法。<code>Sprite::getLocalBounds()</code> 和 <code>Sprite::getGlobalBounds()</code> 都能够计算出 <code>Sprite</code> 的 AABB 属性。区别是 <code>Sprite::getLocalBounds()</code> 忽略了实体的变换属性（平移、旋转、缩放。。。），而 <code>Sprite::getGlobalBounds()</code> 考虑了这些属性。通过这两个方法返回的 <code>FloatRect</code> 可以用于碰撞检测。</p>
+<p>&lt;/br&gt;</p>
+<h3 id="四、资源管理"><a href="#四、资源管理" class="headerlink" title="四、资源管理"></a>四、资源管理</h3><p>无论是做游戏还是多媒体程序，准确、高效的管理好资源是很重要的。确保好资源<strong>不被意外的销毁</strong>以及<strong>不重复读取同一资源</strong>是我们构建一份健壮的代码的基本需求。</p>
+<p>需要明白一个事实，<strong>C++</strong>里栈中的对象在不需要的会被自动清除。但是在某些编程语言中，对象存储在堆中（实现了内存管理）。因此，我们的程序要确保对象在被使用的时候是存活的。下面的例子展示了当函数退出的时候，纹理也被销毁了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sf::<span class="function">Sprite <span class="title">createSprite</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; filename)</span> </span>&#123;</span><br><span class="line">    sf::Texture texture;</span><br><span class="line">    texture.loadFromFile(filename);</span><br><span class="line">    <span class="comment">// 函数返回时，texture 已经被销毁了</span></span><br><span class="line">    <span class="keyword">return</span> sf::Sprite(texture);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果我们使用上面的方法创建 <code>Sprite</code>，那么在绘制 <code>Sprite</code> 的时候将会是一片空白，<code>texture</code>不会被显示出来。</p>
+<p>创建一个资源管理器去管理资源的生命周期是很有用的，下面试资源管理器的头文件定义。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> ASSET_MANAGER_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ASSET_MANAGER_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SFML/Graphics.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;map&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AssetManager</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    AssetManager();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> sf::<span class="function">Texture&amp; <span class="title">GetTexture</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; filename)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, sf::Texture&gt; m_Textures;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> AssetManager* sInstance;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p>可以看到，我们的 <code>AssetManager</code> 是一个单例。这样子的话我们可以在程序的任何地方通过静态方法 <code>GetTexture()</code> 访问资源而不用先去获取 <code>AssetManager</code> 对象的引用。</p>
+<p>里面的 <strong>map</strong> 类型变量存储了资源是否读取过，方便后面判断是否需要再次读取资源。</p>
+<p>现在来看看实现代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"AssetManager.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">AssetManager* AssetManager::sInstance = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">AssetManager::AssetManager() &#123;</span><br><span class="line">    assert(sInstance == <span class="literal">nullptr</span>);</span><br><span class="line">    sInstance = <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>assert</strong> 确保了我们的资源管理器只有一个实例。</p>
+<p>再来看看 <code>AssetManager::GetTexture()</code> 的实现：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sf::Texture&amp; AssetManager::GetTexture(<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; filename) &#123;</span><br><span class="line">    <span class="keyword">auto</span>&amp; texMap = sInstance-&gt;m_Textures;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">auto</span> pairFound = texMap.find(filename);</span><br><span class="line">    <span class="keyword">if</span> (pairFound != texMap.end()) &#123;</span><br><span class="line">        <span class="keyword">return</span> pairFound-&gt;second;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">auto</span>&amp; texture = texMap[filename];</span><br><span class="line">    texture.loadFromFile(filename);</span><br><span class="line">    <span class="keyword">return</span> texture;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码很容易懂，如果资源已经被读取过了，直接返回，否则从给定路径读取。</p>
+<p>最后，看看我们的资源管理器如何使用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SFML/Graphics.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"AssetManager.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    sf::<span class="function">RenderWindow <span class="title">window</span><span class="params">(sf::VideoMode(<span class="number">640</span>, <span class="number">480</span>), <span class="string">"AssetManager"</span>)</span></span>;</span><br><span class="line">    AssetManager manager;</span><br><span class="line">    </span><br><span class="line">    sf::Sprite sprite1 = sf::Sprite(AssetManager::GetTexture(<span class="string">"1.png"</span>));</span><br><span class="line">    sf::Sprite sprite2 = sf::Sprite(AssetManager::GetTexture(<span class="string">"2.png"</span>));</span><br><span class="line">    sf::Sprite sprite3 = sf::Sprite(AssetManager::GetTexture(<span class="string">"1.png"</span>));</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (window.isOpen()) &#123;</span><br><span class="line">        <span class="comment">// Game loop</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// main 函数返回时，manager 被销毁</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>sprite3</strong> 不会从磁盘读取，而是从 <strong>texture</strong> 缓存中读取，提高了效率。</p>
+<p>&lt;/br&gt;</p>
+<p>下一节将会介绍动画精灵😃。</p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/SFML/">SFML</a>
+            <a href="/tags/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F/">用C++和SFML写游戏</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/08/31/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E8%AE%A9%E6%88%91%E4%BB%AC%E7%9A%84%E7%B2%BE%E7%81%B5%E5%8A%A8%E8%B5%B7%E6%9D%A5-6/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">用C++和SFML写游戏-让我们的精灵动起来（6）</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/08/25/%E7%94%A8C++%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E7%BA%B9%E7%90%86%E5%8F%8A%E7%B2%BE%E7%81%B5%EF%BC%885.1%EF%BC%89/">
+        <span class="next-text nav-default">用C++和SFML写游戏-纹理及精灵（5.1）</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

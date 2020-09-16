@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="ubuntu下安装hadoop, hbase"/><meta name="keywords" content="工具安装, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2018/10/20/ubuntu下安装hadoop-hbase/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>ubuntu下安装hadoop, hbase - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">ubuntu下安装hadoop, hbase
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-10-20
+        </span><span class="post-visits"
+             data-url="/2018/10/20/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85hadoop-hbase/"
+             data-title="ubuntu下安装hadoop, hbase">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装ssh，设置ssh无密码登陆"><span class="toc-text">安装ssh，设置ssh无密码登陆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装-Java11"><span class="toc-text">安装 Java11</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Hadoop-2-9-1"><span class="toc-text">安装Hadoop 2.9.1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Hbase-1-4-8"><span class="toc-text">安装Hbase 1.4.8</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hadoop伪分布式配置"><span class="toc-text">hadoop伪分布式配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Hadoop运行的3-种模式"><span class="toc-text">Hadoop运行的3 种模式</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><p>安装环境以及软件版本：</p>
+<ul>
+<li>Ubuntu 16.04.1 LTS</li>
+<li>Hadoop 2.9.1</li>
+<li>HBase 1.4.8<a id="more"></a>
+<h3 id="安装ssh，设置ssh无密码登陆"><a href="#安装ssh，设置ssh无密码登陆" class="headerlink" title="安装ssh，设置ssh无密码登陆"></a>安装ssh，设置ssh无密码登陆</h3></li>
+</ul>
+<p>由于 Hadoop 需要在一台或多台计算机上的多个进程之间通信，我们需要确保正在使用 Hadoop 的用户不输人密码即可连接到所需的每台主机。通过创建有一个空口令 Secure Shell (SSH）的密钥对来实现这一点。我们使用 ssh -keygen 命令启动这一进程，并接受所提供的缺省设置。</p>
+<p>一旦创建了密钥对，需要将新生成的公钥添加到可信密钥的存储列表。这就意味着，当试图连接这台机器时，公钥会被信任。然后，使用 ssh 命令连接本地机器，应该会获得一个如上述显示的关于信任主机证书的警告。确认后，我们应该能够连接而不再需要密码或出现提示。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install openssh-serve</span><br><span class="line">ssh localhost     <span class="comment"># 登陆localhost，第一次需要输入yes</span></span><br><span class="line"><span class="built_in">exit</span>              <span class="comment"># 退出localhost</span></span><br><span class="line"><span class="built_in">cd</span> ~/.ssh/</span><br><span class="line">ssh-keygen -t rsa <span class="comment"># 生成非对称rsa密钥，连续输入三次回车</span></span><br></pre></td></tr></table></figure>
+<p>之后</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat .&#x2F;id_rsa.pub &gt;&gt; .&#x2F;authorized_keys # 加入授权</span><br><span class="line">ssh localhost                         # 此时登陆localhost不需要密码，说明配置成功</span><br></pre></td></tr></table></figure>
+<p><img src="http://cdn.sshpark.com.cn/20181024154038312660668.png" alt="pic-1"></p>
+<h3 id="安装-Java11"><a href="#安装-Java11" class="headerlink" title="安装 Java11"></a>安装 Java11</h3><p>首先从<a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="noopener">oracle</a>官网下载对应的java版本，这里我选择的是<a href="http://download.oracle.com/otn-pub/java/jdk/11.0.1+13/90cf5d8f270a4347a95050320eef3fb7/jdk-11.0.1_linux-x64_bin.tar.gz" target="_blank" rel="noopener">jdk-11.0.1_linux-x64_bin.tar.gz</a></p>
+<p><img src="http://cdn.sshpark.com.cn/20181024154038340093857.png" alt="pic-2"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/lib/jvm                                      <span class="comment"># 创建jvm文件夹</span></span><br><span class="line">sudo tar zxvf jdk-11.0.1_linux-x64_bin.tar  -C /usr/lib <span class="comment"># 解压到/usr/lib/jvm目录下</span></span><br><span class="line"><span class="built_in">cd</span> /usr/lib/jvm       <span class="comment"># 进入该目录</span></span><br><span class="line">mv  jdk-11.0.1 java   <span class="comment"># 重命名为java</span></span><br><span class="line">vi ~/.bashrc          <span class="comment"># 给JDK配置环境变量</span></span><br></pre></td></tr></table></figure>
+<p>在<code>.bashrc</code>文件添加以下内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/lib/jvm/java</span><br><span class="line"><span class="built_in">export</span> JRE_HOME=<span class="variable">$&#123;JAVA_HOME&#125;</span>/jre</span><br><span class="line"><span class="built_in">export</span> CLASSPATH=.:<span class="variable">$&#123;JAVA_HOME&#125;</span>/lib:<span class="variable">$&#123;JRE_HOME&#125;</span>/lib</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$&#123;JAVA_HOME&#125;</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~&#x2F;.bashrc                       #使新配置的环境变量生效</span><br></pre></td></tr></table></figure>
+<p>输出这个说明配置成功</p>
+<p><img src="http://cdn.sshpark.com.cn/20181024154038356515033.png" alt="pic-3"></p>
+<h3 id="安装Hadoop-2-9-1"><a href="#安装Hadoop-2-9-1" class="headerlink" title="安装Hadoop 2.9.1"></a>安装Hadoop 2.9.1</h3><p>下载<a href="http://mirrors.hust.edu.cn/apache/hadoop/common/stable/" target="_blank" rel="noopener">hadoop-2.9.1.tar.gz</a>，之后执行以下步骤</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo tar -zxvf  hadoop-2.9.1.tar.gz -C /usr/<span class="built_in">local</span> <span class="comment">#解压到/usr/local目录下</span></span><br><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span></span><br><span class="line">sudo mv  hadoop-2.9.1    hadoop <span class="comment">#重命名为hadoop</span></span><br><span class="line">sudo chown -R hadoop ./hadoop  <span class="comment">#修改文件权限</span></span><br></pre></td></tr></table></figure>
+<p>给hadoop配置环境变量，将下面代码添加到.bashrc文件:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export HADOOP_HOME=/usr/local/hadoop</span><br><span class="line">export CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath):$CLASSPATH</span><br><span class="line">export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native</span><br><span class="line">export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</span><br></pre></td></tr></table></figure>
+<p>执行source ~./bashrc使设置生效，并查看hadoop是否安装成功</p>
+<p><img src="http://cdn.sshpark.com.cn/2018102415403839325273.png" alt="pic-4"></p>
+<!--more-->
+<h3 id="安装Hbase-1-4-8"><a href="#安装Hbase-1-4-8" class="headerlink" title="安装Hbase 1.4.8"></a>安装Hbase 1.4.8</h3><p>下载<a href="http://apache.fayea.com/hbase/stable/" target="_blank" rel="noopener">hbase-1.4.8-bin.tar.gz</a>，之后执行以下步骤</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo tar -zxvf  hbase-1.4.8-bin.tar.gz -C &#x2F;usr&#x2F;local # 解压到&#x2F;usr&#x2F;local目录下</span><br><span class="line">cd &#x2F;usr&#x2F;local</span><br><span class="line">sudo mv hbase-1.4.8 hbase   # 重命名为hbase</span><br><span class="line">sudo chown -R hbase .&#x2F;hbase # 修改文件权限</span><br></pre></td></tr></table></figure>
+<p>给hadoop配置环境变量，将下面代码添加到.bashrc文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH&#x3D;$PATH:&#x2F;usr&#x2F;local&#x2F;hbase&#x2F;bin</span><br></pre></td></tr></table></figure>
+<p>执行source ~./bashrc使设置生效，并查看hbase是否安装成功</p>
+<p><img src="http://cdn.sshpark.com.cn/20181024154038418264800.png" alt="pic-5"></p>
+<h3 id="hadoop伪分布式配置"><a href="#hadoop伪分布式配置" class="headerlink" title="hadoop伪分布式配置"></a>hadoop伪分布式配置</h3><h4 id="Hadoop运行的3-种模式"><a href="#Hadoop运行的3-种模式" class="headerlink" title="Hadoop运行的3 种模式"></a>Hadoop运行的3 种模式</h4><p>在 Hadoop 上运行作业，却回避了一个重要的问题：应该在何种模式下运行 Hadoop? Hadoop 有 3 种运行模式，各种模式下，Hadoop 组件的运行场所有所不同。回想一下，HDFS 包括一个 NameNode，它充当着集群协调者的角色，是一个或多个用于存储数据的 DataNode 的管理者。对于 MapReduce 而言，JobTracker 是集群的主节点，它负责协调多个 TaskTracker 进程执行的工作。Hadoop 以如下 3 种模式部署上述组件。</p>
+<ul>
+<li>本地独立模式：如果不进行任何配置的话，这是 Hadoop的默认工作模式。在这种模式下，Hadoop 的所有组件，如 NameNode、DataNode、JobTracker 和 TaskTracker，都运行在同一个 Java 进程中。</li>
+<li>伪分布式模式：在这种模式下，Hadoop 的各个组件都拥有一个单独的 Java 虚拟机，它们之间通过网络套接字通信。这种模式在一台主机上有效地产生了一个具有完整功能的微型集群。</li>
+<li>完全分布式模式：在这种模式下，Hadoop 分布在多台主机上，其中一些是通用的工作机，其余的是组件的专用主机，比如 NameNode 和 JobTracker。</li>
+</ul>
+<p>这里进行的是伪分布式模式配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;</span><br></pre></td></tr></table></figure>
+<p>修改core-site.xml，临时目录<code>tmp</code>手动创建</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/usr/local/hadoop/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">description</span>&gt;</span>Abase for other temporary directories.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>修改hdfs-site.xml，<code>name</code>目录和<code>data</code>也手动创建</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.name.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/usr/local/hadoop/tmp/dfs/name<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.data.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/usr/local/hadoop/tmp/dfs/data<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在伪分布式模式中，首次启动Hadoop需要格式化hdfs系统</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop namenode -format</span><br></pre></td></tr></table></figure>
+<font color="red">注意: 格式化 NameNode 的命令可以执行多次，但是这样会使所有的现有文件系统数据受损。只有在 Hadoop 集群关闭和你想进行格式化的情况下，才能执行格式化。但在其他大多数情况下，格式化操作会快速、不可恢复地删除 HDFS 上的所有数据。它在大型集群上的执行时间更长。所以一定要小心。</font>
+
+
+
+<p>启动hadoop</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/hadoop/</span><br><span class="line">sbin/start-all.sh</span><br></pre></td></tr></table></figure>
+<p>输入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps</span><br></pre></td></tr></table></figure>
+<p>出现如下进程，说明启动成功</p>
+<p><img src="http://cdn.sshpark.com.cn/20181024154038558255747.png" alt="pic-6"></p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/">工具安装</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2018/11/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E8%B4%A5%E8%80%85%E6%A0%91/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">数据结构：败者树</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2018/02/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">
+        <span class="next-text nav-default">数据结构：树状数组</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

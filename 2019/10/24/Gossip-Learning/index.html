@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="[论文笔记] Gossip Learning"/><meta name="keywords" content="论文笔记, 联邦学习, Gossip Learning, 边缘计算, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2019/10/24/Gossip-Learning/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>[论文笔记] Gossip Learning - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">[论文笔记] Gossip Learning
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-10-24
+        </span><span class="post-visits"
+             data-url="/2019/10/24/Gossip-Learning/"
+             data-title="[论文笔记] Gossip Learning">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#原文地址"><span class="toc-text">原文地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特色"><span class="toc-text">特色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过程"><span class="toc-text">过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Federated-Learning"><span class="toc-text">Federated Learning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Gossip-Learning"><span class="toc-text">Gossip Learning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模型压缩以及聚合"><span class="toc-text">模型压缩以及聚合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验"><span class="toc-text">实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结论"><span class="toc-text">结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>提出 Gossip Learning，与 Federated Learning 做比较，实验表明使用 Gossip Learning 训练的模型在一定时间过后与Federated Learning 表现相当。</p>
+<a id="more"></a>
+<h2 id="原文地址"><a href="#原文地址" class="headerlink" title="原文地址"></a>原文地址</h2><p><a href="https://link.springer.com/chapter/10.1007/978-3-030-22496-7_5" target="_blank" rel="noopener">Hegedűs I, Danner G, Jelasity M. Gossip Learning as a Decentralized Alternative to Federated Learning[C]//IFIP International Conference on Distributed Applications and Interoperable Systems. Springer, Cham, 2019: 74-90.</a></p>
+<p><br></p>
+<h2 id="特色"><a href="#特色" class="headerlink" title="特色"></a>特色</h2><p>传统的 Federated Learning 是 master-worker 架构（master 节点负责模型聚合，worker 是边缘设备，不同于参数服务器架构）</p>
+<p>Gossip Learning 同样主张将数据保留在边缘设备上，但是它没有负责聚合的服务或者任何的中心组成部分，也就是说它是去中心化的。</p>
+<p>文章通过实验表明了这两种方法训练出的模型变现相当，在高压缩率（采样率低）情况下，Gossip Learning 表现更佳。</p>
+<p><br></p>
+<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a><strong>过程</strong></h2><h3 id="Federated-Learning"><a href="#Federated-Learning" class="headerlink" title="Federated Learning"></a>Federated Learning</h3><p>worker 节点训练过程是异步的，master 在给定的时间 $\Delta_f$ 内收集来自 worker 的参数信息，超过 $\Delta_f$ 仍未发送信息的worker 将被抛弃。<strong>算法第 10 行</strong>使用了压缩机制。</p>
+<p>master 节点运行的算法：</p>
+<p><img src="http://cdn.sshpark.com.cn/20191024215805.png" width="500px" /></p>
+<p>worker 节点运行的算法：</p>
+<p><img src="http://cdn.sshpark.com.cn/20191024220506.png" width="500px" /></p>
+<p><br></p>
+<h3 id="Gossip-Learning"><a href="#Gossip-Learning" class="headerlink" title="Gossip Learning"></a>Gossip Learning</h3><p>Gossip Learning 的特点是没有中心节点，每次更新的时候使用一种<strong>采样方式[参考文献 1， 2]</strong>从相邻节点获取模型参数 $w_r$ 并合并到本地模型中，随后使用本地数据 $D_k$ 更新。</p>
+<p><img src="http://cdn.sshpark.com.cn/20191025152405.png" width="500px" /></p>
+<p><br></p>
+<h3 id="模型压缩以及聚合"><a href="#模型压缩以及聚合" class="headerlink" title="模型压缩以及聚合"></a>模型压缩以及聚合</h3><p>模型压缩：</p>
+<ul>
+<li>不压缩</li>
+<li>随机选取大小为 s 的模型参数</li>
+</ul>
+<p><img src="http://cdn.sshpark.com.cn/20191025152637.png" width="500px" /></p>
+<p>模型聚合：</p>
+<ul>
+<li>简单的平均</li>
+<li>基于采样进行聚合</li>
+</ul>
+<p><img src="http://cdn.sshpark.com.cn/20191025152837.png" width="500px" /></p>
+<p>模型参数更新：</p>
+<p><img src="http://cdn.sshpark.com.cn/20191025153254.png" width="500px" /></p>
+<p><br></p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>基于不同采样率在 <strong>Spambase Dataset</strong> 上的实验结果。</p>
+<p><img src="http://cdn.sshpark.com.cn/20191025153921.png" width="700px" /></p>
+<p>还有其他实验结果就不一一列举了。</p>
+<p><br></p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>文章的目标在模型学习效率上进行对比，在统一分配的情况下，Gossip Learning 和 Federated Learning 效率差不多，在高压缩率下，Gossip Learning 表现更好。</p>
+<p>未来工作的方向是设计一种针对 Gossip Learning 和 Federated Learning 的模型评估，以及更复杂的压缩技术。</p>
+<p><br></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
+<li>Jelasity, M., Voulgaris, S., Guerraoui, R., Kermarrec, A.M., van Steen,  M.: Gossip-based peer sampling. ACM Trans. Comput. Syst. <strong>25</strong>(3), 8 (2007)</li>
+<li>Roverso, R., Dowling, J., Jelasity, M.: Through the wormhole: low cost,  fresh peer sampling for the internet. In: Proceedings of the 13th IEEE  International Conference on Peer-to-Peer Computing (P2P 2013). IEEE  (2013)</li>
+</ol>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/">论文笔记</a>
+            <a href="/tags/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/">联邦学习</a>
+            <a href="/tags/Gossip-Learning/">Gossip Learning</a>
+            <a href="/tags/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97/">边缘计算</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/10/31/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-Edge-Assisted-Hierarchical-Federated-Learning-withNon-IID-Data/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">[论文笔记] Edge-Assisted Hierarchical Federated Learning withNon-IID Data</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/10/24/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/">
+        <span class="next-text nav-default">分布式机器学习: 通信机制</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

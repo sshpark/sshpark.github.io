@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="用C++和SFML写游戏-移动我们的Player（3）"/><meta name="keywords" content="SFML, 用C++和SFML写游戏, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2019/06/06/用C-和SFML写游戏-移动我们的Player（3）/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>用C++和SFML写游戏-移动我们的Player（3） - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">用C++和SFML写游戏-移动我们的Player（3）
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-06-06
+        </span><span class="post-visits"
+             data-url="/2019/06/06/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E7%A7%BB%E5%8A%A8%E6%88%91%E4%BB%AC%E7%9A%84Player%EF%BC%883%EF%BC%89/"
+             data-title="用C++和SFML写游戏-移动我们的Player（3）">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、创建-Player-类"><span class="toc-text">一、创建 Player 类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、一些事件处理"><span class="toc-text">二、一些事件处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、最终效果"><span class="toc-text">三、最终效果</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>在上一节中，我们搭建了游戏的基本框架，用循环处理我们的游戏世界，还掌握了一些方法去解决因机器性能不同而引起的问题。在这一节中，我们将会学习：</p>
+<ol>
+<li>创建 <strong>Player</strong> 类</li>
+<li>移动我们的 <strong>Player</strong><a id="more"></a>
+<br/></li>
+</ol>
+<h3 id="一、创建-Player-类"><a href="#一、创建-Player-类" class="headerlink" title="一、创建 Player 类"></a>一、创建 Player 类</h3><p>这里，将会用<strong>矩形（sf::RectangleShape）</strong>代替我们之前的圆形，<strong>Player</strong> 应该有这几个属性，分别是它的形状、大小和颜色，它的方向，它的速度。</p>
+<p>因此我们创建了这么一个 <strong>Player</strong> 类</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Player</span> :</span> <span class="keyword">public</span> sf::Drawable &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Player(<span class="keyword">const</span> Player&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    Player&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Player&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    Player();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> ... Args&gt;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setPosition</span><span class="params">(Args&amp;&amp; ... args)</span> </span>&#123;</span><br><span class="line">        _shape.setPosition(<span class="built_in">std</span>::forward&lt;Args&gt;(args)...);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">(sf::Time deltaTime)</span></span>;</span><br><span class="line">    <span class="keyword">bool</span> isMoving;</span><br><span class="line">    <span class="keyword">int</span> rotation;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">(sf::RenderTarget&amp; target, sf::RenderStates states)</span> <span class="keyword">const</span> <span class="keyword">override</span></span>;</span><br><span class="line">    sf::RectangleShape _shape;</span><br><span class="line">    sf::Vector2f _velocity;</span><br><span class="line">    </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><strong>Player</strong> 是一个可绘制的对象，因此它继承自 <strong>sf::Drawable</strong>。</p>
+<p>这里 <strong>delete</strong> 关键字的作用跟 <strong>Game</strong> 类中的是一样的。</p>
+<p>通过查询 <strong>sf::RectangleShape</strong> 类中的 <strong>setPosition()</strong>方法，它有两个重载方法，分别是：</p>
+<ol>
+<li>void setPosition (float x, float y)</li>
+<li>void setPosition (const Vector2f &amp;position)</li>
+</ol>
+<p>一个有一个参数，另一个有两个参数，因此 Player 类中的 <strong>setPosition()</strong> 使用了变长参数模版。</p>
+<p><strong>isMoving</strong> 代表 Player是否在移动，<strong>rotation</strong> 可以改变方向。</p>
+<p>接下来就是具体实现了。</p>
+<p>首先是 <strong>Player</strong> 的初始化，代码比较简单，这里就不做解释了。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Player::Player() : _shape(sf::Vector2f(<span class="number">100</span>,<span class="number">100</span>))</span><br><span class="line">&#123;</span><br><span class="line">    _shape.setFillColor(sf::Color::Blue);</span><br><span class="line">    _shape.setOrigin(<span class="number">50</span>,<span class="number">50</span>);</span><br><span class="line">    _shape.setPosition(<span class="number">400</span>, <span class="number">300</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后是 <strong>update</strong> 的实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Player::update(sf::Time deltaTime) &#123;</span><br><span class="line">    <span class="keyword">float</span> seconds = deltaTime.asSeconds();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (rotation != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">float</span> angle = (rotation &gt; <span class="number">0</span> ? <span class="number">1</span> : <span class="number">-1</span>)*<span class="number">180</span>*seconds;</span><br><span class="line">        _shape.rotate(angle);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (isMoving) &#123;</span><br><span class="line">        <span class="keyword">float</span> angle = _shape.getRotation() / <span class="number">180</span> * M_PI - M_PI/<span class="number">2</span>;</span><br><span class="line">        _velocity += sf::Vector2f(<span class="built_in">std</span>::<span class="built_in">cos</span>(angle), <span class="built_in">std</span>::<span class="built_in">sin</span>(angle))*<span class="number">60.f</span>*seconds;</span><br><span class="line">    &#125;</span><br><span class="line">    _shape.<span class="built_in">move</span>(seconds * _velocity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过 <strong>rotation</strong> 参数可以改变方向</p>
+<p><strong>isMoving</strong> 判定 <strong>Player</strong> 是否在移动，如果是则给它继续加速，加速度大小这里为 <strong>60.0</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">float</span> angle = _shape.getRotation() / <span class="number">180</span> * M_PI - M_PI/<span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<p>这段代码计算出的是当前 <strong>Player</strong> 移动的角度，减去 <strong>M_PI/2</strong> 是为了是初始方向是向上的。</p>
+<p><br/></p>
+<h3 id="二、一些事件处理"><a href="#二、一些事件处理" class="headerlink" title="二、一些事件处理"></a>二、一些事件处理</h3><p>有了 Player 类，当然还需要让用户去改变它的状态，这里可以通过简单的事件处理解决。事件处理在 <strong>Game</strong> 类的 <strong>processEvents</strong> 方法中，直接看代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (_window.pollEvent(event)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (event.type == sf::Event::Closed) &#123;</span><br><span class="line">        _window.<span class="built_in">close</span>();</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.type == sf::Event::KeyPressed) &#123;</span><br><span class="line">        <span class="keyword">if</span> (event.key.code == sf::<span class="built_in">Keyboard</span>::Escape) &#123;</span><br><span class="line">            _window.<span class="built_in">close</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.key.code == sf::<span class="built_in">Keyboard</span>::Up) &#123;</span><br><span class="line">            _player.isMoving = <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.key.code == sf::<span class="built_in">Keyboard</span>::Left) &#123;</span><br><span class="line">            _player.rotation = <span class="number">-1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.key.code == sf::<span class="built_in">Keyboard</span>::Right) &#123;</span><br><span class="line">            _player.rotation = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.type == sf::Event::KeyReleased) &#123;</span><br><span class="line">        <span class="keyword">if</span>(event.key.code == sf::<span class="built_in">Keyboard</span>::Up)</span><br><span class="line">            _player.isMoving = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (event.key.code == sf::<span class="built_in">Keyboard</span>::Left)</span><br><span class="line">            _player.rotation = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (event.key.code == sf::<span class="built_in">Keyboard</span>::Right)</span><br><span class="line">            _player.rotation = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码简单粗暴，方向键的左右控制 <strong>Player</strong> 向左向右旋转，<strong>UP键</strong>给 <strong>Player</strong> 加速。</p>
+<p><br/></p>
+<h3 id="三、最终效果"><a href="#三、最终效果" class="headerlink" title="三、最终效果"></a>三、最终效果</h3><p><img src="http://cdn.sshpark.com.cn/20190607001506.gif" width="500px" /></p>
+<p>代码已上传到 <strong><a href="https://github.com/sshpark/LearnSFML/tree/master/blog3" target="_blank" rel="noopener">Github</a></strong> </p>
+<p>虽然很简陋，但是好歹运行了起来。这里没有做边界处理，可以看到最后我们的 <strong>Player</strong> 跑到画面外去了。</p>
+<p>下一节我们将会介绍关于<strong>事件处理</strong>的内容。😃</p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/SFML/">SFML</a>
+            <a href="/tags/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F/">用C++和SFML写游戏</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/08/21/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E7%AE%A1%E7%90%86%E6%88%91%E4%BB%AC%E7%9A%84%E4%BA%8B%E4%BB%B6%E6%B5%81%EF%BC%884%EF%BC%89/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">用C++和SFML写游戏-事件的处理（4）</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/06/05/%E7%94%A8C++%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-Game%E7%B1%BB%E7%9A%84%E5%88%9B%E5%BB%BA%EF%BC%882%EF%BC%89/">
+        <span class="next-text nav-default">用C++和SFML写游戏-Game类的创建（2）</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

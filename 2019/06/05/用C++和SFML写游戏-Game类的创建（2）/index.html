@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="用C++和SFML写游戏-Game类的创建（2）"/><meta name="keywords" content="SFML, 用C++和SFML写游戏, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2019/06/05/用C++和SFML写游戏-Game类的创建（2）/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>用C++和SFML写游戏-Game类的创建（2） - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">用C++和SFML写游戏-Game类的创建（2）
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-06-05
+        </span><span class="post-visits"
+             data-url="/2019/06/05/%E7%94%A8C++%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-Game%E7%B1%BB%E7%9A%84%E5%88%9B%E5%BB%BA%EF%BC%882%EF%BC%89/"
+             data-title="用C++和SFML写游戏-Game类的创建（2）">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Game类"><span class="toc-text">Game类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FPS"><span class="toc-text">FPS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1、动态时间步长"><span class="toc-text">1、动态时间步长</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、固定时间步长"><span class="toc-text">2、固定时间步长</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、最小时间步长"><span class="toc-text">3、最小时间步长</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>这一节我们将会学习到游戏的基本结构，其中的内容包括了：</p>
+<ul>
+<li>Game类的创建</li>
+<li>什么是帧数</li>
+<li>Player类的创建</li>
+<li>事件管理器</li>
+</ul>
+<h3 id="Game类"><a href="#Game类" class="headerlink" title="Game类"></a>Game类</h3><p>在上一节中，我们用尽可能少的代码创建了一个基本游戏，它包括了：</p>
+<ul>
+<li>窗口的创建</li>
+<li>图形的绘制</li>
+<li>处理用户的输入</li>
+<li>将游戏元素绘制到屏幕上</li>
+</ul>
+<a id="more"></a>
+<p>上一节中的实例代码全部写在了 <strong>main</strong> 函数了，并没有使用到 <strong>C++</strong> 的面向对象特性。为了提高我们代码的可复用性，从本节开始，我们将会一步步的使用 <strong>OOP</strong> 设计思想封装我们的游戏基本元素，搭建出一个游戏框架的雏形。首先是<strong>Game类</strong>的实现，如下所示：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Game</span> &#123;</span></span><br><span class="line">       <span class="keyword">public</span>:</span><br><span class="line">           Game(<span class="keyword">const</span> Game&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">           Game&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Game&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">           Game();</span><br><span class="line">           <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">       <span class="keyword">private</span>:</span><br><span class="line">           <span class="function"><span class="keyword">void</span> <span class="title">processEvents</span><span class="params">()</span></span>;</span><br><span class="line">           <span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">()</span></span>;</span><br><span class="line">           <span class="function"><span class="keyword">void</span> <span class="title">render</span><span class="params">()</span></span>;</span><br><span class="line">           sf::RenderWindow _window;</span><br><span class="line">           sf::CircleShape  _player;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>* argv[])</span> </span>&#123;</span><br><span class="line">    Game game;</span><br><span class="line">    game.<span class="built_in">run</span>();</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Game类</strong>中的 <strong>=delete</strong> 是为了删除C++类默认的<strong>拷贝构造函数</strong>以及<strong>拷贝赋值运算符</strong>，有关这方面的介绍可以去了解一下，这里就不做赘述。</p>
+<p>可以看到，我们的 <strong>main</strong> 函数里面不在包含任何循环，游戏的运行只需要调用 <strong>Game</strong> 类中的 <strong>run</strong> 方法。对于类中的其它方法 <strong>processEvents()，update()，render()</strong> ，下面一一介绍：</p>
+<ul>
+<li><strong>processEvents():</strong> 这里处理用户的输入</li>
+<li><strong>update():</strong> 更新游戏的状态，计算出下一步</li>
+<li><strong>render():</strong> 绘制游戏的画面（渲染）</li>
+</ul>
+<p>下面，先做简单的实现，为了简单，我们的游戏角色先用一个圆形表示：</p>
+<p>1、构造方法的实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Game::Game() : _window(sf::VideoMode(<span class="number">800</span>, <span class="number">600</span>),<span class="string">"02_Game_Archi"</span>),</span><br><span class="line">_player(<span class="number">150</span>) &#123;</span><br><span class="line">    _player.setFillColor(sf::Color::Blue);</span><br><span class="line">    _player.setPosition(<span class="number">10</span>, <span class="number">20</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2、<strong>Game.run()</strong> 隐藏了 <strong>main</strong> 里面的循环体</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Game::<span class="built_in">run</span>() &#123;</span><br><span class="line">    <span class="keyword">while</span> (_window.isOpen()) &#123;</span><br><span class="line">        processEvents();</span><br><span class="line">        update();</span><br><span class="line">        render();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3、<strong>processEvents()</strong> 用于处理用户的输入，这里它只是简单地通过轮询从上一帧到现在的事件。例如点击按钮或者按下键盘按键，我们这里就只检查用户按下窗口的关闭按钮以及 <strong>ESC</strong> 键，然后窗口就会关闭。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Game::processEvents() &#123;</span><br><span class="line">    sf::Event event;</span><br><span class="line">    <span class="keyword">while</span> (_window.pollEvent(event)) &#123;</span><br><span class="line">        <span class="keyword">if</span> ((event.type == sf::Event::Closed)</span><br><span class="line">          || ((event.type == sf::Event::KeyPressed) &amp;&amp; (event.key.code == sf::<span class="built_in">Keyboard</span>::Escape))) &#123;</span><br><span class="line">            _window.<span class="built_in">close</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>4、<strong>update()</strong> 方法更新了我们的游戏逻辑。但是现在我们还没有具体的逻辑实现，后面将会加入。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Game::update() &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>5、<strong>render()</strong> 负责将游戏画面渲染到屏幕上。首先默认用 <strong>sf::Color::Black</strong> 清除窗口，然后将我们的游戏对象渲染到窗口，最后在屏幕上显示出来。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Game::render() &#123;</span><br><span class="line">    _window.<span class="built_in">clear</span>();</span><br><span class="line">    _window.draw(_player);</span><br><span class="line">    _window.<span class="built_in">display</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行效果跟前一节是一样的</p>
+<p><img alt="02_Game_Archi" src="http://cdn.sshpark.com.cn/20190404201354.png" width="500px" /></p>
+<h3 id="FPS"><a href="#FPS" class="headerlink" title="FPS"></a>FPS</h3><p><strong>FPS（frames per second）：</strong> 每秒的帧数，一帧就是通常指一个画面。</p>
+<p>由于电脑硬件的不同，同一个游戏在不同电脑的运行速度很可能是不一样的。如果开发者没有注意到这个问题，可能会出现角色穿墙的情况，如 <strong>图 1</strong> 所示。</p>
+<p><img alt="图 1" src="http://cdn.sshpark.com.cn/20190528162017.png" width="500px"/></p>
+<p>为了解决这个问题，通常有三种方案，一是动态时间步长，二是固定时间步长，三是两者一起使用。</p>
+<h3 id="1、动态时间步长"><a href="#1、动态时间步长" class="headerlink" title="1、动态时间步长"></a>1、动态时间步长</h3><p>由于每台计算机的性能可能不一样，因此处理一帧所花费的时间也是不同的，但是现实世界中时间的流逝是一样的。 因此这种方法更新的主要原理就是计算出上帧到现在所花费的时间，然后将这个时间传入到 <strong>update()</strong> 函数。</p>
+<p>最后的绘制效果如 <strong>图 2</strong> 所示，可以看到在运行快的计算机上面用户的帧数更高，而运行较慢的计算机上帧数较低，但是完成这个过程所<strong>花费的时间</strong>是一样的。</p>
+<p><img alt="图2" src="http://cdn.sshpark.com.cn/20190529152709.png" width="500px" /></p>
+<p>这个过程的代码大概长这个样子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Game::<span class="built_in">run</span>() &#123;</span><br><span class="line">    sf::Clock clock;</span><br><span class="line">    <span class="keyword">while</span> (_window.isOpen()) &#123;</span><br><span class="line">        processEvents();</span><br><span class="line">        update(clock.restart());</span><br><span class="line">        render();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这时候，我们的 <strong>update</strong> 方法也需要做些改变：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">(sf::Time deltaTime)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><strong>deltaTime</strong> 参数代表的是上次调用 <strong>update</strong> 到现在经过了多少时间</p>
+<p><br/></p>
+<h3 id="2、固定时间步长"><a href="#2、固定时间步长" class="headerlink" title="2、固定时间步长"></a>2、固定时间步长</h3><p>自上一次游戏循环过去了一定量的真实时间。 需要为游戏的“当前时间”模拟推进相同长度的时间，以追上玩家的时间。 我们使用一系列的固定时间步长。 代码大致如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Game::<span class="built_in">run</span>(<span class="keyword">int</span> frame_per_seconds) &#123;</span><br><span class="line">    sf::Clock clock;</span><br><span class="line">    sf::Time timeSinceLastUpdate = sf::Time::Zero;</span><br><span class="line">    sf::Time TimePerFrame = sf::seconds(<span class="number">1.f</span>/frame_per_seconds);</span><br><span class="line">    <span class="keyword">while</span> (_window.isOpen()) &#123;</span><br><span class="line">        processEvents();</span><br><span class="line">        <span class="keyword">bool</span> repaint = <span class="literal">false</span>;</span><br><span class="line">        timeSinceLastUpdate += clock.restart();</span><br><span class="line">        <span class="keyword">while</span> (timeSinceLastUpdate &gt; TimePerFrame) &#123;</span><br><span class="line">            timeSinceLastUpdate -= TimePerFrame;</span><br><span class="line">            repaint = <span class="literal">true</span>;</span><br><span class="line">            update(TimePerFrame);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(repaint)</span><br><span class="line">            render();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在每帧的开始，根据过去了多少真实的时间，更新<code>timeSinceLastUpdate</code>。 这个变量表明了游戏世界时钟比真实世界落后了多少，然后我们使用一个<strong>固定时间步长(fix time step)</strong>的内部循环进行追赶。 一旦我们追上真实时间，我们就渲染然后开始新一轮循环。</p>
+<h3 id="3、最小时间步长"><a href="#3、最小时间步长" class="headerlink" title="3、最小时间步长"></a>3、最小时间步长</h3><p>这个方法把前面两个方法结合。通过确保传入 <strong>update()</strong> 方法的时间参数不那么高使得游戏需要运行的足够快，也就是我们通过这个方法设置了最小的帧数，但是没有最大的。</p>
+<p>就是将传入 <strong>update()</strong> 方法的时间参数不大于一个值，具体过程如图所示：</p>
+<p><img alt="图 3" src="http://cdn.sshpark.com.cn/20190605120644.png" width="500px" /></p>
+<p>具体代码实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Game::<span class="built_in">run</span>(<span class="keyword">int</span> minimum_frame_per_seconds)) &#123;</span><br><span class="line">    sf::Clock clock;</span><br><span class="line">    sf::Time timeSinceLastUpdate;</span><br><span class="line">    sf::Time TimePerFrame = sf::seconds(<span class="number">1.f</span>/minimum_frame_per_seconds);</span><br><span class="line">    <span class="keyword">while</span> (_window.isOpen()) &#123;</span><br><span class="line">        processEvents();</span><br><span class="line">        timeSinceLastUpdate = clock.restart();</span><br><span class="line">        <span class="keyword">while</span> (timeSinceLastUpdate &gt; TimePerFrame) &#123;</span><br><span class="line">            timeSinceLastUpdate -= TimePerFrame;</span><br><span class="line">            update(TimePerFrame);</span><br><span class="line">        &#125;</span><br><span class="line">        update(timeSinceLastUpdate);</span><br><span class="line">        render();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在每一帧中，<strong>update()</strong> 方法都被调用，但是我们确保了传入参数不会太大。</p>
+<p><br/></p>
+<p>下一节将会学习如何移动我们的角色😃。</p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/SFML/">SFML</a>
+            <a href="/tags/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F/">用C++和SFML写游戏</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/06/06/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E7%A7%BB%E5%8A%A8%E6%88%91%E4%BB%AC%E7%9A%84Player%EF%BC%883%EF%BC%89/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">用C++和SFML写游戏-移动我们的Player（3）</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/04/06/%E8%81%8A%E8%81%8AAndroid%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84MVP%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+        <span class="next-text nav-default">聊聊Android开发中的MVP设计模式</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

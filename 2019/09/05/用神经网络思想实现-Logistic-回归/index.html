@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="用神经网络思想实现 Logistic 回归"/><meta name="keywords" content="神经网络, Python, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2019/09/05/用神经网络思想实现-Logistic-回归/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>用神经网络思想实现 Logistic 回归 - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">用神经网络思想实现 Logistic 回归
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-09-05
+        </span><span class="post-visits"
+             data-url="/2019/09/05/%E7%94%A8%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%80%9D%E6%83%B3%E5%AE%9E%E7%8E%B0-Logistic-%E5%9B%9E%E5%BD%92/"
+             data-title="用神经网络思想实现 Logistic 回归">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、需要用到的包"><span class="toc-text">1、需要用到的包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、问题描述以及数据处理"><span class="toc-text">2、问题描述以及数据处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、学习算法的一般结构"><span class="toc-text">3、学习算法的一般结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、实现算法的每一部分"><span class="toc-text">4、实现算法的每一部分</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-有用的函数"><span class="toc-text">4.1 有用的函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-初始化参数"><span class="toc-text">4.2 初始化参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-前向传播和反向传播"><span class="toc-text">4.3 前向传播和反向传播</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4-优化"><span class="toc-text">4.4 优化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、将上面的函数放入-model-中"><span class="toc-text">5、将上面的函数放入 model 中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、进一步分析"><span class="toc-text">6、进一步分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7、使用自己的图片测试"><span class="toc-text">7、使用自己的图片测试</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>这是 <strong>吴恩达</strong> 的课程《神经网络与深度学习》第一个编程练习作业。</p>
+<p>在这个作业中我们将不会使用任何循环（for/while），除非它明确说明要<strong>显式</strong>的使用循环。</p>
+<p>将会学习到：</p>
+<ul>
+<li>建立一个学习算法的基本结构，它包括：<ul>
+<li>初始化参数</li>
+<li>计算<strong>成本函数（cost function）</strong>以及它的<strong>梯度</strong></li>
+<li>使用优化算法 — <strong>梯度下降法（gradient descent）</strong></li>
+</ul>
+</li>
+<li>将上面提到的三个函数放入我们的主函数 model 中</li>
+</ul>
+<a id="more"></a>
+<p>&lt;/br&gt;</p>
+<h3 id="1、需要用到的包"><a href="#1、需要用到的包" class="headerlink" title="1、需要用到的包"></a>1、需要用到的包</h3><ul>
+<li>Python 3.7</li>
+<li>h5py 2.9</li>
+<li>numpy 1.17</li>
+<li>matplotlib 3.1</li>
+<li>from lr_utils import load_dataset</li>
+</ul>
+<p>以上用到的包是在 conda 环境中运行的。<strong>lr_utils</strong> 负责读取数据集。</p>
+<p>&lt;/br&gt;</p>
+<h3 id="2、问题描述以及数据处理"><a href="#2、问题描述以及数据处理" class="headerlink" title="2、问题描述以及数据处理"></a>2、问题描述以及数据处理</h3><p>给定的数据集 <strong>“data.h5”</strong> 包括了：</p>
+<ul>
+<li>训练集$（m_{train}）$图片已经做好了标记，0 代表图片不是猫，1 代表图片是猫</li>
+<li>测试集$（m_{test}）$图片同样做了标记</li>
+<li>每张图片的大小是 $(num<em>{px}, num</em>{px}, 3)$，3 代表的是 RGB 颜色通道。因此每张图片是一个 $num<em>{px} * num</em>{px}$ 大小的矩形</li>
+</ul>
+<p>这里需要建立一个简单的图片识别算法去区分哪些图片是猫。</p>
+<p>来看看给定的数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">train_set_x_orig, train_set_y, test_set_x_orig, test_set_y, classes = load_dataset()</span><br></pre></td></tr></table></figure>
+<p>带有 <code>_orig</code> 后缀的代表我们之后需要对它们进行<strong>预处理</strong>，之后我们就会得到<strong>预处理</strong>之后的数据集 <code>train_set_x</code> 和 <code>test_set_x</code>。</p>
+<p><code>train_set_x</code> 和 <code>test_set_x</code> 用数组储存了图片，具体可以通过下面例子展示:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">index = <span class="number">25</span></span><br><span class="line">plt.imshow(train_set_x_orig[index])</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"y = "</span> + str(train_set_y[:,index]) + <span class="string">", it's a '"</span> + classes[np.squeeze(train_set_y[:,index])].decode(<span class="string">"utf-8"</span>) +  <span class="string">"' picture."</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>输出：</strong></p>
+<p><img src="http://cdn.sshpark.com.cn/20190905150922.png" width="280px" /></p>
+<p>深度学习中的很多 <strong>bug</strong> 都是因为 <strong>矩阵/向量</strong> 的大小不匹配导致的，认真检查好它们的大小将会让你避免很多 <strong>bug</strong>。</p>
+<p>下面的方法能让我们获取到：</p>
+<ul>
+<li>$m_{train}$（训练集的数量）</li>
+<li>$m_{test}$（测试集的数量）</li>
+<li>$num_{px}$（图片的宽高）</li>
+</ul>
+<p>记住 <code>train_set_x_orig</code> 是$（m<em>{train}, num</em>{px}, num<em>{px}, 3）$ 大小的 numpy 数组，你可以通过 <code>train_set_x_orig.shape[0]</code> 获取 $m</em>{train}$ 的大小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### START CODE HERE ### (≈ 3 lines of code)</span></span><br><span class="line">m_train = train_set_y.shape[<span class="number">1</span>]</span><br><span class="line">m_test = test_set_y.shape[<span class="number">1</span>]</span><br><span class="line">num_px = train_set_x_orig.shape[<span class="number">1</span>]</span><br><span class="line"><span class="comment">### END CODE HERE ###</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> (<span class="string">"Number of training examples: m_train = "</span> + str(m_train))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"Number of testing examples: m_test = "</span> + str(m_test))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"Height/Width of each image: num_px = "</span> + str(num_px))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"Each image is of size: ("</span> + str(num_px) + <span class="string">", "</span> + str(num_px) + <span class="string">", 3)"</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"train_set_x shape: "</span> + str(train_set_x_orig.shape))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"train_set_y shape: "</span> + str(train_set_y.shape))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"test_set_x shape: "</span> + str(test_set_x_orig.shape))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"test_set_y shape: "</span> + str(test_set_y.shape))</span><br></pre></td></tr></table></figure>
+<p><strong>输出：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Number of training examples: m_train &#x3D; 209</span><br><span class="line">Number of testing examples: m_test &#x3D; 50</span><br><span class="line">Height&#x2F;Width of each image: num_px &#x3D; 64</span><br><span class="line">Each image is of size: (64, 64, 3)</span><br><span class="line">train_set_x shape: (209, 64, 64, 3)</span><br><span class="line">train_set_y shape: (1, 209)</span><br><span class="line">test_set_x shape: (50, 64, 64, 3)</span><br><span class="line">test_set_y shape: (1, 50)</span><br></pre></td></tr></table></figure>
+<p>&lt;/br&gt;</p>
+<p>为了进行后面的算法学习，我们对图片做以下<strong>预处理</strong>。</p>
+<p>将 $(num<em>{px}, num</em>{px}, 3)$ 大小的图片变成 $(num<em>{px}*num</em>{px}<em>3, 1)$，相当于把图片由<strong>矩阵</strong>变为了<em>*向量</em></em>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Reshape the training and test examples</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### START CODE HERE ### (≈ 2 lines of code)</span></span><br><span class="line">train_set_x_flatten = train_set_x_orig.reshape(train_set_x_orig.shape[<span class="number">0</span>], <span class="number">-1</span>).T</span><br><span class="line">test_set_x_flatten = test_set_x_orig.reshape(test_set_x_orig.shape[<span class="number">0</span>], <span class="number">-1</span>).T</span><br><span class="line"><span class="comment">### END CODE HERE ###</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> (<span class="string">"train_set_x_flatten shape: "</span> + str(train_set_x_flatten.shape))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"train_set_y shape: "</span> + str(train_set_y.shape))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"test_set_x_flatten shape: "</span> + str(test_set_x_flatten.shape))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"test_set_y shape: "</span> + str(test_set_y.shape))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"sanity check after reshaping: "</span> + str(train_set_x_flatten[<span class="number">0</span>:<span class="number">5</span>,<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
+<p><strong>输出：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">train_set_x_flatten shape: (12288, 209)</span><br><span class="line">train_set_y shape: (1, 209)</span><br><span class="line">test_set_x_flatten shape: (12288, 50)</span><br><span class="line">test_set_y shape: (1, 50)</span><br><span class="line">sanity check after reshaping: [17 31 56 22 33]</span><br></pre></td></tr></table></figure>
+<p>最后，我们要将数据进行<strong>标准化</strong>，对于图片数据，我们可以将它除以 255 (RGB通道的最大值)。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">train_set_x = train_set_x_flatten / <span class="number">255.</span></span><br><span class="line">test_set_x = test_set_x_flatten / <span class="number">255.</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h3 id="3、学习算法的一般结构"><a href="#3、学习算法的一般结构" class="headerlink" title="3、学习算法的一般结构"></a>3、学习算法的一般结构</h3><p>接下来就是设计我们的算法去区分猫。</p>
+<p>这里将会用神经网络建立 <strong>Logistic</strong> 回归，不得不说，<strong>Logistic</strong> 是一种非常简单的神经网络。如下图所示：</p>
+<p><img src="http://cdn.sshpark.com.cn/20190905154251.png" width="500px" /></p>
+<p><strong>算法的数学语言描述：</strong></p>
+<p>对于样本$x^{(i)}:$</p>
+<script type="math/tex; mode=display">
+z^{(i)} = w^Tx^{(i)}+b\\\
+\hat{y}^{(i)} = a^{(i)} = sigmoid(z^{(i)})\\\
+\mathcal{L(a^{(i)}, y^{(i)})} = -y^{(i)}log(a^{(i)})-(1-y^{(i)})log(1-a^{(i)})</script><p>最后所有样本的损失函数为：</p>
+<script type="math/tex; mode=display">
+J = \frac{1}{m}\sum_{i=1}^{m}\mathcal{L(a^{(i)}, y^{(i)})}</script><p>这次的练习，我们会进行以下步骤：</p>
+<ul>
+<li>初始化模型参数</li>
+<li>通过最小化成本函数去学习模型参数</li>
+<li>使用学习到的参数去做预测</li>
+<li>分析以及总结</li>
+</ul>
+<p>&lt;/br&gt;</p>
+<h3 id="4、实现算法的每一部分"><a href="#4、实现算法的每一部分" class="headerlink" title="4、实现算法的每一部分"></a>4、实现算法的每一部分</h3><p>这是我们建立神经网络的主要步骤：</p>
+<ul>
+<li><p>定义模型的结构</p>
+</li>
+<li><p>初始化模型参数</p>
+</li>
+<li><p>循环:</p>
+<ul>
+<li>计算当前成本函数（前向传播）</li>
+<li>计算当前梯度（反向传播）</li>
+<li>更新参数（梯度下降）</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-1-有用的函数"><a href="#4-1-有用的函数" class="headerlink" title="4.1 有用的函数"></a>4.1 有用的函数</h4><p><strong>sigmoid 函数</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: sigmoid</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(z)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Compute the sigmoid of z</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    x -- A scalar or numpy array of any size.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Return:</span></span><br><span class="line"><span class="string">    s -- sigmoid(z)</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">### START CODE HERE ### (≈ 1 line of code)</span></span><br><span class="line">    s = <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> s</span><br></pre></td></tr></table></figure>
+<p><strong>测试：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> (<span class="string">"sigmoid(0) = "</span> + str(sigmoid(<span class="number">0</span>)))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"sigmoid(9.2) = "</span> + str(sigmoid(<span class="number">9.2</span>)))</span><br></pre></td></tr></table></figure>
+<p><strong>输出：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sigmoid(<span class="number">0</span>) = <span class="number">0.5</span></span><br><span class="line">sigmoid(<span class="number">9.2</span>) = <span class="number">0.999898970806</span></span><br></pre></td></tr></table></figure>
+<h4 id="4-2-初始化参数"><a href="#4-2-初始化参数" class="headerlink" title="4.2 初始化参数"></a>4.2 初始化参数</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: initialize_with_zeros</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">initialize_with_zeros</span><span class="params">(dim)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    This function creates a vector of zeros of shape (dim, 1) for w and initializes b to 0.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Argument:</span></span><br><span class="line"><span class="string">    dim -- size of the w vector we want (or number of parameters in this case)</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    w -- initialized vector of shape (dim, 1)</span></span><br><span class="line"><span class="string">    b -- initialized scalar (corresponds to the bias)</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">### START CODE HERE ### (≈ 1 line of code)</span></span><br><span class="line">    w = np.zeros(shape=(dim, <span class="number">1</span>))</span><br><span class="line">    b = <span class="number">0</span></span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">assert</span>(w.shape == (dim, <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">assert</span>(isinstance(b, float) <span class="keyword">or</span> isinstance(b, int))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> w, b</span><br></pre></td></tr></table></figure>
+<p><strong>测试：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dim = <span class="number">2</span></span><br><span class="line">w, b = initialize_with_zeros(dim)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"w = "</span> + str(w))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"b = "</span> + str(b))</span><br></pre></td></tr></table></figure>
+<p><strong>输出：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">w &#x3D; [[ 0.]</span><br><span class="line"> [ 0.]]</span><br><span class="line">b &#x3D; 0</span><br></pre></td></tr></table></figure>
+<h4 id="4-3-前向传播和反向传播"><a href="#4-3-前向传播和反向传播" class="headerlink" title="4.3 前向传播和反向传播"></a>4.3 前向传播和反向传播</h4><p>实现 <code>propagate()</code> 函数去计算前向传播和反向传播。</p>
+<p>有用的公式：</p>
+<script type="math/tex; mode=display">
+\frac{\partial{J}}{\partial{w}} = \frac{1}{m}X(A-Y)^T\\\
+\frac{\partial{J}}{\partial{b}} = \frac{1}{m}\sum_{i=1}^m(a^{(i)}-y^{(i)})</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: propagate</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">propagate</span><span class="params">(w, b, X, Y)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Implement the cost function and its gradient for the propagation explained above</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    w -- weights, a numpy array of size (num_px * num_px * 3, 1)</span></span><br><span class="line"><span class="string">    b -- bias, a scalar</span></span><br><span class="line"><span class="string">    X -- data of size (num_px * num_px * 3, number of examples)</span></span><br><span class="line"><span class="string">    Y -- true "label" vector (containing 0 if non-cat, 1 if cat) of size (1, number of examples)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Return:</span></span><br><span class="line"><span class="string">    cost -- negative log-likelihood cost for logistic regression</span></span><br><span class="line"><span class="string">    dw -- gradient of the loss with respect to w, thus same shape as w</span></span><br><span class="line"><span class="string">    db -- gradient of the loss with respect to b, thus same shape as b</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Tips:</span></span><br><span class="line"><span class="string">    - Write your code step by step for the propagation</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    </span><br><span class="line">    m = X.shape[<span class="number">1</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># FORWARD PROPAGATION (FROM X TO COST)</span></span><br><span class="line">    <span class="comment">### START CODE HERE ### (≈ 2 lines of code)</span></span><br><span class="line">    A = sigmoid(np.dot(w.T, X) + b)  <span class="comment"># compute activation</span></span><br><span class="line">    cost = (- <span class="number">1</span> / m) * np.sum(Y * np.log(A) + (<span class="number">1</span> - Y) * (np.log(<span class="number">1</span> - A)))  <span class="comment"># compute cost</span></span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># BACKWARD PROPAGATION (TO FIND GRAD)</span></span><br><span class="line">    <span class="comment">### START CODE HERE ### (≈ 2 lines of code)</span></span><br><span class="line">    dw = (<span class="number">1</span> / m) * np.dot(X, (A - Y).T)</span><br><span class="line">    db = (<span class="number">1</span> / m) * np.sum(A - Y)</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">assert</span>(dw.shape == w.shape)</span><br><span class="line">    <span class="keyword">assert</span>(db.dtype == float)</span><br><span class="line">    cost = np.squeeze(cost)</span><br><span class="line">    <span class="keyword">assert</span>(cost.shape == ())</span><br><span class="line">    </span><br><span class="line">    grads = &#123;<span class="string">"dw"</span>: dw,</span><br><span class="line">             <span class="string">"db"</span>: db&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> grads, cost</span><br></pre></td></tr></table></figure>
+<p><strong>测试：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">w, b, X, Y = np.array([[<span class="number">1</span>], [<span class="number">2</span>]]), <span class="number">2</span>, np.array([[<span class="number">1</span>,<span class="number">2</span>], [<span class="number">3</span>,<span class="number">4</span>]]), np.array([[<span class="number">1</span>, <span class="number">0</span>]])</span><br><span class="line">grads, cost = propagate(w, b, X, Y)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"dw = "</span> + str(grads[<span class="string">"dw"</span>]))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"db = "</span> + str(grads[<span class="string">"db"</span>]))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"cost = "</span> + str(cost))</span><br></pre></td></tr></table></figure>
+<p><strong>输出：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dw &#x3D; [[ 0.99993216]</span><br><span class="line"> [ 1.99980262]]</span><br><span class="line">db &#x3D; 0.499935230625</span><br><span class="line">cost &#x3D; 6.00006477319</span><br></pre></td></tr></table></figure>
+<h4 id="4-4-优化"><a href="#4-4-优化" class="headerlink" title="4.4 优化"></a>4.4 优化</h4><p>使用<strong>梯度下降</strong>进行优化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: optimize</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">optimize</span><span class="params">(w, b, X, Y, num_iterations, learning_rate, print_cost = False)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    This function optimizes w and b by running a gradient descent algorithm</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    w -- weights, a numpy array of size (num_px * num_px * 3, 1)</span></span><br><span class="line"><span class="string">    b -- bias, a scalar</span></span><br><span class="line"><span class="string">    X -- data of shape (num_px * num_px * 3, number of examples)</span></span><br><span class="line"><span class="string">    Y -- true "label" vector (containing 0 if non-cat, 1 if cat), of shape (1, number of examples)</span></span><br><span class="line"><span class="string">    num_iterations -- number of iterations of the optimization loop</span></span><br><span class="line"><span class="string">    learning_rate -- learning rate of the gradient descent update rule</span></span><br><span class="line"><span class="string">    print_cost -- True to print the loss every 100 steps</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    params -- dictionary containing the weights w and bias b</span></span><br><span class="line"><span class="string">    grads -- dictionary containing the gradients of the weights and bias with respect to the cost function</span></span><br><span class="line"><span class="string">    costs -- list of all the costs computed during the optimization, this will be used to plot the learning curve.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Tips:</span></span><br><span class="line"><span class="string">    You basically need to write down two steps and iterate through them:</span></span><br><span class="line"><span class="string">        1) Calculate the cost and the gradient for the current parameters. Use propagate().</span></span><br><span class="line"><span class="string">        2) Update the parameters using gradient descent rule for w and b.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    </span><br><span class="line">    costs = []</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_iterations):</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Cost and gradient calculation (≈ 1-4 lines of code)</span></span><br><span class="line">        <span class="comment">### START CODE HERE ### </span></span><br><span class="line">        grads, cost = propagate(w, b, X, Y)</span><br><span class="line">        <span class="comment">### END CODE HERE ###</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Retrieve derivatives from grads</span></span><br><span class="line">        dw = grads[<span class="string">"dw"</span>]</span><br><span class="line">        db = grads[<span class="string">"db"</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># update rule (≈ 2 lines of code)</span></span><br><span class="line">        <span class="comment">### START CODE HERE ###</span></span><br><span class="line">        w = w - learning_rate * dw  <span class="comment"># need to broadcast</span></span><br><span class="line">        b = b - learning_rate * db</span><br><span class="line">        <span class="comment">### END CODE HERE ###</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Record the costs</span></span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">            costs.append(cost)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Print the cost every 100 training examples</span></span><br><span class="line">        <span class="keyword">if</span> print_cost <span class="keyword">and</span> i % <span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"Cost after iteration %i: %f"</span> % (i, cost))</span><br><span class="line">    </span><br><span class="line">    params = &#123;<span class="string">"w"</span>: w,</span><br><span class="line">              <span class="string">"b"</span>: b&#125;</span><br><span class="line">    </span><br><span class="line">    grads = &#123;<span class="string">"dw"</span>: dw,</span><br><span class="line">             <span class="string">"db"</span>: db&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> params, grads, costs</span><br></pre></td></tr></table></figure>
+<p><strong>测试：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">params, grads, costs &#x3D; optimize(w, b, X, Y, num_iterations&#x3D; 100, learning_rate &#x3D; 0.009, print_cost &#x3D; False)</span><br><span class="line"></span><br><span class="line">print (&quot;w &#x3D; &quot; + str(params[&quot;w&quot;]))</span><br><span class="line">print (&quot;b &#x3D; &quot; + str(params[&quot;b&quot;]))</span><br><span class="line">print (&quot;dw &#x3D; &quot; + str(grads[&quot;dw&quot;]))</span><br><span class="line">print (&quot;db &#x3D; &quot; + str(grads[&quot;db&quot;]))</span><br></pre></td></tr></table></figure>
+<p><strong>输出：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">w &#x3D; [[ 0.1124579 ]</span><br><span class="line"> [ 0.23106775]]</span><br><span class="line">b &#x3D; 1.55930492484</span><br><span class="line">dw &#x3D; [[ 0.90158428]</span><br><span class="line"> [ 1.76250842]]</span><br><span class="line">db &#x3D; 0.430462071679</span><br></pre></td></tr></table></figure>
+<p>下面是实现<strong>预测函数</strong></p>
+<ul>
+<li>计算$\hat{y}=A=\sigma{(w^TX+b)}$</li>
+<li>将激活函数计算的值转换为 0（ &lt;= 0.5）或 1（ &gt; 0.5），并储存在 <code>Y_prediction</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: predict</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(w, b, X)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    Predict whether the label is 0 or 1 using learned logistic regression parameters (w, b)</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    w -- weights, a numpy array of size (num_px * num_px * 3, 1)</span></span><br><span class="line"><span class="string">    b -- bias, a scalar</span></span><br><span class="line"><span class="string">    X -- data of size (num_px * num_px * 3, number of examples)</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    Y_prediction -- a numpy array (vector) containing all predictions (0/1) for the examples in X</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    </span><br><span class="line">    m = X.shape[<span class="number">1</span>]</span><br><span class="line">    Y_prediction = np.zeros((<span class="number">1</span>, m))</span><br><span class="line">    w = w.reshape(X.shape[<span class="number">0</span>], <span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Compute vector "A" predicting the probabilities of a cat being present in the picture</span></span><br><span class="line">    <span class="comment">### START CODE HERE ### (≈ 1 line of code)</span></span><br><span class="line">    A = sigmoid(np.dot(w.T, X) + b)</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(A.shape[<span class="number">1</span>]):</span><br><span class="line">        <span class="comment"># Convert probabilities a[0,i] to actual predictions p[0,i]</span></span><br><span class="line">        <span class="comment">### START CODE HERE ### (≈ 4 lines of code)</span></span><br><span class="line">        Y_prediction[<span class="number">0</span>, i] = <span class="number">1</span> <span class="keyword">if</span> A[<span class="number">0</span>, i] &gt; <span class="number">0.5</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">        <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">assert</span>(Y_prediction.shape == (<span class="number">1</span>, m))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> Y_prediction</span><br></pre></td></tr></table></figure>
+<p>&lt;/br&gt;</p>
+<h3 id="5、将上面的函数放入-model-中"><a href="#5、将上面的函数放入-model-中" class="headerlink" title="5、将上面的函数放入 model 中"></a>5、将上面的函数放入 model 中</h3><p>现在讲上面实现的函数放入 model 中，搭建我们的模型</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: model</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">model</span><span class="params">(X_train, Y_train, X_test, Y_test, num_iterations=<span class="number">2000</span>, learning_rate=<span class="number">0.5</span>, print_cost=False)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Builds the logistic regression model by calling the function you've implemented previously</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    X_train -- training set represented by a numpy array of shape (num_px * num_px * 3, m_train)</span></span><br><span class="line"><span class="string">    Y_train -- training labels represented by a numpy array (vector) of shape (1, m_train)</span></span><br><span class="line"><span class="string">    X_test -- test set represented by a numpy array of shape (num_px * num_px * 3, m_test)</span></span><br><span class="line"><span class="string">    Y_test -- test labels represented by a numpy array (vector) of shape (1, m_test)</span></span><br><span class="line"><span class="string">    num_iterations -- hyperparameter representing the number of iterations to optimize the parameters</span></span><br><span class="line"><span class="string">    learning_rate -- hyperparameter representing the learning rate used in the update rule of optimize()</span></span><br><span class="line"><span class="string">    print_cost -- Set to true to print the cost every 100 iterations</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    d -- dictionary containing information about the model.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">### START CODE HERE ###</span></span><br><span class="line">    <span class="comment"># initialize parameters with zeros (≈ 1 line of code)</span></span><br><span class="line">    w, b = initialize_with_zeros(X_train.shape[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Gradient descent (≈ 1 line of code)</span></span><br><span class="line">    parameters, grads, costs = optimize(w, b, X_train, Y_train, num_iterations, learning_rate, print_cost)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Retrieve parameters w and b from dictionary "parameters"</span></span><br><span class="line">    w = parameters[<span class="string">"w"</span>]</span><br><span class="line">    b = parameters[<span class="string">"b"</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Predict test/train set examples (≈ 2 lines of code)</span></span><br><span class="line">    Y_prediction_test = predict(w, b, X_test)</span><br><span class="line">    Y_prediction_train = predict(w, b, X_train)</span><br><span class="line"></span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Print train/test Errors</span></span><br><span class="line">    print(<span class="string">"train accuracy: &#123;&#125; %"</span>.format(<span class="number">100</span> - np.mean(np.abs(Y_prediction_train - Y_train)) * <span class="number">100</span>))</span><br><span class="line">    print(<span class="string">"test accuracy: &#123;&#125; %"</span>.format(<span class="number">100</span> - np.mean(np.abs(Y_prediction_test - Y_test)) * <span class="number">100</span>))</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    d = &#123;<span class="string">"costs"</span>: costs,</span><br><span class="line">         <span class="string">"Y_prediction_test"</span>: Y_prediction_test, </span><br><span class="line">         <span class="string">"Y_prediction_train"</span> : Y_prediction_train, </span><br><span class="line">         <span class="string">"w"</span> : w, </span><br><span class="line">         <span class="string">"b"</span> : b,</span><br><span class="line">         <span class="string">"learning_rate"</span> : learning_rate,</span><br><span class="line">         <span class="string">"num_iterations"</span>: num_iterations&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> d</span><br></pre></td></tr></table></figure>
+<p>进行训练</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations = <span class="number">2000</span>, learning_rate = <span class="number">0.005</span>, print_cost = <span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>输出：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Cost after iteration 0: 0.693147</span><br><span class="line">Cost after iteration 100: 0.584508</span><br><span class="line">Cost after iteration 200: 0.466949</span><br><span class="line">Cost after iteration 300: 0.376007</span><br><span class="line">Cost after iteration 400: 0.331463</span><br><span class="line">Cost after iteration 500: 0.303273</span><br><span class="line">Cost after iteration 600: 0.279880</span><br><span class="line">Cost after iteration 700: 0.260042</span><br><span class="line">Cost after iteration 800: 0.242941</span><br><span class="line">Cost after iteration 900: 0.228004</span><br><span class="line">Cost after iteration 1000: 0.214820</span><br><span class="line">Cost after iteration 1100: 0.203078</span><br><span class="line">Cost after iteration 1200: 0.192544</span><br><span class="line">Cost after iteration 1300: 0.183033</span><br><span class="line">Cost after iteration 1400: 0.174399</span><br><span class="line">Cost after iteration 1500: 0.166521</span><br><span class="line">Cost after iteration 1600: 0.159305</span><br><span class="line">Cost after iteration 1700: 0.152667</span><br><span class="line">Cost after iteration 1800: 0.146542</span><br><span class="line">Cost after iteration 1900: 0.140872</span><br><span class="line">train accuracy: 99.04306220095694 %</span><br><span class="line">test accuracy: 70.0 %</span><br></pre></td></tr></table></figure>
+<p>训练准确率接近100％。 这说明了模型正在运行并且具有足够的容量来适应训练数据。 测试准确率为70％， 考虑到我们使用的<strong>小数据集</strong>并且<strong>逻辑回归是线性分类器</strong>，这个简单模型实际上并不坏。 不用担心，下周你将建立一个更好的分类器！</p>
+<p>此外，你会发现该模型显然过度拟合了训练数据。 后面将会学习如何减少过拟合，例如使用正则化。 </p>
+<p>打印成本函数的变化：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">costs = np.squeeze(d[<span class="string">'costs'</span>])</span><br><span class="line">plt.plot(costs)</span><br><span class="line">plt.ylabel(<span class="string">'cost'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'iterations (per hundreds)'</span>)</span><br><span class="line">plt.title(<span class="string">"Learning rate ="</span> + str(d[<span class="string">"learning_rate"</span>]))</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://cdn.sshpark.com.cn/20190905162906.png" width="500px" /></p>
+<p>可以看到我们的成本函数是在不断减小的，说明我们的模型在不断的学习中。</p>
+<p>&lt;/br&gt;</p>
+<h3 id="6、进一步分析"><a href="#6、进一步分析" class="headerlink" title="6、进一步分析"></a>6、进一步分析</h3><p><strong>关于学习率的选择</strong></p>
+<p>为了让我们梯度下降法很好的工作，学习率的选择会很重要。因为学习率的大小影响着我们的学习速度，如果学习率太大了，可能会错过最优解，太小的话则会增加迭代次数降低效率。</p>
+<p>下面来看看不同学习率会对模型产生的影响：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">learning_rates = [<span class="number">0.01</span>, <span class="number">0.001</span>, <span class="number">0.0001</span>]</span><br><span class="line">models = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> learning_rates:</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">"learning rate is: "</span> + str(i))</span><br><span class="line">    models[str(i)] = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations = <span class="number">1500</span>, learning_rate = i, print_cost = <span class="literal">False</span>)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'\n'</span> + <span class="string">"-------------------------------------------------------"</span> + <span class="string">'\n'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> learning_rates:</span><br><span class="line">    plt.plot(np.squeeze(models[str(i)][<span class="string">"costs"</span>]), label= str(models[str(i)][<span class="string">"learning_rate"</span>]))</span><br><span class="line"></span><br><span class="line">plt.ylabel(<span class="string">'cost'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'iterations'</span>)</span><br><span class="line"></span><br><span class="line">legend = plt.legend(loc=<span class="string">'upper center'</span>, shadow=<span class="literal">True</span>)</span><br><span class="line">frame = legend.get_frame()</span><br><span class="line">frame.set_facecolor(<span class="string">'0.90'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><strong>输出：</strong></p>
+<p><img src="http://cdn.sshpark.com.cn/20190905163528.png" width="500px" /></p>
+<p>不同的学习率会产生不同的成本，从而产生不同的预测结果。</p>
+<p>如果学习率太大（0.01），则成本可能上下波动甚至可能发散。</p>
+<p>较低的成本并不意味着更好的模型。 你必须检查是否有可能发生了过拟合。 当训练精度远高于测试精度时，就会发生这种情况。</p>
+<p>在深度学习中，我们通常建议您：</p>
+<ul>
+<li>选择更好地降低成本函数的学习率。</li>
+<li>如果您的模型发生过拟合，请使用其他技术来减少过拟合。</li>
+</ul>
+<p>&lt;/br&gt;</p>
+<h3 id="7、使用自己的图片测试"><a href="#7、使用自己的图片测试" class="headerlink" title="7、使用自己的图片测试"></a>7、使用自己的图片测试</h3><p>网上找了一张图：</p>
+<p><img src="http://cdn.sshpark.com.cn/20190905170540.jpeg" width="500px" /></p>
+<p><strong>进行预测：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="comment"># 读取图片并将图片转换为 (num_px, num_px, 3) 大小</span></span><br><span class="line">my_image = Image.open(<span class="string">'my.jpeg'</span>)</span><br><span class="line">my_image = my_image.convert(<span class="string">"RGB"</span>)</span><br><span class="line">my_image = my_image.resize((num_px, num_px),Image.ANTIALIAS)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转换为 numpy 中的数组</span></span><br><span class="line">image = np.array(my_image)</span><br><span class="line">my_image = image.reshape((<span class="number">1</span>, num_px*num_px*<span class="number">3</span>)).T</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预测</span></span><br><span class="line">my_predicted_image = predict(d[<span class="string">"w"</span>], d[<span class="string">"b"</span>], my_image)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示处理后的图片</span></span><br><span class="line">plt.imshow(image)</span><br><span class="line">print(<span class="string">"y = "</span> + str(np.squeeze(my_predicted_image)) + <span class="string">", your algorithm predicts a \""</span> + classes[int(np.squeeze(my_predicted_image)),].decode(<span class="string">"utf-8"</span>) +  <span class="string">"\" picture."</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>输出：</strong></p>
+<p><img src="http://cdn.sshpark.com.cn/20190905170627.png" width="400px" /></p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">神经网络</a>
+            <a href="/tags/Python/">Python</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/09/07/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-2D-%E6%91%84%E5%83%8F%E6%9C%BA%E7%9A%84%E4%BD%BF%E7%94%A8%EF%BC%887%EF%BC%89/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">用C++和SFML写游戏-2D 摄像机的使用（7）</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/08/31/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E8%AE%A9%E6%88%91%E4%BB%AC%E7%9A%84%E7%B2%BE%E7%81%B5%E5%8A%A8%E8%B5%B7%E6%9D%A5-6/">
+        <span class="next-text nav-default">用C++和SFML写游戏-让我们的精灵动起来（6）</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

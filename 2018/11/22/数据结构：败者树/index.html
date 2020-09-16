@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="数据结构：败者树"/><meta name="keywords" content="数据结构, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2018/11/22/数据结构：败者树/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>数据结构：败者树 - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">数据结构：败者树
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-11-22
+        </span><span class="post-visits"
+             data-url="/2018/11/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E8%B4%A5%E8%80%85%E6%A0%91/"
+             data-title="数据结构：败者树">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p><img src="http://cdn.sshpark.com.cn/20190409233530.jpg" alt=""></p>
+<p>败者树是计算机科学学科里的一种数据结构，可用于外部排序中提高效率。实际上是一棵完全二叉树。</p>
+<p><font color="red">败者树的中间结点记录的败者的标号</font><br><a id="more"></a><br>它可以在 log(n) 时间内找到最值。</p>
+<p><strong>败者树的建立：</strong>在参赛者数组b[]的最后添加一位，存放一个参赛选手的绝对最小值（选手都是正数的话，如-1）。所有中间节点都记录这个最小值的下标。然后依次调整（adjust()）各个选手即可。</p>
+<p><strong>败者树的调整：</strong>当改变一个选手的值，需要调整以维持败者树的形态。败者树只需调整选手的父节点即可。当子节点的值大于父节点，则子节点记录于父节点（小为胜利，记录败者），父节点继续与其父节点比赛；若子节点小于父节点，则直接使用子节点进行下一轮比赛。</p>
+<p>如图所示是一颗败者树，规定数大者败。</p>
+<p><img src="http://cdn.sshpark.com.cn/屏幕快照%202018-11-22%20下午9.09.21.jpg" alt="败者树"></p>
+<ul>
+<li>b0与b1对比，b0败</li>
+<li>b2与b3对比，b3败</li>
+<li>b1与b2对比，b2败</li>
+</ul>
+<p>ls[0]记录的是胜者的下标</p>
+<p><strong>相关实现</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LEN 4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MIN -1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> buf[LEN+<span class="number">1</span>];<span class="comment">// 存放多路归并的头元素，多出来的一位放最小值</span></span><br><span class="line"><span class="keyword">int</span> ls[LEN+<span class="number">1</span>]; <span class="comment">// ls[0]保存的是胜者的下标，其余保存败者下标号</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">adjust</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> *arr)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> tmp = (index+LEN)&gt;&gt;<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (tmp &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (buf[index] &gt; buf[ls[tmp]]) &#123; <span class="comment">// 如果当前节点大于父节点（胜者）</span></span><br><span class="line">            ls[tmp] ^= index; <span class="comment">// 交换两个数的异或做法</span></span><br><span class="line">            index ^= ls[tmp];</span><br><span class="line">            ls[tmp] ^= index;</span><br><span class="line">        &#125;</span><br><span class="line">        tmp /= <span class="number">2</span>; <span class="comment">// 访问父节点</span></span><br><span class="line">    &#125;</span><br><span class="line">    ls[<span class="number">0</span>] = index; <span class="comment">// ls[0] 记录最小值的标号</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">build</span><span class="params">(<span class="keyword">int</span> *arr)</span> </span>&#123;</span><br><span class="line">    buf[LEN] = MIN;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; LEN+<span class="number">1</span>; i++) </span><br><span class="line">        ls[i] = LEN;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; LEN; i++)</span><br><span class="line">        adjust(i, arr);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> arr[] = &#123;<span class="number">12</span>, <span class="number">1</span>, <span class="number">6</span>, <span class="number">8</span>&#125;;</span><br><span class="line">    <span class="built_in">memcpy</span>(buf,arr,LEN*<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    build(buf);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, buf[ls[<span class="number">0</span>]]); <span class="comment">// 输出最小值</span></span><br><span class="line"></span><br><span class="line">    arr[<span class="number">1</span>] = <span class="number">22</span>; <span class="comment">// 取出最小值1后，此处变为22</span></span><br><span class="line">    <span class="built_in">memcpy</span>(buf,arr,LEN*<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    adjust(<span class="number">1</span>, buf); <span class="comment">// 调整败者树</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, buf[ls[<span class="number">0</span>]]); <span class="comment">// 输出最小值</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>结果输出：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+<p>败者树一般用于外部排序中，相关代码可访问<a href="https://github.com/sshpark/ExternalSort" target="_blank" rel="noopener"><font color="orange">ExternalSort</font></a> </p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2018/11/26/%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">笔记：协同过滤推荐算法</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2018/10/20/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85hadoop-hbase/">
+        <span class="next-text nav-default">ubuntu下安装hadoop, hbase</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
