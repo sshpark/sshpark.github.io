@@ -179,14 +179,14 @@
 <p>5、<strong>render()</strong> 负责将游戏画面渲染到屏幕上。首先默认用 <strong>sf::Color::Black</strong> 清除窗口，然后将我们的游戏对象渲染到窗口，最后在屏幕上显示出来。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Game::render() &#123;</span><br><span class="line">    _window.<span class="built_in">clear</span>();</span><br><span class="line">    _window.draw(_player);</span><br><span class="line">    _window.<span class="built_in">display</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运行效果跟前一节是一样的</p>
-<p><img alt="02_Game_Archi" src="../images/20190404201354.png.png.png" width="500px" /></p>
+<p><img alt="02_Game_Archi" src="../images/20190404201354.png.png" width="500px" /></p>
 <h3 id="FPS"><a href="#FPS" class="headerlink" title="FPS"></a>FPS</h3><p><strong>FPS（frames per second）：</strong> 每秒的帧数，一帧就是通常指一个画面。</p>
 <p>由于电脑硬件的不同，同一个游戏在不同电脑的运行速度很可能是不一样的。如果开发者没有注意到这个问题，可能会出现角色穿墙的情况，如 <strong>图 1</strong> 所示。</p>
-<p><img alt="图 1" src="../images/20190528162017.png.png.png" width="500px"/></p>
+<p><img alt="图 1" src="../images/20190528162017.png.png" width="500px"/></p>
 <p>为了解决这个问题，通常有三种方案，一是动态时间步长，二是固定时间步长，三是两者一起使用。</p>
 <h3 id="1、动态时间步长"><a href="#1、动态时间步长" class="headerlink" title="1、动态时间步长"></a>1、动态时间步长</h3><p>由于每台计算机的性能可能不一样，因此处理一帧所花费的时间也是不同的，但是现实世界中时间的流逝是一样的。 因此这种方法更新的主要原理就是计算出上帧到现在所花费的时间，然后将这个时间传入到 <strong>update()</strong> 函数。</p>
 <p>最后的绘制效果如 <strong>图 2</strong> 所示，可以看到在运行快的计算机上面用户的帧数更高，而运行较慢的计算机上帧数较低，但是完成这个过程所<strong>花费的时间</strong>是一样的。</p>
-<p><img alt="图2" src="../images/20190529152709.png.png.png" width="500px" /></p>
+<p><img alt="图2" src="../images/20190529152709.png.png" width="500px" /></p>
 <p>这个过程的代码大概长这个样子：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Game::<span class="built_in">run</span>() &#123;</span><br><span class="line">    sf::Clock clock;</span><br><span class="line">    <span class="keyword">while</span> (_window.isOpen()) &#123;</span><br><span class="line">        processEvents();</span><br><span class="line">        update(clock.restart());</span><br><span class="line">        render();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这时候，我们的 <strong>update</strong> 方法也需要做些改变：</p>
@@ -198,7 +198,7 @@
 <p>在每帧的开始，根据过去了多少真实的时间，更新<code>timeSinceLastUpdate</code>。 这个变量表明了游戏世界时钟比真实世界落后了多少，然后我们使用一个<strong>固定时间步长(fix time step)</strong>的内部循环进行追赶。 一旦我们追上真实时间，我们就渲染然后开始新一轮循环。</p>
 <h3 id="3、最小时间步长"><a href="#3、最小时间步长" class="headerlink" title="3、最小时间步长"></a>3、最小时间步长</h3><p>这个方法把前面两个方法结合。通过确保传入 <strong>update()</strong> 方法的时间参数不那么高使得游戏需要运行的足够快，也就是我们通过这个方法设置了最小的帧数，但是没有最大的。</p>
 <p>就是将传入 <strong>update()</strong> 方法的时间参数不大于一个值，具体过程如图所示：</p>
-<p><img alt="图 3" src="../images/20190605120644.png.png.png" width="500px" /></p>
+<p><img alt="图 3" src="../images/20190605120644.png.png" width="500px" /></p>
 <p>具体代码实现：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Game::<span class="built_in">run</span>(<span class="keyword">int</span> minimum_frame_per_seconds)) &#123;</span><br><span class="line">    sf::Clock clock;</span><br><span class="line">    sf::Time timeSinceLastUpdate;</span><br><span class="line">    sf::Time TimePerFrame = sf::seconds(<span class="number">1.f</span>/minimum_frame_per_seconds);</span><br><span class="line">    <span class="keyword">while</span> (_window.isOpen()) &#123;</span><br><span class="line">        processEvents();</span><br><span class="line">        timeSinceLastUpdate = clock.restart();</span><br><span class="line">        <span class="keyword">while</span> (timeSinceLastUpdate &gt; TimePerFrame) &#123;</span><br><span class="line">            timeSinceLastUpdate -= TimePerFrame;</span><br><span class="line">            update(TimePerFrame);</span><br><span class="line">        &#125;</span><br><span class="line">        update(timeSinceLastUpdate);</span><br><span class="line">        render();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在每一帧中，<strong>update()</strong> 方法都被调用，但是我们确保了传入参数不会太大。</p>

@@ -153,30 +153,30 @@
 <p><br></p>
 <h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a><strong>过程</strong></h2><h3 id="Federated-Learning"><a href="#Federated-Learning" class="headerlink" title="Federated Learning"></a>Federated Learning</h3><p>worker 节点训练过程是异步的，master 在给定的时间 $\Delta_f$ 内收集来自 worker 的参数信息，超过 $\Delta_f$ 仍未发送信息的worker 将被抛弃。<strong>算法第 10 行</strong>使用了压缩机制。</p>
 <p>master 节点运行的算法：</p>
-<p><img src="../images/20191024215805.png.png.png" width="500px" /></p>
+<p><img src="../images/20191024215805.png.png" width="500px" /></p>
 <p>worker 节点运行的算法：</p>
-<p><img src="../images/20191024220506.png.png.png" width="500px" /></p>
+<p><img src="../images/20191024220506.png.png" width="500px" /></p>
 <p><br></p>
 <h3 id="Gossip-Learning"><a href="#Gossip-Learning" class="headerlink" title="Gossip Learning"></a>Gossip Learning</h3><p>Gossip Learning 的特点是没有中心节点，每次更新的时候使用一种<strong>采样方式[参考文献 1， 2]</strong>从相邻节点获取模型参数 $w_r$ 并合并到本地模型中，随后使用本地数据 $D_k$ 更新。</p>
-<p><img src="../images/20191025152405.png.png.png" width="500px" /></p>
+<p><img src="../images/20191025152405.png.png" width="500px" /></p>
 <p><br></p>
 <h3 id="模型压缩以及聚合"><a href="#模型压缩以及聚合" class="headerlink" title="模型压缩以及聚合"></a>模型压缩以及聚合</h3><p>模型压缩：</p>
 <ul>
 <li>不压缩</li>
 <li>随机选取大小为 s 的模型参数</li>
 </ul>
-<p><img src="../images/20191025152637.png.png.png" width="500px" /></p>
+<p><img src="../images/20191025152637.png.png" width="500px" /></p>
 <p>模型聚合：</p>
 <ul>
 <li>简单的平均</li>
 <li>基于采样进行聚合</li>
 </ul>
-<p><img src="../images/20191025152837.png.png.png" width="500px" /></p>
+<p><img src="../images/20191025152837.png.png" width="500px" /></p>
 <p>模型参数更新：</p>
-<p><img src="../images/20191025153254.png.png.png" width="500px" /></p>
+<p><img src="../images/20191025153254.png.png" width="500px" /></p>
 <p><br></p>
 <h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>基于不同采样率在 <strong>Spambase Dataset</strong> 上的实验结果。</p>
-<p><img src="../images/20191025153921.png.png.png" width="700px" /></p>
+<p><img src="../images/20191025153921.png.png" width="700px" /></p>
 <p>还有其他实验结果就不一一列举了。</p>
 <p><br></p>
 <h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>文章的目标在模型学习效率上进行对比，在统一分配的情况下，Gossip Learning 和 Federated Learning 效率差不多，在高压缩率下，Gossip Learning 表现更好。</p>

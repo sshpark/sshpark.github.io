@@ -140,7 +140,7 @@
 
     <div class="post-content"><p>先来解释一下为什么要在子线程中更新UI。</p>
 <p>没有人愿意使用经常卡顿的<code>APP</code>，用户希望他们的<code>App</code>用起来流畅而不卡顿。当然每个开发者也希望这样——没有人会在构建自己的<code>App</code>时会说，“这个<code>App</code>跑的太快了，也许我应该放慢一点速度”；</p>
-<p><img src="../images/屏幕快照 2019-02-11 下午11.58.59.png.png.png" width="100px" height="100px"/></p>
+<p><img src="../images/屏幕快照 2019-02-11 下午11.58.59.png.png" width="100px" height="100px"/></p>
 <p>尽管没有人希望这样做， 那么为什么还会有的<code>App</code>用起来会那么卡呢？ 你之前可能已经看过我所说的这些<code>App</code>。</p>
 <p>可以列出一些导致某些<code>App</code>卡顿的原因，但是我敢打赌排在前10位的原因之一就是主线程上有太多的东西。 它有可能是被<code>I/O</code>处理或者复杂的计算(或者两者兼之)所拖累，这很糟糕。</p>
 <p>难道这意味着我们的<code>App</code>中不应该有<code>I/O</code>处理或者复杂的计算吗？显然不是，但是我们应该知道要把这些放在哪里，而不是全部放在主线程中。<br>
