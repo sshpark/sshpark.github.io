@@ -146,13 +146,13 @@
   </div><div class="post-content"><p><strong>想要了解一个算法，最好的做好就是自己实现一遍。</strong>前面简单讲了什么是<a href="http://sshpark.com.cn/2018/11/26/笔记：协同过滤推荐算法">协同过滤</a>，那么在本文，将会尝试实现它。本文实现的是<strong>基于用户的协同过滤算法</strong> ——这种算法给用户推荐和他兴趣相似的其他用户喜欢的物品。感谢<a href="http://product.dangdang.com/22775361.html" target="_blank" rel="noopener">《推荐系统实践》</a>一书的对这方面详细描述。<br><a id="more"></a><br><br></p>
 <h3 id="数据集的准备"><a href="#数据集的准备" class="headerlink" title="数据集的准备"></a>数据集的准备</h3><p>采用GroupLens提供的MovieLens数据集。MovieLens数据集有3个不同的版本，这里采用中等大小的数据集。该数据集包含6000多用户对4000多部电影的100万条评分。该数据集是一个评分数据集，用户可以给电影评5个不同等级的分数(1~5分)。<a href="http://grouplens.org/datasets/movielens/1m/" target="_blank" rel="noopener">数据集下载地址</a></p>
 <p>解压后可以看到以下文件</p>
-<p><img src="../images/20181202161544.png.png" alt="数据集"></p>
+<p><img src="../images/20181202161544.png" alt="数据集"></p>
 <p><br></p>
 <h3 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h3><h4 id="1、求用户的相似度"><a href="#1、求用户的相似度" class="headerlink" title="1、求用户的相似度"></a>1、求用户的相似度</h4><p>通过余弦相似度公式计算，给定用户<code>u</code>和用户<code>v</code>，令<code>N(u)</code>表示用户<code>u</code>曾经有过正反馈的物品集合，令<code>N(v)</code><br>为用户<code>v</code>曾经有过正反馈的物品集合。</p>
 <script type="math/tex; mode=display">
 W_{uv} = \frac{|N(u) \cap N(v)|}{\sqrt{|N(u)||N(v)|}}</script><p><br></p>
 <p>用下图举例说明UserCF计算用户兴趣相似度的例子。在该例中，用户A对物品{a, b, d}有过行为，用户B对物品{a, c}有过行为，</p>
-<p><img src="../images/20181202201603.png.png" alt="图片来源于《推荐系统实战》"></p>
+<p><img src="../images/20181202201603.png" alt="图片来源于《推荐系统实战》"></p>
 <p>利用余弦相似度公式计算用户A和用户B的兴趣相似度为:</p>
 <script type="math/tex; mode=display">
 W_{AB} = \frac{|\{a,b,d\} \cap \{a,c\}|}{\sqrt{|\{a,b,d\}||\{a,c\}|}} = \frac{1}{\sqrt{6}}</script><p>实际上，很多用户相互之间并没有对同样的物品产生过行为，所以公式中的 $|N(u) \cap N(v)|$ 大多数时候为0。因此我们可以先找出$|N(u) \cap N(v)| \ne 0$ 的用户对，然后再做计算。</p>
