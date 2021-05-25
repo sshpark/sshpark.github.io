@@ -145,11 +145,11 @@
     </div>
   </div><div class="post-content"><p>先来解释一下为什么要在子线程中更新UI。</p>
 <p>没有人愿意使用经常卡顿的<code>APP</code>，用户希望他们的<code>App</code>用起来流畅而不卡顿。当然每个开发者也希望这样——没有人会在构建自己的<code>App</code>时会说，“这个<code>App</code>跑的太快了，也许我应该放慢一点速度”；</p>
-<p><img src="http://cdn.sshpark.com.cn/屏幕快照 2019-02-11 下午11.58.59.png" width="100px" height="100px"/></p>
+<p><img src="../images/屏幕快照 2019-02-11 下午11.58.59.png" width="100px" height="100px"/></p>
 <p>尽管没有人希望这样做， 那么为什么还会有的<code>App</code>用起来会那么卡呢？ 你之前可能已经看过我所说的这些<code>App</code>。</p>
 <p>可以列出一些导致某些<code>App</code>卡顿的原因，但是我敢打赌排在前10位的原因之一就是主线程上有太多的东西。 它有可能是被<code>I/O</code>处理或者复杂的计算(或者两者兼之)所拖累，这很糟糕。</p>
 <p>难道这意味着我们的<code>App</code>中不应该有<code>I/O</code>处理或者复杂的计算吗？显然不是，但是我们应该知道要把这些放在哪里，而不是全部放在主线程中。<br><a id="more"></a><br>那么前面的主线程是什么鬼。</p>
-<p><img src="http://cdn.sshpark.com.cn/20190212001021.gif" width="100px" height="100px"/></p>
+<p><img src="../images/20190212001021.gif" width="100px" height="100px"/></p>
 <p>是这样的，当我们启动一个<code>App</code>的时候， <code>Android</code>系统会启动一个<code>Linux Process</code>，该<code>Process</code>包含一个<code>Thread</code>，称为<code>UI Thread</code> 或 <code>Main Thread</code>。通常一个应用的所有组件都运行在这一个 <code>Process</code>中。当然，你可以通过修改 4大组件在<code>Manifest.xml</code>中的代码块(<code>&lt;activity&gt;&lt;service&gt;&lt;provider&gt;&lt;receiver&gt;</code>)中的 <code>android:process</code> 属性指定其运行在不同 的<code>process</code>中 。当一个组件在启动的时候，如果该<code>process</code>已经存在了，那么该组件就直接通过这个<code>process</code>被启动起来，井且运行在这个<code>process</code>的<code>UIThread</code>中 。简单来说，它是负责用户界面的线程。处理的逻辑有，系统事件处理、用户输入事件处理、UI绘制、Service、 Alarm等。</p>
 <p><code>Android</code>默认约定当UI线程阻塞超过20秒将会引起<code>ANR(Application Not Responding)</code>异常。但是实际上，不要说20秒，即使是5秒甚至是2秒，用户都会感到不爽。因此避免在UI线程执行一些耗时操作很有必要。</p>
 <p>这里介绍4种常用的操作多线程的方法</p>
@@ -194,7 +194,7 @@
 <p><strong>代码清单1.3</strong></p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.com.sshpark.mvpdemo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle</span><br><span class="line"><span class="keyword">import</span> kotlinx.android.synthetic.main.activity_main.*</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 绑定Button事件</span></span><br><span class="line">        bn.setOnClickListener &#123;</span><br><span class="line">            Thread(Runnable &#123;</span><br><span class="line">                killSomeTime()</span><br><span class="line">            &#125;).start()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新UI的逻辑</span></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">killSomeTime</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>..<span class="number">20</span>) &#123;</span><br><span class="line">            runOnUiThread(Runnable &#123;</span><br><span class="line">                tv.text = i.toString()</span><br><span class="line">            &#125;)</span><br><span class="line">            Thread.sleep(<span class="number">2000</span>)</span><br><span class="line">            println(<span class="string">"i: <span class="variable">$i</span>"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>运行效果：</strong></p>
-<p><img src="http://cdn.sshpark.com.cn/20190212134129.gif" height="400px" alt="图片1"></p>
+<p><img src="../images/20190212134129.gif" height="400px" alt="图片1"></p>
 <p><br></p>
 <h2 id="Handlers-and-Messages"><a href="#Handlers-and-Messages" class="headerlink" title="Handlers and Messages"></a>Handlers and Messages</h2><p>与<code>Thread</code>不同，<code>Handler</code>类是<code>Android</code>框架的一部分ーー不是<code>Java</code>的一部分。 处理程序对象主要用于管理线程。</p>
 <p><code>Android</code>主线程包含一个消息队列 (MessageQueue)，该消息队列里面可以存入一系列的<code>Message</code>或<code>Runnable</code>对象。通过一个<code>Handler</code>你可以往这个消息队列发送<code>Message</code>或者<code>Runnable</code>对象，并且处理这些对象。每次你新创建一个 <code>Handle</code>对象，它会绑定于创建它的线程(也就是 UI 线程)，以及该线程的消息队列，从这时起，这个<code>handler</code>就会开始把<code>Message</code>或<code>Runnable</code>对象传递到消息队列中，并在它们出队列的时候执行它们。</p>
@@ -268,7 +268,7 @@
 <li><strong>如何创建后台线程？</strong><code>Java Threads</code>，<code>Handlers</code>，<code>AsyncTask</code>，以及<code>doAsync</code></li>
 </ol>
 <p>最后，还是要多练习才能掌握好它们</p>
-<p><img src="http://cdn.sshpark.com.cn/20190212151203.png" width="120px" height="100px"></p>
+<p><img src="../images/20190212151203.png" width="120px" height="100px"></p>
 
       </div>
       
@@ -309,7 +309,7 @@
     粤ICP备17102498号
   </span>
 
-  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+  <span class="copyright-year">&copy;2017 - 2021<span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>
     <span class="author">Sshpark</span>

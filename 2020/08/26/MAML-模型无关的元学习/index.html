@@ -158,7 +158,7 @@
 <script type="math/tex; mode=display">
 \theta \leftarrow \theta-\beta \nabla_{\theta} \sum_{m=1}^{M} \mathcal{L}_{\mathcal{T}_{m}}\left(f_{\theta_{m}^{\prime}}\right)</script><p>其中 $\beta$ 为元学习率，这里为一个真正的参数更新步骤。这里需要计算关于 $\theta$ 的二阶梯度，但用一级近似通常也可以达到比较好的性能。</p>
 <p>算法描述如下：</p>
-<p><img src="http://cdn.sshpark.com.cn/20200826235916.png" style="zoom:50%;" /></p>
+<p><img src="../images/20200826235916.png" style="zoom:50%;" /></p>
 <p>算法步骤：</p>
 <ol>
 <li><p>随机初始化参数 $\theta$</p>
@@ -172,7 +172,7 @@
 </li>
 </ol>
 <p>算法过程如下图所示：</p>
-<p><img src="http://cdn.sshpark.com.cn/20200903143037.png" style="zoom:50%;" /></p>
+<p><img src="../images/20200903143037.png" style="zoom:50%;" /></p>
 <p>$\theta$ 是初始化参数，也就是元学习的目标，通过不同任务的更新方向去更新 $\theta$，使得 $\theta$ 达到一个敏感（sensitive）位置，也就是说任务在这个位置只需要做一步或者几步的梯度下降就会引起损失函数的较大变化，迅速达到该任务的“最优”位置。</p>
 <h2 id="MAML-的简单例子"><a href="#MAML-的简单例子" class="headerlink" title="MAML 的简单例子"></a>MAML 的简单例子</h2><p>为了理解 MAML 算法是如何寻找一个更好且鲁棒的初始化参数 $\theta$ 去泛化这些任务的。我们从头实现一个 MAML 算法。</p>
 <p>为了方便理解，这里我们考虑一个二分类任务，随机生成一些训练数据，并用一个单层的神经网络去做训练。</p>
@@ -232,7 +232,7 @@
     粤ICP备17102498号
   </span>
 
-  <span class="copyright-year">&copy;2017 - 2020<span class="heart">
+  <span class="copyright-year">&copy;2017 - 2021<span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>
     <span class="author">Sshpark</span>
