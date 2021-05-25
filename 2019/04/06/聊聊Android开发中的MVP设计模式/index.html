@@ -143,7 +143,7 @@
     <div class="post-toc-content">
       <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MVP基本框架搭建"><span class="toc-text">MVP基本框架搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MVP-简单例子"><span class="toc-text">MVP 简单例子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最后"><span class="toc-text">最后</span></a></li></ol>
     </div>
-  </div><div class="post-content"><p><img src="../images/20190406001243.png" alt="MVP设计模式"></p>
+  </div><div class="post-content"><p><img src="../images/20190406001243.png.png" alt="MVP设计模式"></p>
 <p>Android中的设计模式很多，常用的有 <strong>MVC、MVP和MVVM</strong>，MVP是目前比较流行的一种设计模式，全称为<strong>Model-View-Presenter</strong>。从上图可以看到，MVP 设计模式解除了Model和View的耦合。这种设计的优点是有效地降低View的复杂性，避免业务逻辑被塞入View中，使得View变得更为简单专一。不仅如此，MVP 还带来了良好的可拓展性、可测试性，保证系统整洁性、灵活性。对于一个复杂的应用来说，MVP模式是一种良好的架构模式，它可以非常好地组织应用结构，使得应用变得灵活，拥抱变化。</p>
 <p>MVP模式下，项目中会多出很多类和接口，这是为了实现Model和View的解耦，View和数据的交互通过接口来实现。虽然多出了这些类和接口，但是这样便于我们维护，使用MVP模式来写项目，可以说是<strong>面向接口编程</strong>，调用的方法基本都是抽象的，直接使用接口来调用，提高可维护性。在MVP模式中，一般我们都会将要调用的方法抽象成接口，Model、View、Presenter接口，在各实现类中，直接对接口进行操作。</p>
 <p>MVP设计模式的好处有以下几点</p>
@@ -165,7 +165,7 @@
 <h3 id="MVP-简单例子"><a href="#MVP-简单例子" class="headerlink" title="MVP 简单例子"></a>MVP 简单例子</h3><p>这是一个简单的例子，仅仅是作为如何使用 MVP ，实际项目中的使用应该根据需求做定制或者使用成熟的开发框架。</p>
 <p><strong>实现效果：</strong></p>
 <p>通过点击注册按钮，可以向数据库中插入用户注册信息，点击查询按钮，可以显示用户数据。</p>
-<p><img src="../images/20190409231939.gif" alt=""></p>
+<p><img src="../images/20190409231939.gif.png" alt=""></p>
 <p><strong>准备工作：</strong></p>
 <div class="table-container">
 <table>
@@ -216,7 +216,7 @@
 </table>
 </div>
 <p><strong>目录结构：</strong></p>
-<p><img src="../images/20190409230344.png.png" height="500px" width="auto"/></p>
+<p><img src="../images/20190409230344.png.png.png" height="500px" width="auto"/></p>
 <p>1、编写契约类<strong>UserContract</strong>，规定 <strong>View</strong> 和 <strong>Presenter</strong> 接口</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">UserContract</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">View</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">showDialog</span><span class="params">(msg: <span class="type">String</span>)</span></span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Presenter</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">load</span><span class="params">()</span></span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">register</span><span class="params">(username: <span class="type">String</span>, password: <span class="type">String</span>)</span></span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>2、Model层实现，为了简单，使用 <strong>List</strong> 存储数据</p>

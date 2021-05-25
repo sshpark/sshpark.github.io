@@ -179,7 +179,7 @@
 <p><code>train_set_x</code> 和 <code>test_set_x</code> 用数组储存了图片，具体可以通过下面例子展示:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">index = <span class="number">25</span></span><br><span class="line">plt.imshow(train_set_x_orig[index])</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"y = "</span> + str(train_set_y[:,index]) + <span class="string">", it's a '"</span> + classes[np.squeeze(train_set_y[:,index])].decode(<span class="string">"utf-8"</span>) +  <span class="string">"' picture."</span>)</span><br></pre></td></tr></table></figure>
 <p><strong>输出：</strong></p>
-<p><img src="../images/20190905150922.png.png" width="280px" /></p>
+<p><img src="../images/20190905150922.png.png.png" width="280px" /></p>
 <p>深度学习中的很多 <strong>bug</strong> 都是因为 <strong>矩阵/向量</strong> 的大小不匹配导致的，认真检查好它们的大小将会让你避免很多 <strong>bug</strong>。</p>
 <p>下面的方法能让我们获取到：</p>
 <ul>
@@ -202,7 +202,7 @@
 <p><br></p>
 <h3 id="3、学习算法的一般结构"><a href="#3、学习算法的一般结构" class="headerlink" title="3、学习算法的一般结构"></a>3、学习算法的一般结构</h3><p>接下来就是设计我们的算法去区分猫。</p>
 <p>这里将会用神经网络建立 <strong>Logistic</strong> 回归，不得不说，<strong>Logistic</strong> 是一种非常简单的神经网络。如下图所示：</p>
-<p><img src="../images/20190905154251.png.png" width="500px" /></p>
+<p><img src="../images/20190905154251.png.png.png" width="500px" /></p>
 <p><strong>算法的数学语言描述：</strong></p>
 <p>对于样本$x^{(i)}:$</p>
 <script type="math/tex; mode=display">
@@ -275,7 +275,7 @@ J = \frac{1}{m}\sum_{i=1}^{m}\mathcal{L(a^{(i)}, y^{(i)})}</script><p>这次的�
 <p>此外，你会发现该模型显然过度拟合了训练数据。 后面将会学习如何减少过拟合，例如使用正则化。 </p>
 <p>打印成本函数的变化：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">costs = np.squeeze(d[<span class="string">'costs'</span>])</span><br><span class="line">plt.plot(costs)</span><br><span class="line">plt.ylabel(<span class="string">'cost'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'iterations (per hundreds)'</span>)</span><br><span class="line">plt.title(<span class="string">"Learning rate ="</span> + str(d[<span class="string">"learning_rate"</span>]))</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="../images/20190905162906.png.png" width="500px" /></p>
+<p><img src="../images/20190905162906.png.png.png" width="500px" /></p>
 <p>可以看到我们的成本函数是在不断减小的，说明我们的模型在不断的学习中。</p>
 <p>&lt;/br&gt;</p>
 <h3 id="6、进一步分析"><a href="#6、进一步分析" class="headerlink" title="6、进一步分析"></a>6、进一步分析</h3><p><strong>关于学习率的选择</strong></p>
@@ -283,7 +283,7 @@ J = \frac{1}{m}\sum_{i=1}^{m}\mathcal{L(a^{(i)}, y^{(i)})}</script><p>这次的�
 <p>下面来看看不同学习率会对模型产生的影响：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">learning_rates = [<span class="number">0.01</span>, <span class="number">0.001</span>, <span class="number">0.0001</span>]</span><br><span class="line">models = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> learning_rates:</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">"learning rate is: "</span> + str(i))</span><br><span class="line">    models[str(i)] = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations = <span class="number">1500</span>, learning_rate = i, print_cost = <span class="literal">False</span>)</span><br><span class="line">    <span class="keyword">print</span> (<span class="string">'\n'</span> + <span class="string">"-------------------------------------------------------"</span> + <span class="string">'\n'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> learning_rates:</span><br><span class="line">    plt.plot(np.squeeze(models[str(i)][<span class="string">"costs"</span>]), label= str(models[str(i)][<span class="string">"learning_rate"</span>]))</span><br><span class="line"></span><br><span class="line">plt.ylabel(<span class="string">'cost'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'iterations'</span>)</span><br><span class="line"></span><br><span class="line">legend = plt.legend(loc=<span class="string">'upper center'</span>, shadow=<span class="literal">True</span>)</span><br><span class="line">frame = legend.get_frame()</span><br><span class="line">frame.set_facecolor(<span class="string">'0.90'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 <p><strong>输出：</strong></p>
-<p><img src="../images/20190905163528.png.png" width="500px" /></p>
+<p><img src="../images/20190905163528.png.png.png" width="500px" /></p>
 <p>不同的学习率会产生不同的成本，从而产生不同的预测结果。</p>
 <p>如果学习率太大（0.01），则成本可能上下波动甚至可能发散。</p>
 <p>较低的成本并不意味着更好的模型。 你必须检查是否有可能发生了过拟合。 当训练精度远高于测试精度时，就会发生这种情况。</p>
@@ -294,11 +294,11 @@ J = \frac{1}{m}\sum_{i=1}^{m}\mathcal{L(a^{(i)}, y^{(i)})}</script><p>这次的�
 </ul>
 <p>&lt;/br&gt;</p>
 <h3 id="7、使用自己的图片测试"><a href="#7、使用自己的图片测试" class="headerlink" title="7、使用自己的图片测试"></a>7、使用自己的图片测试</h3><p>网上找了一张图：</p>
-<p><img src="../images/20190905170540.jpeg.png" width="500px" /></p>
+<p><img src="../images/20190905170540.jpeg.png.png" width="500px" /></p>
 <p><strong>进行预测：</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="comment"># 读取图片并将图片转换为 (num_px, num_px, 3) 大小</span></span><br><span class="line">my_image = Image.open(<span class="string">'my.jpeg'</span>)</span><br><span class="line">my_image = my_image.convert(<span class="string">"RGB"</span>)</span><br><span class="line">my_image = my_image.resize((num_px, num_px),Image.ANTIALIAS)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转换为 numpy 中的数组</span></span><br><span class="line">image = np.array(my_image)</span><br><span class="line">my_image = image.reshape((<span class="number">1</span>, num_px*num_px*<span class="number">3</span>)).T</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预测</span></span><br><span class="line">my_predicted_image = predict(d[<span class="string">"w"</span>], d[<span class="string">"b"</span>], my_image)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示处理后的图片</span></span><br><span class="line">plt.imshow(image)</span><br><span class="line">print(<span class="string">"y = "</span> + str(np.squeeze(my_predicted_image)) + <span class="string">", your algorithm predicts a \""</span> + classes[int(np.squeeze(my_predicted_image)),].decode(<span class="string">"utf-8"</span>) +  <span class="string">"\" picture."</span>)</span><br></pre></td></tr></table></figure>
 <p><strong>输出：</strong></p>
-<p><img src="../images/20190905170627.png.png" width="400px" /></p>
+<p><img src="../images/20190905170627.png.png.png" width="400px" /></p>
 
       </div>
       

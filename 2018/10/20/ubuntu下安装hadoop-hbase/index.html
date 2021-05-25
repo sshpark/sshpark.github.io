@@ -155,28 +155,28 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install openssh-serve</span><br><span class="line">ssh localhost     <span class="comment"># 登陆localhost，第一次需要输入yes</span></span><br><span class="line"><span class="built_in">exit</span>              <span class="comment"># 退出localhost</span></span><br><span class="line"><span class="built_in">cd</span> ~/.ssh/</span><br><span class="line">ssh-keygen -t rsa <span class="comment"># 生成非对称rsa密钥，连续输入三次回车</span></span><br></pre></td></tr></table></figure>
 <p>之后</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat .&#x2F;id_rsa.pub &gt;&gt; .&#x2F;authorized_keys # 加入授权</span><br><span class="line">ssh localhost                         # 此时登陆localhost不需要密码，说明配置成功</span><br></pre></td></tr></table></figure>
-<p><img src="../images/20181024154038312660668.png" alt="pic-1"></p>
+<p><img src="../images/20181024154038312660668.png.png" alt="pic-1"></p>
 <h3 id="安装-Java11"><a href="#安装-Java11" class="headerlink" title="安装 Java11"></a>安装 Java11</h3><p>首先从<a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="noopener">oracle</a>官网下载对应的java版本，这里我选择的是<a href="http://download.oracle.com/otn-pub/java/jdk/11.0.1+13/90cf5d8f270a4347a95050320eef3fb7/jdk-11.0.1_linux-x64_bin.tar.gz" target="_blank" rel="noopener">jdk-11.0.1_linux-x64_bin.tar.gz</a></p>
-<p><img src="../images/20181024154038340093857.png" alt="pic-2"></p>
+<p><img src="../images/20181024154038340093857.png.png" alt="pic-2"></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/lib/jvm                                      <span class="comment"># 创建jvm文件夹</span></span><br><span class="line">sudo tar zxvf jdk-11.0.1_linux-x64_bin.tar  -C /usr/lib <span class="comment"># 解压到/usr/lib/jvm目录下</span></span><br><span class="line"><span class="built_in">cd</span> /usr/lib/jvm       <span class="comment"># 进入该目录</span></span><br><span class="line">mv  jdk-11.0.1 java   <span class="comment"># 重命名为java</span></span><br><span class="line">vi ~/.bashrc          <span class="comment"># 给JDK配置环境变量</span></span><br></pre></td></tr></table></figure>
 <p>在<code>.bashrc</code>文件添加以下内容</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/lib/jvm/java</span><br><span class="line"><span class="built_in">export</span> JRE_HOME=<span class="variable">$&#123;JAVA_HOME&#125;</span>/jre</span><br><span class="line"><span class="built_in">export</span> CLASSPATH=.:<span class="variable">$&#123;JAVA_HOME&#125;</span>/lib:<span class="variable">$&#123;JRE_HOME&#125;</span>/lib</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$&#123;JAVA_HOME&#125;</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~&#x2F;.bashrc                       #使新配置的环境变量生效</span><br></pre></td></tr></table></figure>
 <p>输出这个说明配置成功</p>
-<p><img src="../images/20181024154038356515033.png" alt="pic-3"></p>
+<p><img src="../images/20181024154038356515033.png.png" alt="pic-3"></p>
 <h3 id="安装Hadoop-2-9-1"><a href="#安装Hadoop-2-9-1" class="headerlink" title="安装Hadoop 2.9.1"></a>安装Hadoop 2.9.1</h3><p>下载<a href="http://mirrors.hust.edu.cn/apache/hadoop/common/stable/" target="_blank" rel="noopener">hadoop-2.9.1.tar.gz</a>，之后执行以下步骤</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo tar -zxvf  hadoop-2.9.1.tar.gz -C /usr/<span class="built_in">local</span> <span class="comment">#解压到/usr/local目录下</span></span><br><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span></span><br><span class="line">sudo mv  hadoop-2.9.1    hadoop <span class="comment">#重命名为hadoop</span></span><br><span class="line">sudo chown -R hadoop ./hadoop  <span class="comment">#修改文件权限</span></span><br></pre></td></tr></table></figure>
 <p>给hadoop配置环境变量，将下面代码添加到.bashrc文件:</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export HADOOP_HOME=/usr/local/hadoop</span><br><span class="line">export CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath):$CLASSPATH</span><br><span class="line">export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native</span><br><span class="line">export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</span><br></pre></td></tr></table></figure>
 <p>执行source ~./bashrc使设置生效，并查看hadoop是否安装成功</p>
-<p><img src="../images/2018102415403839325273.png" alt="pic-4"></p>
+<p><img src="../images/2018102415403839325273.png.png" alt="pic-4"></p>
 <!--more-->
 <h3 id="安装Hbase-1-4-8"><a href="#安装Hbase-1-4-8" class="headerlink" title="安装Hbase 1.4.8"></a>安装Hbase 1.4.8</h3><p>下载<a href="http://apache.fayea.com/hbase/stable/" target="_blank" rel="noopener">hbase-1.4.8-bin.tar.gz</a>，之后执行以下步骤</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo tar -zxvf  hbase-1.4.8-bin.tar.gz -C &#x2F;usr&#x2F;local # 解压到&#x2F;usr&#x2F;local目录下</span><br><span class="line">cd &#x2F;usr&#x2F;local</span><br><span class="line">sudo mv hbase-1.4.8 hbase   # 重命名为hbase</span><br><span class="line">sudo chown -R hbase .&#x2F;hbase # 修改文件权限</span><br></pre></td></tr></table></figure>
 <p>给hadoop配置环境变量，将下面代码添加到.bashrc文件:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH&#x3D;$PATH:&#x2F;usr&#x2F;local&#x2F;hbase&#x2F;bin</span><br></pre></td></tr></table></figure>
 <p>执行source ~./bashrc使设置生效，并查看hbase是否安装成功</p>
-<p><img src="../images/20181024154038418264800.png" alt="pic-5"></p>
+<p><img src="../images/20181024154038418264800.png.png" alt="pic-5"></p>
 <h3 id="hadoop伪分布式配置"><a href="#hadoop伪分布式配置" class="headerlink" title="hadoop伪分布式配置"></a>hadoop伪分布式配置</h3><h4 id="Hadoop运行的3-种模式"><a href="#Hadoop运行的3-种模式" class="headerlink" title="Hadoop运行的3 种模式"></a>Hadoop运行的3 种模式</h4><p>在 Hadoop 上运行作业，却回避了一个重要的问题：应该在何种模式下运行 Hadoop? Hadoop 有 3 种运行模式，各种模式下，Hadoop 组件的运行场所有所不同。回想一下，HDFS 包括一个 NameNode，它充当着集群协调者的角色，是一个或多个用于存储数据的 DataNode 的管理者。对于 MapReduce 而言，JobTracker 是集群的主节点，它负责协调多个 TaskTracker 进程执行的工作。Hadoop 以如下 3 种模式部署上述组件。</p>
 <ul>
 <li>本地独立模式：如果不进行任何配置的话，这是 Hadoop的默认工作模式。在这种模式下，Hadoop 的所有组件，如 NameNode、DataNode、JobTracker 和 TaskTracker，都运行在同一个 Java 进程中。</li>
@@ -200,7 +200,7 @@
 <p>输入</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps</span><br></pre></td></tr></table></figure>
 <p>出现如下进程，说明启动成功</p>
-<p><img src="../images/20181024154038558255747.png" alt="pic-6"></p>
+<p><img src="../images/20181024154038558255747.png.png" alt="pic-6"></p>
 
       </div>
       

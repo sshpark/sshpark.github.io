@@ -8,7 +8,7 @@ for path,dir_list,file_list in g:
         with open(os.path.join('./_posts',file_name), 'r+') as f:
             content = f.read()
             print(file_name, len(content))
-            content = re.sub('(?<=../images/).*?(?=")', lambda m: m.group(0) + '.png', content)
+            content = re.sub('(?<=../images/).*?(?=("|\)))', lambda m: m.group(0) + '.png', content)
             f.seek(0)
             f.truncate()
             f.write(content)
