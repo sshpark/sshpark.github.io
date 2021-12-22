@@ -16,10 +16,7 @@
 <meta name="description" content="多思考，少跟风"/><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/page/4/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>sshpark</title>
@@ -138,41 +135,51 @@
         </div>
     </header>
 
-    <div class="post-content"><h3 id="题目1-推断上下级"><a href="#题目1-推断上下级" class="headerlink" title="题目1 : 推断上下级"></a>题目1 : 推断上下级</h3><p>时间限制:10000ms</p>
+    <div class="post-content"><h3 id="题目1-推断上下级">题目1 : 推断上下级</h3>
+<p>时间限制:10000ms</p>
 <p>单点时限:1000ms</p>
 <p>内存限制:256MB</p>
-<h4 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h4><p>H公司包括CEO在内，一共有N名员工，编号1~N，其中CEO的编号是1。除了CEO之外，其他员工都有唯一一名直接上司，形成了一种树形的上下级关系。</p>
-<p>现在小Hi知道H公司所有的上下级关系，一共M对。换句话说，只要两名员工A和B之间存在上下级关系(直接或者间接)，那么A和B一定在这M对关系之中。  </p>
+<h4 id="描述">描述</h4>
+<p>H公司包括CEO在内，一共有N名员工，编号1~N，其中CEO的编号是1。除了CEO之外，其他员工都有唯一一名直接上司，形成了一种树形的上下级关系。</p>
+<p>现在小Hi知道H公司所有的上下级关系，一共M对。换句话说，只要两名员工A和B之间存在上下级关系(直接或者间接)，那么A和B一定在这M对关系之中。</p>
 <p>请你帮小Hi推断出每个人的直接上级是谁。</p>
-<h4 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h4><p>第一行包含两个整数N和M。  </p>
-<p>以下M行，每行包含两个整数Ai和Bi，代表Ai是Bi的上级。  </p>
-<p><strong>2 &lt;= N &lt;= 1000</strong> </p>
+<h4 id="输入">输入</h4>
+<p>第一行包含两个整数N和M。</p>
+<p>以下M行，每行包含两个整数Ai和Bi，代表Ai是Bi的上级。</p>
+<p><strong>2 &lt;= N &lt;= 1000</strong></p>
 <p><strong>1 &lt;= M &lt;= 499500</strong></p>
-<h4 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h4><p>输出N行，其中第i行包含一个整数Pi，代表i号员工的上级。(对CEO输出0)</p>
+<h4 id="输出">输出</h4>
+<p>输出N行，其中第i行包含一个整数Pi，代表i号员工的上级。(对CEO输出0)</p>
 <p><strong>样例输入</strong></p>
 <p><code>3 2 1 2 1 3</code></p>
 <p><strong>样例输出</strong></p>
 <p><code>0 1 1</code></p>
-<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>不能<font color="red">直接套用</font>并查集去解，因为题目要求输出的是每一个员工的<font color="red">直接上级</font>。员工之间的关系是树形关系，不存在回路，使用拓扑排序就可以得到每个员工的直接上级。因为拓扑排序会从这个树形结构的根结点（CEO）开始，当弹出一个节点时，如果相邻节点此时入度为0，则<strong>此节点</strong>的直接上级就是<strong>弹出的节点</strong>。</p>
+<h4 id="题解">题解</h4>
+<p>不能<font color="red">直接套用</font>并查集去解，因为题目要求输出的是每一个员工的<font color="red">直接上级</font>。员工之间的关系是树形关系，不存在回路，使用拓扑排序就可以得到每个员工的直接上级。因为拓扑排序会从这个树形结构的根结点（CEO）开始，当弹出一个节点时，如果相邻节点此时入度为0，则<strong>此节点</strong>的直接上级就是<strong>弹出的节点</strong>。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ll long long</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">1005</span>;</span><br><span class="line"><span class="keyword">int</span> in[maxn], fa[maxn];</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; p[maxn];</span><br><span class="line"><span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt; q;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n, m, a, b;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d %d"</span>, &amp;n, &amp;m);</span><br><span class="line">    <span class="built_in">memset</span>(in, <span class="number">0</span>, <span class="keyword">sizeof</span> in);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (m--) &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d %d"</span>, &amp;a, &amp;b);</span><br><span class="line">        p[a].push_back(b);</span><br><span class="line">        in[b]++;</span><br><span class="line">    &#125;</span><br><span class="line">    q.push(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">while</span> (!q.empty()) &#123;</span><br><span class="line">        <span class="keyword">int</span> top = q.front();</span><br><span class="line">        q.pop();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it : p[top]) &#123;</span><br><span class="line">            in[it]--;</span><br><span class="line">            <span class="keyword">if</span> (in[it] == <span class="number">0</span>) &#123;</span><br><span class="line">                fa[it] = top;</span><br><span class="line">                q.push(it);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"0\n"</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, fa[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
-<h3 id="题目2-数组划分游戏"><a href="#题目2-数组划分游戏" class="headerlink" title="题目2 : 数组划分游戏"></a>题目2 : 数组划分游戏</h3><p>时间限制:10000ms</p>
+<h3 id="题目2-数组划分游戏">题目2 : 数组划分游戏</h3>
+<p>时间限制:10000ms</p>
 <p>单点时限:1000ms</p>
 <p>内存限制:256MB</p>
-<h4 id="描述-1"><a href="#描述-1" class="headerlink" title="描述"></a>描述</h4><p>小Hi在玩一个有关数组划分的游戏。给定一个整数K和一个长度为N的数组A=[A1, A2, … AN]，小Hi需要将它划分为K个连续子数组，并对每个子数组求和。</p>
-<p>不妨设这K个子数组的和依次是S1, S2, … SK，则小Hi的得分是其中的最小值即min(S1, S2, … SK)。  </p>
+<h4 id="描述-1">描述</h4>
+<p>小Hi在玩一个有关数组划分的游戏。给定一个整数K和一个长度为N的数组A=[A1, A2, ... AN]，小Hi需要将它划分为K个连续子数组，并对每个子数组求和。</p>
+<p>不妨设这K个子数组的和依次是S1, S2, ... SK，则小Hi的得分是其中的最小值即min(S1, S2, ... SK)。</p>
 <p>例如对于A=[1, 2, 3, 4]和K=2，小Hi可以划分成[1, 2]和[3, 4]，这样得分是3；也可以划分成[1, 2, 3]和[4]，这样得分是4。</p>
 <p>对于给定的K和数组A，你能帮助小Hi算出他最多能得多少分吗？</p>
-<h4 id="输入-1"><a href="#输入-1" class="headerlink" title="输入"></a>输入</h4><p>第一行包含两个整数N和K。  </p>
-<p>第二行包含N个整数A1, A2, … AN。  </p>
-<p>对于60%的数据，1 &lt;= N &lt;= 1000  </p>
-<p>对于100%的数据，1 &lt;= K &lt;= N &lt;= 100000  1 &lt;= Ai &lt;= 1000000</p>
-<h4 id="输出-1"><a href="#输出-1" class="headerlink" title="输出"></a>输出</h4><p>一个整数代表答案</p>
+<h4 id="输入-1">输入</h4>
+<p>第一行包含两个整数N和K。</p>
+<p>第二行包含N个整数A1, A2, ... AN。</p>
+<p>对于60%的数据，1 &lt;= N &lt;= 1000</p>
+<p>对于100%的数据，1 &lt;= K &lt;= N &lt;= 100000 1 &lt;= Ai &lt;= 1000000</p>
+<h4 id="输出-1">输出</h4>
+<p>一个整数代表答案</p>
 <p><strong>样例输入</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">4 2</span><br><span class="line">1 2 3 4</span><br></pre></td></tr></table></figure>
 <p><strong>样例输出</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4</span><br></pre></td></tr></table></figure>
-<h4 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h4><p><strong>二分法</strong>解决，二分每块区域的<strong>最小值</strong>是多少。</p>
+<h4 id="题解-1">题解</h4>
+<p><strong>二分法</strong>解决，二分每块区域的<strong>最小值</strong>是多少。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ll long long</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">100005</span>;</span><br><span class="line"><span class="keyword">int</span> n, k;</span><br><span class="line"><span class="keyword">int</span> a[maxn];</span><br><span class="line">ll res = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">bool</span> <span class="title">ok</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    ll sum = <span class="number">0</span>, mina = <span class="number">0x7f7f7f</span>;</span><br><span class="line">    <span class="keyword">int</span> m = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        sum += a[i];</span><br><span class="line">        <span class="keyword">if</span> (sum &gt;= x) &#123;</span><br><span class="line">            mina = <span class="built_in">min</span>(sum, mina);</span><br><span class="line">            sum = <span class="number">0</span>;</span><br><span class="line">            m++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (m &gt;= k) res = <span class="built_in">max</span>(res, mina);</span><br><span class="line">    <span class="keyword">return</span> m &gt;= k;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ll sum = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d %d"</span>, &amp;n, &amp;k);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>, a+i);</span><br><span class="line">        sum += a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    ll l = <span class="number">1</span>, r = sum, mid;</span><br><span class="line">    <span class="keyword">while</span> (l &lt;= r) &#123;</span><br><span class="line">        mid = (l+r)&gt;&gt;<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (ok(mid)) l = mid+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> r = mid<span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lld\n"</span>, res);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
           <div class="read-more">
@@ -200,7 +207,7 @@
 <p>在计算机程序设计中，回调函数，或简称回调，是指通过函数参数传递到其它代码的，某一块可执行代码的引用。这一设计允许了底层代码调用在高层定义的子程序。</p>
 </blockquote>
 <p>这段话不是那么好理解，不同语言实现回调的方式有些许不同。其实可以这样理解，回调就是 <strong>在一个函数中调用另外一个函数</strong>。</p>
-<p>在 <strong>c</strong> 语言中，回调是使用函数指针来实现的。 函数指针——顾名思义，是指向一个函数的指针。通常函数指针有两个方面的用途，一个是<strong>转换表</strong>（jump table），另一个是<strong>作为参数传递给一个函数</strong>。</p>
+<p>在 <strong>c</strong> 语言中，回调是使用函数指针来实现的。 函数指针----顾名思义，是指向一个函数的指针。通常函数指针有两个方面的用途，一个是<strong>转换表</strong>（jump table），另一个是<strong>作为参数传递给一个函数</strong>。</p>
 <p>下面是两个函数指针的声明</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> (*f)(<span class="keyword">int</span>, <span class="keyword">float</span>);</span><br><span class="line"><span class="keyword">int</span> *(*g[])(<span class="keyword">int</span>, <span class="keyword">float</span>);</span><br></pre></td></tr></table></figure>
 <p>前者把 <strong>f</strong> 声明为一个函数指针，它所指的函数接受两个参数，分别是一个整型值和浮点型值，并返回一个整型值。后者把 <strong>g</strong> 声明为一个数组，数组的元素类型是一个函数指针，它所指向的函数接受两个参数，分别是一个整型值和浮点型值，并返回一个整型指针。</p>
@@ -233,7 +240,7 @@
 <p><img src="http://sshpark.github.io/images/屏幕快照 2019-02-11 下午11.58.59.png" width="100px" height="100px"/></p>
 <p>尽管没有人希望这样做， 那么为什么还会有的<code>App</code>用起来会那么卡呢？ 你之前可能已经看过我所说的这些<code>App</code>。</p>
 <p>可以列出一些导致某些<code>App</code>卡顿的原因，但是我敢打赌排在前10位的原因之一就是主线程上有太多的东西。 它有可能是被<code>I/O</code>处理或者复杂的计算(或者两者兼之)所拖累，这很糟糕。</p>
-<p>难道这意味着我们的<code>App</code>中不应该有<code>I/O</code>处理或者复杂的计算吗？显然不是，但是我们应该知道要把这些放在哪里，而不是全部放在主线程中。<br>
+<p>难道这意味着我们的<code>App</code>中不应该有<code>I/O</code>处理或者复杂的计算吗？显然不是，但是我们应该知道要把这些放在哪里，而不是全部放在主线程中。
           <div class="read-more">
             <a href="/2019/02/11/%E5%9C%A8Android%E4%B8%AD%E6%9B%B4%E6%96%B0UI%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/" class="read-more-link">阅读更多</a>
           </div>
@@ -277,7 +284,7 @@
     </header>
 
     <div class="post-content"><p>什么意思呢？就是将 ABCD 变成 DCBA。这里的ABCD代表字节。</p>
-<p>这个方法是在<strong>嵌入式系统课程</strong>中学到的，效率很高，该方法只用了一个临时变量而且不使用循环语句。<br>
+<p>这个方法是在<strong>嵌入式系统课程</strong>中学到的，效率很高，该方法只用了一个临时变量而且不使用循环语句。
           <div class="read-more">
             <a href="/2019/01/10/%E5%B0%86%E4%B8%80%E4%B8%AA%E5%AD%97-32-bit-%E6%8C%89%E5%AD%97%E8%8A%82%E5%8F%8D%E8%BD%AC%E7%9A%84%E6%96%B9%E6%B3%95/" class="read-more-link">阅读更多</a>
           </div>
@@ -298,7 +305,9 @@
         </div>
     </header>
 
-    <div class="post-content"><h3 id="A-Dangerous-Maze"><a href="#A-Dangerous-Maze" class="headerlink" title=" A Dangerous Maze"></a><a href="https://vjudge.net/problem/LightOJ-1027" target="_blank" rel="noopener"> A Dangerous Maze</a></h3><h3 id="B-Discovering-Gold"><a href="#B-Discovering-Gold" class="headerlink" title="B - Discovering Gold"></a><a href="https://vjudge.net/problem/LightOJ-1030" target="_blank" rel="noopener">B - Discovering Gold</a></h3><p>给你一个数N，代表有N个点，每个点上有一定数量的黄金，你有一个6面的骰子，投到x就走x步，如果超过了N，就再投一次，让你求获得黄金数量的期望值。<br>
+    <div class="post-content"><h3 id="a-dangerous-maze"><a href="https://vjudge.net/problem/LightOJ-1027" target="_blank" rel="noopener">A Dangerous Maze</a></h3>
+<h3 id="b---discovering-gold"><a href="https://vjudge.net/problem/LightOJ-1030" target="_blank" rel="noopener">B - Discovering Gold</a></h3>
+<p>给你一个数N，代表有N个点，每个点上有一定数量的黄金，你有一个6面的骰子，投到x就走x步，如果超过了N，就再投一次，让你求获得黄金数量的期望值。
           <div class="read-more">
             <a href="/2018/12/04/kuangbin%E5%B8%A6%E4%BD%A0%E9%A3%9E-%E4%B8%93%E9%A2%98%E4%BA%8C%E5%8D%81%E4%B8%80-%E6%A6%82%E7%8E%87-%E6%9C%9F%E6%9C%9B/" class="read-more-link">阅读更多</a>
           </div>
@@ -319,7 +328,7 @@
         </div>
     </header>
 
-    <div class="post-content"><p><strong>想要了解一个算法，最好的做好就是自己实现一遍。</strong>前面简单讲了什么是<a href="http://sshpark.com.cn/2018/11/26/笔记：协同过滤推荐算法">协同过滤</a>，那么在本文，将会尝试实现它。本文实现的是<strong>基于用户的协同过滤算法</strong> ——这种算法给用户推荐和他兴趣相似的其他用户喜欢的物品。感谢<a href="http://product.dangdang.com/22775361.html" target="_blank" rel="noopener">《推荐系统实践》</a>一书的对这方面详细描述。<br>
+    <div class="post-content"><p><strong>想要了解一个算法，最好的做好就是自己实现一遍。</strong>前面简单讲了什么是<a href="http://sshpark.com.cn/2018/11/26/笔记：协同过滤推荐算法">协同过滤</a>，那么在本文，将会尝试实现它。本文实现的是<strong>基于用户的协同过滤算法</strong> ——这种算法给用户推荐和他兴趣相似的其他用户喜欢的物品。感谢<a href="http://product.dangdang.com/22775361.html" target="_blank" rel="noopener">《推荐系统实践》</a>一书的对这方面详细描述。
           <div class="read-more">
             <a href="/2018/12/01/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%EF%BC%88UserCF%EF%BC%89/" class="read-more-link">阅读更多</a>
           </div>
@@ -340,7 +349,7 @@
         </div>
     </header>
 
-    <div class="post-content"><p>随着电子商务的兴起，推荐系统得到了广泛的应用，同时也推进了对推荐算法的研究。例如：淘宝、京东、Amazon等都采用了智能的推荐系统。<strong>协同过滤（Collaborative filtering）</strong>算法是诞生最早的一种推荐算法，并被广泛采用。其主要思想是“利用群众的智慧”对信息进行过滤和筛选。协同过滤相对于集体智慧而言，它从一定程度上保留了个体的特征。<br>
+    <div class="post-content"><p>随着电子商务的兴起，推荐系统得到了广泛的应用，同时也推进了对推荐算法的研究。例如：淘宝、京东、Amazon等都采用了智能的推荐系统。<strong>协同过滤（Collaborative filtering）</strong>算法是诞生最早的一种推荐算法，并被广泛采用。其主要思想是“利用群众的智慧”对信息进行过滤和筛选。协同过滤相对于集体智慧而言，它从一定程度上保留了个体的特征。
           <div class="read-more">
             <a href="/2018/11/26/%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/" class="read-more-link">阅读更多</a>
           </div>
@@ -361,9 +370,9 @@
         </div>
     </header>
 
-    <div class="post-content"><p><img src="http://sshpark.github.io/images/20190409233530.jpg" alt=""></p>
+    <div class="post-content"><p><img src="http://sshpark.github.io/images/20190409233530.jpg" /></p>
 <p>败者树是计算机科学学科里的一种数据结构，可用于外部排序中提高效率。实际上是一棵完全二叉树。</p>
-<p><font color="red">败者树的中间结点记录的败者的标号</font><br>
+<p><font color="red">败者树的中间结点记录的败者的标号</font>
           <div class="read-more">
             <a href="/2018/11/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E8%B4%A5%E8%80%85%E6%A0%91/" class="read-more-link">阅读更多</a>
           </div>

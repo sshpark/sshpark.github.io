@@ -16,10 +16,7 @@
 <meta name="description" content="贪吃蛇小游戏--SFML实现"/><meta name="keywords" content="SFML, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/2019/09/26/贪吃蛇小游戏-SFML实现/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>贪吃蛇小游戏--SFML实现 - sshpark</title>
@@ -141,13 +138,15 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、蛇的表示"><span class="toc-text">一、蛇的表示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、更新逻辑"><span class="toc-text">二、更新逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、其他东西"><span class="toc-text">三、其他东西</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、后续"><span class="toc-text">四、后续</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一蛇的表示"><span class="toc-text">一、蛇的表示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二更新逻辑"><span class="toc-text">二、更新逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三其他东西"><span class="toc-text">三、其他东西</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四后续"><span class="toc-text">四、后续</span></a></li></ol>
     </div>
-  </div><div class="post-content"><p>经典游戏 —— 贪吃蛇。游戏的实现很简单，只要理清需要用什么数据结构表示蛇以及更新逻辑就好。这里使用 <strong>SFML</strong> 实现。</p>
-<h3 id="一、蛇的表示"><a href="#一、蛇的表示" class="headerlink" title="一、蛇的表示"></a>一、蛇的表示</h3><p>我们可以将蛇身体每一部分存储起来，这里只需要储存每一部分的坐标值。如下</p>
+  </div><div class="post-content"><p>经典游戏 ---- 贪吃蛇。游戏的实现很简单，只要理清需要用什么数据结构表示蛇以及更新逻辑就好。这里使用 <strong>SFML</strong> 实现。</p>
+<h3 id="一蛇的表示">一、蛇的表示</h3>
+<p>我们可以将蛇身体每一部分存储起来，这里只需要储存每一部分的坐标值。如下</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SnakeSegment</span> &#123;</span></span><br><span class="line">    <span class="keyword">int</span> x, y;</span><br><span class="line"></span><br><span class="line">    SnakeSegment(<span class="keyword">int</span> xx, <span class="keyword">int</span> yy): x(xx), y(yy) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span> == (<span class="keyword">const</span> SnakeSegment&amp; other) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>-&gt;x == other.x &amp;&amp; <span class="keyword">this</span>-&gt;y == other.y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>&lt;/br&gt;</p>
-<h3 id="二、更新逻辑"><a href="#二、更新逻辑" class="headerlink" title="二、更新逻辑"></a>二、更新逻辑</h3><p>这里的话，我们需要考虑的逻辑有：</p>
+<p></br></p>
+<h3 id="二更新逻辑">二、更新逻辑</h3>
+<p>这里的话，我们需要考虑的逻辑有：</p>
 <ul>
 <li>在每一步的更新中，蛇的每一部分的<strong>坐标</strong>都在变化</li>
 <li>如果撞到自身，那么游戏重新开始</li>
@@ -156,12 +155,14 @@
 </ul>
 <p>代码如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = snake.size();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n<span class="number">-1</span>; i++)</span><br><span class="line">        snake[i] = snake[i+<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (dir == <span class="number">0</span>) snake[n<span class="number">-1</span>].x--; <span class="keyword">if</span> (dir == <span class="number">1</span>) snake[n<span class="number">-1</span>].y++;</span><br><span class="line">    <span class="keyword">if</span> (dir == <span class="number">2</span>) snake[n<span class="number">-1</span>].x++; <span class="keyword">if</span> (dir == <span class="number">3</span>) snake[n<span class="number">-1</span>].y--;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">std</span>::find(snake.begin(), snake.end()<span class="number">-1</span>, snake[n<span class="number">-1</span>]) != snake.end()<span class="number">-1</span>)</span><br><span class="line">        init();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (snake[n<span class="number">-1</span>].x == fruit.x &amp;&amp; snake[n<span class="number">-1</span>].y == fruit.y) &#123;</span><br><span class="line">        fruit.x = rand() % (windowWidth<span class="number">-2</span>)+<span class="number">1</span>;</span><br><span class="line">        fruit.y = rand() % (windowHeight<span class="number">-2</span>)+<span class="number">1</span>;</span><br><span class="line">        snake.push_back(snake[n<span class="number">-1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (snake[n<span class="number">-1</span>].x &gt;= windowWidth<span class="number">-1</span>) snake[n<span class="number">-1</span>].x = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (snake[n<span class="number">-1</span>].x &lt; <span class="number">1</span>) snake[n<span class="number">-1</span>].x = windowWidth<span class="number">-2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (snake[n<span class="number">-1</span>].y &gt;= windowHeight<span class="number">-1</span>) snake[n<span class="number">-1</span>].y = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (snake[n<span class="number">-1</span>].y &lt; <span class="number">1</span>) snake[n<span class="number">-1</span>].y = windowHeight<span class="number">-2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>&lt;/br&gt;</p>
-<h3 id="三、其他东西"><a href="#三、其他东西" class="headerlink" title="三、其他东西"></a>三、其他东西</h3><p>剩下的就是<strong>世界的绘制</strong>和<strong>键盘事件的处理</strong>，这两部分实现比较简单，这里就不贴代码了。完整代码可以参见<a href="https://github.com/sshpark/LearnSFML/tree/master/Snake" target="_blank" rel="noopener">这里</a></p>
+<p></br></p>
+<h3 id="三其他东西">三、其他东西</h3>
+<p>剩下的就是<strong>世界的绘制</strong>和<strong>键盘事件的处理</strong>，这两部分实现比较简单，这里就不贴代码了。完整代码可以参见<a href="https://github.com/sshpark/LearnSFML/tree/master/Snake" target="_blank" rel="noopener">这里</a></p>
 <p>游戏展示：</p>
 <p><img src="http://sshpark.github.io/images/20190926000954.gif" width="500px" /></p>
-<p>&lt;/br&gt;</p>
-<h3 id="四、后续"><a href="#四、后续" class="headerlink" title="四、后续"></a>四、后续</h3><p>作为展示，贪吃蛇游戏的代码实现过程较为简单，很多小细节没有去处理。例如，吃到食物之后蛇的身体没有立马更新、食物的随机生成没有考虑与蛇冲突、没有分数的展示等等，感兴趣的小伙伴可以动手去实现自己的贪吃蛇小游戏。😃</p>
+<p></br></p>
+<h3 id="四后续">四、后续</h3>
+<p>作为展示，贪吃蛇游戏的代码实现过程较为简单，很多小细节没有去处理。例如，吃到食物之后蛇的身体没有立马更新、食物的随机生成没有考虑与蛇冲突、没有分数的展示等等，感兴趣的小伙伴可以动手去实现自己的贪吃蛇小游戏。😃</p>
 
       </div>
       

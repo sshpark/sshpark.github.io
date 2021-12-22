@@ -16,10 +16,7 @@
 <meta name="description" content="贝尔曼方程"/><meta name="keywords" content="强化学习, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/2019/09/15/贝尔曼方程/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>贝尔曼方程 - sshpark</title>
@@ -141,58 +138,74 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、一些概念"><span class="toc-text">1、一些概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1、回报（Return）"><span class="toc-text">1.1、回报（Return）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2、策略（Policy）"><span class="toc-text">1.2、策略（Policy）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3、State-value-function"><span class="toc-text">1.3、State value function</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4、Q-function"><span class="toc-text">1.4、Q function</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、求解-State-value-function-和-Q-function"><span class="toc-text">2、求解 State value function 和 Q function</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一些概念"><span class="toc-text">1、一些概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#回报return"><span class="toc-text">1.1、回报（Return）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#策略policy"><span class="toc-text">1.2、策略（Policy）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#state-value-function"><span class="toc-text">1.3、State value function</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#q-function"><span class="toc-text">1.4、Q function</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#求解-state-value-function-和-q-function"><span class="toc-text">2、求解 State value function 和 Q function</span></a></li></ol>
     </div>
   </div><div class="post-content"><p>强化学习中的 <strong>State value function</strong> 和 <strong>Q function</strong>。</p>
 <a id="more"></a>
-<h3 id="1、一些概念"><a href="#1、一些概念" class="headerlink" title="1、一些概念"></a>1、一些概念</h3><h4 id="1-1、回报（Return）"><a href="#1-1、回报（Return）" class="headerlink" title="1.1、回报（Return）"></a>1.1、回报（Return）</h4><p>智能体的目标是最大化回报。通常，回报需要定义一个折扣因子 $\gamma$，回报函数如下：</p>
-<script type="math/tex; mode=display">
+<h3 id="一些概念">1、一些概念</h3>
+<h4 id="回报return">1.1、回报（Return）</h4>
+<p>智能体的目标是最大化回报。通常，回报需要定义一个折扣因子 <span class="math inline">\(\gamma\)</span>，回报函数如下： <span class="math display">\[
 \begin{aligned}
-G_t &= R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}...\\
-    &= \sum_{k = 0}^{\infty}\gamma^k r_{t+k+1}
-\end{aligned}</script><h4 id="1-2、策略（Policy）"><a href="#1-2、策略（Policy）" class="headerlink" title="1.2、策略（Policy）"></a>1.2、策略（Policy）</h4><p>策略的定义为 $ \pi: S \rightarrow A $</p>
-<h4 id="1-3、State-value-function"><a href="#1-3、State-value-function" class="headerlink" title="1.3、State value function"></a>1.3、State value function</h4><p><strong>State value function</strong>描述的是在策略 $\pi$ 下该状态 $s$ 下有多好。</p>
-<script type="math/tex; mode=display">
-V^{\pi}(s)=\mathbb{E}_{\pi}[G_t|s_t=s]</script><h4 id="1-4、Q-function"><a href="#1-4、Q-function" class="headerlink" title="1.4、Q function"></a>1.4、Q function</h4><p><strong>Q function</strong> 描述的是在策略 $\pi$ 下，在状态 $s$ 采取动作 $a$ 有多好。</p>
-<script type="math/tex; mode=display">
-Q^\pi(s, a) = \mathbb{E}[G_t|s_t=s,a_t=a]</script><p><br></p>
-<h3 id="2、求解-State-value-function-和-Q-function"><a href="#2、求解-State-value-function-和-Q-function" class="headerlink" title="2、求解 State value function 和 Q function"></a>2、求解 State value function 和 Q function</h3><p><strong>贝尔曼方程（Bellman equation）</strong>是理查德·贝尔曼推导出来的，可以帮助解决马尔可夫决策问题（MDP）。</p>
-<p>根据回报的定义，我们可以将 <strong>State value function</strong> 表示为：</p>
-<script type="math/tex; mode=display">
+G_t &amp;= R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}...\\
+    &amp;= \sum_{k = 0}^{\infty}\gamma^k r_{t+k+1}
+\end{aligned}
+\]</span></p>
+<h4 id="策略policy">1.2、策略（Policy）</h4>
+<p>策略的定义为 $ : S A $</p>
+<h4 id="state-value-function">1.3、State value function</h4>
+<p><strong>State value function</strong>描述的是在策略 <span class="math inline">\(\pi\)</span> 下该状态 <span class="math inline">\(s\)</span> 下有多好。 <span class="math display">\[
+V^{\pi}(s)=\mathbb{E}_{\pi}[G_t|s_t=s]
+\]</span></p>
+<h4 id="q-function">1.4、Q function</h4>
+<p><strong>Q function</strong> 描述的是在策略 <span class="math inline">\(\pi\)</span> 下，在状态 <span class="math inline">\(s\)</span> 采取动作 <span class="math inline">\(a\)</span> 有多好。 <span class="math display">\[
+Q^\pi(s, a) = \mathbb{E}[G_t|s_t=s,a_t=a]
+\]</span></p>
+<p><br></p>
+<h3 id="求解-state-value-function-和-q-function">2、求解 State value function 和 Q function</h3>
+<p><strong>贝尔曼方程（Bellman equation）</strong>是理查德·贝尔曼推导出来的，可以帮助解决马尔可夫决策问题（MDP）。</p>
+<p>根据回报的定义，我们可以将 <strong>State value function</strong> 表示为： <span class="math display">\[
 \begin{aligned}
-V^\pi(s)&=\mathbb{E}_\pi[R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}+...|s_t=s]\\
-&=\mathbb{E}_\pi[\sum_{k=0}^{\infty}\gamma^k R_{t+k+1}|s_t=s]
-\end{aligned}</script><p><strong>定理 1:</strong></p>
-<script type="math/tex; mode=display">
-\mathbb{E}_{\pi}\left[\boldsymbol{v}_{\pi}\left(S_{t+1}\right) | \boldsymbol{S}_{t}\right]=\mathbb{E}_{\pi}\left[\mathbb{E}_{\pi}\left[\boldsymbol{G}_{t+1} | \boldsymbol{S}_{t+1}\right] | \boldsymbol{S}_{t}\right]=\mathbb{E}_{\pi}\left[\boldsymbol{G}_{t+1} | \boldsymbol{S}_{t}\right]</script><p><strong>证明</strong>：</p>
-<p>其中 <script type="math/tex">{s}=S_{t,} {g}^{\prime}={G}_{t+1}, {s}^{\prime}={S}_{t+1}</script></p>
-<script type="math/tex; mode=display">
+V^\pi(s)&amp;=\mathbb{E}_\pi[R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}+...|s_t=s]\\
+&amp;=\mathbb{E}_\pi[\sum_{k=0}^{\infty}\gamma^k R_{t+k+1}|s_t=s]
+\end{aligned}
+\]</span> <strong>定理 1:</strong> <span class="math display">\[
+\mathbb{E}_{\pi}\left[\boldsymbol{v}_{\pi}\left(S_{t+1}\right) | \boldsymbol{S}_{t}\right]=\mathbb{E}_{\pi}\left[\mathbb{E}_{\pi}\left[\boldsymbol{G}_{t+1} | \boldsymbol{S}_{t+1}\right] | \boldsymbol{S}_{t}\right]=\mathbb{E}_{\pi}\left[\boldsymbol{G}_{t+1} | \boldsymbol{S}_{t}\right]
+\]</span></p>
+<p><strong>证明</strong>：</p>
+<p>其中 <span class="math display">\[ {s}=S_{t,} {g}^{\prime}={G}_{t+1}, {s}^{\prime}={S}_{t+1} \]</span></p>
+<p><span class="math display">\[
 \begin{aligned}
-\mathbb{E}_{\pi}\left[\mathbb{E}_{\pi}\left[G_{t+1} | S_{t+1}\right] | S_{t}\right] &=\mathbb{E}_{\pi}\left[\mathbb{E}_{\pi}\left[g^{\prime} | s^{\prime}\right] | s\right] \\
-&=\sum_{s^{\prime}} \sum_{g^{\prime}} g^{\prime} p\left(g^{\prime} | s^{\prime}, s\right) p\left(s^{\prime} | s\right) \\
-&=\sum_{s^{\prime}} \sum_{g^{\prime}} \frac{g^{\prime} p\left(g^{\prime} | s^{\prime}, s\right) p\left(s^{\prime} | s\right) p(s)}{p(s)} \\
-&=\sum_{s^{\prime}} \sum_{g^{\prime}} \frac{g^{\prime} p\left(g^{\prime} | s^{\prime}, s\right) p\left(s^{\prime}, s\right)}{p(s)} \\
-&=\sum_{s^{\prime}} \sum_{g^{\prime}} \frac{g^{\prime} p\left(g^{\prime}, s^{\prime}, s\right)}{p(s)} \\
-&=\sum_{s^{\prime}} \sum_{g^{\prime}} g^{\prime} p\left(g^{\prime}, s^{\prime} | s\right) \\
-&=\sum_{g^{\prime}} \sum_{s^{\prime}} g^{\prime} p\left(g^{\prime}, s^{\prime} | s\right) \\
-&=\sum_{g^{\prime}} g^{\prime} p\left(g^{\prime} | s\right) \\
-&=\mathbb{E}_{\pi}\left[g^{\prime} | s\right]=\mathbb{E}_{\pi}\left[G_{t+1} | S_{t}\right]
-\end{aligned}</script><p>进而得到 <strong>State value function</strong></p>
-<script type="math/tex; mode=display">
+\mathbb{E}_{\pi}\left[\mathbb{E}_{\pi}\left[G_{t+1} | S_{t+1}\right] | S_{t}\right] &amp;=\mathbb{E}_{\pi}\left[\mathbb{E}_{\pi}\left[g^{\prime} | s^{\prime}\right] | s\right] \\
+&amp;=\sum_{s^{\prime}} \sum_{g^{\prime}} g^{\prime} p\left(g^{\prime} | s^{\prime}, s\right) p\left(s^{\prime} | s\right) \\
+&amp;=\sum_{s^{\prime}} \sum_{g^{\prime}} \frac{g^{\prime} p\left(g^{\prime} | s^{\prime}, s\right) p\left(s^{\prime} | s\right) p(s)}{p(s)} \\
+&amp;=\sum_{s^{\prime}} \sum_{g^{\prime}} \frac{g^{\prime} p\left(g^{\prime} | s^{\prime}, s\right) p\left(s^{\prime}, s\right)}{p(s)} \\
+&amp;=\sum_{s^{\prime}} \sum_{g^{\prime}} \frac{g^{\prime} p\left(g^{\prime}, s^{\prime}, s\right)}{p(s)} \\
+&amp;=\sum_{s^{\prime}} \sum_{g^{\prime}} g^{\prime} p\left(g^{\prime}, s^{\prime} | s\right) \\
+&amp;=\sum_{g^{\prime}} \sum_{s^{\prime}} g^{\prime} p\left(g^{\prime}, s^{\prime} | s\right) \\
+&amp;=\sum_{g^{\prime}} g^{\prime} p\left(g^{\prime} | s\right) \\
+&amp;=\mathbb{E}_{\pi}\left[g^{\prime} | s\right]=\mathbb{E}_{\pi}\left[G_{t+1} | S_{t}\right]
+\end{aligned}
+\]</span></p>
+<p>进而得到 <strong>State value function</strong></p>
+<p><span class="math display">\[
 \begin{aligned}
-v_{\pi}(s) &=\mathbb{E}_{\pi}\left[G_{t} | S_{t}=s\right] \\
-&=\mathbb{E}_{\pi}\left[R_{t+1}+\gamma R_{t+2}+\gamma^{2} R_{t+3}+\cdots | S_{t}=s\right] \\
-&=\mathbb{E}_{\pi}\left[R_{t+1}+\gamma \sum_{k=0}^{\infty} \gamma^{k} R_{(t+1)+k+1} | S_{t}=s\right] \\
-&=\mathbb{E}_{\pi}\left[R_{t+1}+\gamma G_{t+1} | S_{t}=s\right] \\
-&=\mathbb{E}_{\pi}\left[R_{t+1}+\gamma \mathbb{E}_{\pi}\left[G_{t+1} | S_{t+1}\right] | S_{t}=s\right] \\
-&=\mathbb{E}_{\pi}\left[R_{t+1}+\gamma v_{\pi}\left(S_{t+1}\right) | S_{t}=s\right] \\
-&=\sum_{a} \pi(a | s) \sum_{r} p(r | s, a) r+\gamma \sum_{a} \pi(a | s) \sum_{s^{\prime}} p\left(s^{\prime} | s, a\right) v_{\pi}\left(s^{\prime}\right) \\
-&=\sum_{a} \pi(a | s) \sum_{r} \sum_{s^{\prime}} p\left(s^{\prime}, r | s, a\right) r+\gamma \sum_{a} \pi(a | s) \sum_{r} \sum_{r} p\left(s^{\prime}, r | s, a\right) v_{\pi}\left(s^{\prime}\right) \\
-&=\sum_{a} \pi(a | s) \sum_{s^{\prime}} \sum_{r} p\left(s^{\prime}, r | s, a\right) r+\gamma \sum_{a} \pi(a | s) \sum_{s^{\prime}} \sum_{r} p\left(s^{\prime}, r | s, a\right) v_{\pi}\left(s^{\prime}\right) \\
-&=\sum_{a} \pi(a | s) \sum_{s^{\prime}} \sum_{r} p\left(s^{\prime}, r | s, a\right)\left[r+\gamma v_{\pi}\left(s^{\prime}\right)\right]
-\end{aligned}</script><p>同理可推导 <strong>Q function</strong> 为：</p>
-<script type="math/tex; mode=display">
-q_{\pi}(s, a)=\sum_{s^{\prime}} \sum_{r} p\left(s^{\prime}, r | s, a\right)\left[r+\gamma v_{\pi}\left(s^{\prime}\right)\right]</script>
+v_{\pi}(s) &amp;=\mathbb{E}_{\pi}\left[G_{t} | S_{t}=s\right] \\
+&amp;=\mathbb{E}_{\pi}\left[R_{t+1}+\gamma R_{t+2}+\gamma^{2} R_{t+3}+\cdots | S_{t}=s\right] \\
+&amp;=\mathbb{E}_{\pi}\left[R_{t+1}+\gamma \sum_{k=0}^{\infty} \gamma^{k} R_{(t+1)+k+1} | S_{t}=s\right] \\
+&amp;=\mathbb{E}_{\pi}\left[R_{t+1}+\gamma G_{t+1} | S_{t}=s\right] \\
+&amp;=\mathbb{E}_{\pi}\left[R_{t+1}+\gamma \mathbb{E}_{\pi}\left[G_{t+1} | S_{t+1}\right] | S_{t}=s\right] \\
+&amp;=\mathbb{E}_{\pi}\left[R_{t+1}+\gamma v_{\pi}\left(S_{t+1}\right) | S_{t}=s\right] \\
+&amp;=\sum_{a} \pi(a | s) \sum_{r} p(r | s, a) r+\gamma \sum_{a} \pi(a | s) \sum_{s^{\prime}} p\left(s^{\prime} | s, a\right) v_{\pi}\left(s^{\prime}\right) \\
+&amp;=\sum_{a} \pi(a | s) \sum_{r} \sum_{s^{\prime}} p\left(s^{\prime}, r | s, a\right) r+\gamma \sum_{a} \pi(a | s) \sum_{r} \sum_{r} p\left(s^{\prime}, r | s, a\right) v_{\pi}\left(s^{\prime}\right) \\
+&amp;=\sum_{a} \pi(a | s) \sum_{s^{\prime}} \sum_{r} p\left(s^{\prime}, r | s, a\right) r+\gamma \sum_{a} \pi(a | s) \sum_{s^{\prime}} \sum_{r} p\left(s^{\prime}, r | s, a\right) v_{\pi}\left(s^{\prime}\right) \\
+&amp;=\sum_{a} \pi(a | s) \sum_{s^{\prime}} \sum_{r} p\left(s^{\prime}, r | s, a\right)\left[r+\gamma v_{\pi}\left(s^{\prime}\right)\right]
+\end{aligned}
+\]</span></p>
+<p>同理可推导 <strong>Q function</strong> 为：</p>
+<p><span class="math display">\[
+q_{\pi}(s, a)=\sum_{s^{\prime}} \sum_{r} p\left(s^{\prime}, r | s, a\right)\left[r+\gamma v_{\pi}\left(s^{\prime}\right)\right]
+\]</span></p>
+
       </div>
       
       <footer class="post-footer">

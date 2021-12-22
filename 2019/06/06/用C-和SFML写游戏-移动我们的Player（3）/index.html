@@ -16,10 +16,7 @@
 <meta name="description" content="用C++和SFML写游戏-移动我们的Player（3）"/><meta name="keywords" content="SFML, 用C++和SFML写游戏, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/2019/06/06/用C-和SFML写游戏-移动我们的Player（3）/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>用C++和SFML写游戏-移动我们的Player（3） - sshpark</title>
@@ -141,21 +138,21 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、创建-Player-类"><span class="toc-text">一、创建 Player 类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、一些事件处理"><span class="toc-text">二、一些事件处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、最终效果"><span class="toc-text">三、最终效果</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一创建-player-类"><span class="toc-text">一、创建 Player 类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二一些事件处理"><span class="toc-text">二、一些事件处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三最终效果"><span class="toc-text">三、最终效果</span></a></li></ol>
     </div>
   </div><div class="post-content"><p>在上一节中，我们搭建了游戏的基本框架，用循环处理我们的游戏世界，还掌握了一些方法去解决因机器性能不同而引起的问题。在这一节中，我们将会学习：</p>
-<ol>
+<ol type="1">
 <li>创建 <strong>Player</strong> 类</li>
-<li>移动我们的 <strong>Player</strong><a id="more"></a>
-<br/></li>
+<li>移动我们的 <strong>Player</strong> <a id="more"></a> <br/></li>
 </ol>
-<h3 id="一、创建-Player-类"><a href="#一、创建-Player-类" class="headerlink" title="一、创建 Player 类"></a>一、创建 Player 类</h3><p>这里，将会用<strong>矩形（sf::RectangleShape）</strong>代替我们之前的圆形，<strong>Player</strong> 应该有这几个属性，分别是它的形状、大小和颜色，它的方向，它的速度。</p>
+<h3 id="一创建-player-类">一、创建 Player 类</h3>
+<p>这里，将会用<strong>矩形（sf::RectangleShape）</strong>代替我们之前的圆形，<strong>Player</strong> 应该有这几个属性，分别是它的形状、大小和颜色，它的方向，它的速度。</p>
 <p>因此我们创建了这么一个 <strong>Player</strong> 类</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Player</span> :</span> <span class="keyword">public</span> sf::Drawable &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Player(<span class="keyword">const</span> Player&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    Player&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Player&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    Player();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> ... Args&gt;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setPosition</span><span class="params">(Args&amp;&amp; ... args)</span> </span>&#123;</span><br><span class="line">        _shape.setPosition(<span class="built_in">std</span>::forward&lt;Args&gt;(args)...);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">(sf::Time deltaTime)</span></span>;</span><br><span class="line">    <span class="keyword">bool</span> isMoving;</span><br><span class="line">    <span class="keyword">int</span> rotation;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">(sf::RenderTarget&amp; target, sf::RenderStates states)</span> <span class="keyword">const</span> <span class="keyword">override</span></span>;</span><br><span class="line">    sf::RectangleShape _shape;</span><br><span class="line">    sf::Vector2f _velocity;</span><br><span class="line">    </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p><strong>Player</strong> 是一个可绘制的对象，因此它继承自 <strong>sf::Drawable</strong>。</p>
 <p>这里 <strong>delete</strong> 关键字的作用跟 <strong>Game</strong> 类中的是一样的。</p>
 <p>通过查询 <strong>sf::RectangleShape</strong> 类中的 <strong>setPosition()</strong>方法，它有两个重载方法，分别是：</p>
-<ol>
+<ol type="1">
 <li>void setPosition (float x, float y)</li>
 <li>void setPosition (const Vector2f &amp;position)</li>
 </ol>
@@ -171,12 +168,14 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">float</span> angle = _shape.getRotation() / <span class="number">180</span> * M_PI - M_PI/<span class="number">2</span>;</span><br></pre></td></tr></table></figure>
 <p>这段代码计算出的是当前 <strong>Player</strong> 移动的角度，减去 <strong>M_PI/2</strong> 是为了是初始方向是向上的。</p>
 <p><br/></p>
-<h3 id="二、一些事件处理"><a href="#二、一些事件处理" class="headerlink" title="二、一些事件处理"></a>二、一些事件处理</h3><p>有了 Player 类，当然还需要让用户去改变它的状态，这里可以通过简单的事件处理解决。事件处理在 <strong>Game</strong> 类的 <strong>processEvents</strong> 方法中，直接看代码：</p>
+<h3 id="二一些事件处理">二、一些事件处理</h3>
+<p>有了 Player 类，当然还需要让用户去改变它的状态，这里可以通过简单的事件处理解决。事件处理在 <strong>Game</strong> 类的 <strong>processEvents</strong> 方法中，直接看代码：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (_window.pollEvent(event)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (event.type == sf::Event::Closed) &#123;</span><br><span class="line">        _window.<span class="built_in">close</span>();</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.type == sf::Event::KeyPressed) &#123;</span><br><span class="line">        <span class="keyword">if</span> (event.key.code == sf::<span class="built_in">Keyboard</span>::Escape) &#123;</span><br><span class="line">            _window.<span class="built_in">close</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.key.code == sf::<span class="built_in">Keyboard</span>::Up) &#123;</span><br><span class="line">            _player.isMoving = <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.key.code == sf::<span class="built_in">Keyboard</span>::Left) &#123;</span><br><span class="line">            _player.rotation = <span class="number">-1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.key.code == sf::<span class="built_in">Keyboard</span>::Right) &#123;</span><br><span class="line">            _player.rotation = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.type == sf::Event::KeyReleased) &#123;</span><br><span class="line">        <span class="keyword">if</span>(event.key.code == sf::<span class="built_in">Keyboard</span>::Up)</span><br><span class="line">            _player.isMoving = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (event.key.code == sf::<span class="built_in">Keyboard</span>::Left)</span><br><span class="line">            _player.rotation = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (event.key.code == sf::<span class="built_in">Keyboard</span>::Right)</span><br><span class="line">            _player.rotation = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>代码简单粗暴，方向键的左右控制 <strong>Player</strong> 向左向右旋转，<strong>UP键</strong>给 <strong>Player</strong> 加速。</p>
 <p><br/></p>
-<h3 id="三、最终效果"><a href="#三、最终效果" class="headerlink" title="三、最终效果"></a>三、最终效果</h3><p><img src="http://sshpark.github.io/images/20190607001506.gif" width="500px" /></p>
-<p>代码已上传到 <strong><a href="https://github.com/sshpark/LearnSFML/tree/master/blog3" target="_blank" rel="noopener">Github</a></strong> </p>
+<h3 id="三最终效果">三、最终效果</h3>
+<p><img src="http://sshpark.github.io/images/20190607001506.gif" width="500px" /></p>
+<p>代码已上传到 <strong><a href="https://github.com/sshpark/LearnSFML/tree/master/blog3" target="_blank" rel="noopener">Github</a></strong></p>
 <p>虽然很简陋，但是好歹运行了起来。这里没有做边界处理，可以看到最后我们的 <strong>Player</strong> 跑到画面外去了。</p>
 <p>下一节我们将会介绍关于<strong>事件处理</strong>的内容。😃</p>
 

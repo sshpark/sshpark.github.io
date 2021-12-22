@@ -16,10 +16,7 @@
 <meta name="description" content="笔记：协同过滤推荐算法"/><meta name="keywords" content="协同过滤, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/2018/11/26/笔记：协同过滤推荐算法/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>笔记：协同过滤推荐算法 - sshpark</title>
@@ -141,66 +138,78 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#协同过滤算法理论基础"><span class="toc-text">协同过滤算法理论基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一、几种常用的相似度计算方法"><span class="toc-text">一、几种常用的相似度计算方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、求最近邻居"><span class="toc-text">二、求最近邻居</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、计算推荐"><span class="toc-text">三、计算推荐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#User-CF（基于用户的）"><span class="toc-text">User CF（基于用户的）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Item-CF（基于物品的）"><span class="toc-text">Item CF（基于物品的）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、协同过滤算法的不足"><span class="toc-text">四、协同过滤算法的不足</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1、数据稀疏性问题"><span class="toc-text">1、数据稀疏性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、冷启动问题-cold-start-problem"><span class="toc-text">2、冷启动问题( cold start problem)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、可扩展性问题"><span class="toc-text">3、可扩展性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、鲁棒性问题"><span class="toc-text">4、鲁棒性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、隐性喜好发现"><span class="toc-text">5、隐性喜好发现</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#协同过滤算法理论基础"><span class="toc-text">协同过滤算法理论基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一几种常用的相似度计算方法"><span class="toc-text">一、几种常用的相似度计算方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二求最近邻居"><span class="toc-text">二、求最近邻居</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三计算推荐"><span class="toc-text">三、计算推荐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#user-cf基于用户的"><span class="toc-text">User CF（基于用户的）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#item-cf基于物品的"><span class="toc-text">Item CF（基于物品的）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四协同过滤算法的不足"><span class="toc-text">四、协同过滤算法的不足</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据稀疏性问题"><span class="toc-text">1、数据稀疏性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#冷启动问题-cold-start-problem"><span class="toc-text">2、冷启动问题( cold start problem)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#可扩展性问题"><span class="toc-text">3、可扩展性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#鲁棒性问题"><span class="toc-text">4、鲁棒性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#隐性喜好发现"><span class="toc-text">5、隐性喜好发现</span></a></li></ol>
     </div>
-  </div><div class="post-content"><p>随着电子商务的兴起，推荐系统得到了广泛的应用，同时也推进了对推荐算法的研究。例如：淘宝、京东、Amazon等都采用了智能的推荐系统。<strong>协同过滤（Collaborative filtering）</strong>算法是诞生最早的一种推荐算法，并被广泛采用。其主要思想是“利用群众的智慧”对信息进行过滤和筛选。协同过滤相对于集体智慧而言，它从一定程度上保留了个体的特征。<br><a id="more"></a><br>一般来说，协同过滤推荐分为三种类型。第一种是<strong>基于用户(user-based)的协同过滤</strong>，第二种是<strong>基于项目(item-based)的协同过滤</strong>，第三种是<strong>基于模型(model based)的协同过滤</strong>。</p>
+  </div><div class="post-content"><p>随着电子商务的兴起，推荐系统得到了广泛的应用，同时也推进了对推荐算法的研究。例如：淘宝、京东、Amazon等都采用了智能的推荐系统。<strong>协同过滤（Collaborative filtering）</strong>算法是诞生最早的一种推荐算法，并被广泛采用。其主要思想是“利用群众的智慧”对信息进行过滤和筛选。协同过滤相对于集体智慧而言，它从一定程度上保留了个体的特征。 <a id="more"></a> 一般来说，协同过滤推荐分为三种类型。第一种是<strong>基于用户(user-based)的协同过滤</strong>，第二种是<strong>基于项目(item-based)的协同过滤</strong>，第三种是<strong>基于模型(model based)的协同过滤</strong>。</p>
 <p><br></p>
-<h3 id="协同过滤算法理论基础"><a href="#协同过滤算法理论基础" class="headerlink" title="协同过滤算法理论基础"></a><strong>协同过滤算法理论基础</strong></h3><h3 id="一、几种常用的相似度计算方法"><a href="#一、几种常用的相似度计算方法" class="headerlink" title="一、几种常用的相似度计算方法"></a>一、几种常用的相似度计算方法</h3><ul>
+<h3 id="协同过滤算法理论基础"><strong>协同过滤算法理论基础</strong></h3>
+<h3 id="一几种常用的相似度计算方法">一、几种常用的相似度计算方法</h3>
+<ul>
 <li><strong>欧几里得距离（Euclidean Distance）</strong></li>
 </ul>
 <p>欧几里得度量（euclidean metric）（也称欧氏距离）是一个通常采用的距离定义，指在m维空间中两个点之间的真实距离，或者向量的自然长度（即该点到原点的距离）。在二维和三维空间中的欧氏距离就是两点之间的实际距离。</p>
-<p>二维空间下欧几里得公式</p>
-<script type="math/tex; mode=display">
-d(x, y) = \sqrt{x^2+y^2}</script><ul>
+<p>二维空间下欧几里得公式 <span class="math display">\[
+d(x, y) = \sqrt{x^2+y^2}
+\]</span></p>
+<ul>
 <li><strong>皮尔逊相关系数（Pearson Correlation Coefficient）</strong></li>
 </ul>
 <p>皮尔逊相关系数一般用于计算两个定距变量间联系的紧密程度，它的取值在 [-1，+1] 之间。</p>
 <p>下面给出基于用户的相似度计算公式</p>
-<script type="math/tex; mode=display">
-p(x, y) = \frac{\sum_{i\in I(x)\cap I(y)}(r_{xi}-\overline{r_x})(r_{yi}-\overline{r_y})}{\sqrt{(r_{xi}-\overline{r_x})^2}\sqrt{(r_{yi}-\overline{r_y})^2}}</script><p><code>p(x, y)</code>表示的是用户<code>x, y</code>之间基于皮尔逊相关系数的相似度，<code>I(x)</code>表示拥护<code>x</code>标z注的所有项目集合，<code>I(y)</code>表示用户<code>y</code>标注的所有项目集合, $r<em>{xi}$ 表示用户<code>x</code>对项目<code>i</code>的标注，$r</em>{yi}$ 表示用户<code>y</code>对项目<code>i</code>的标注，\overline{r_x}、\overline{r_y} 表示用户<code>x, y</code>在所有项目上标注的均值。</p>
+<p><span class="math display">\[
+p(x, y) = \frac{\sum_{i\in I(x)\cap I(y)}(r_{xi}-\overline{r_x})(r_{yi}-\overline{r_y})}{\sqrt{(r_{xi}-\overline{r_x})^2}\sqrt{(r_{yi}-\overline{r_y})^2}}
+\]</span></p>
+<p><code>p(x, y)</code>表示的是用户<code>x, y</code>之间基于皮尔逊相关系数的相似度，<code>I(x)</code>表示拥护<code>x</code>标z注的所有项目集合，<code>I(y)</code>表示用户<code>y</code>标注的所有项目集合, <span class="math inline">\(r_{xi}\)</span> 表示用户<code>x</code>对项目<code>i</code>的标注，<span class="math inline">\(r_{yi}\)</span> 表示用户<code>y</code>对项目<code>i</code>的标注，、 表示用户<code>x, y</code>在所有项目上标注的均值。</p>
 <p>类似的，我们也可以得到基于项目的相似度计算。</p>
 <ul>
 <li><strong>Cosine 相似度（Cosine Similarity）</strong></li>
 </ul>
-<p>计算个体间的相似程度，相似度度量的值越小，说明个体间相似度越小，相似度的值越大说明个体差异越大。广泛应用于计算文档数据的相似度。</p>
-<script type="math/tex; mode=display">
-T(x, y) = \frac{\overrightarrow{x} \cdot \overrightarrow{y}}{\|\overrightarrow{x}\|\times\|\overrightarrow{y}\|}</script><ul>
+<p>计算个体间的相似程度，相似度度量的值越小，说明个体间相似度越小，相似度的值越大说明个体差异越大。广泛应用于计算文档数据的相似度。 <span class="math display">\[
+T(x, y) = \frac{\overrightarrow{x} \cdot \overrightarrow{y}}{\|\overrightarrow{x}\|\times\|\overrightarrow{y}\|}
+\]</span></p>
+<ul>
 <li><p><strong>杰卡德相似性度量（Jaccard Similarity）</strong></p>
-<p>两个集合的交集在该两个集合的并集所占的比例来度量两个集合的相似度。举例，新闻A和新闻B提取出词语集合的交集在新闻A和新闻B提取出词语集合的并集所占的比例就是AB的相似度。</p>
-</li>
+<p>两个集合的交集在该两个集合的并集所占的比例来度量两个集合的相似度。举例，新闻A和新闻B提取出词语集合的交集在新闻A和新闻B提取出词语集合的并集所占的比例就是AB的相似度。</p></li>
 </ul>
 <p><br></p>
-<h3 id="二、求最近邻居"><a href="#二、求最近邻居" class="headerlink" title="二、求最近邻居"></a>二、求最近邻居</h3><p>知道了相似度的计算方法后，我们还需要知道如何根据相似度找到用户-物品邻居，一般取出其中的K个。</p>
+<h3 id="二求最近邻居">二、求最近邻居</h3>
+<p>知道了相似度的计算方法后，我们还需要知道如何根据相似度找到用户-物品邻居，一般取出其中的K个。</p>
 <p><br></p>
-<h3 id="三、计算推荐"><a href="#三、计算推荐" class="headerlink" title="三、计算推荐"></a>三、计算推荐</h3><h3 id="User-CF（基于用户的）"><a href="#User-CF（基于用户的）" class="headerlink" title="User CF（基于用户的）"></a>User CF（基于用户的）</h3><p>通常这些算法都可以总结成三步：</p>
+<h3 id="三计算推荐">三、计算推荐</h3>
+<h3 id="user-cf基于用户的">User CF（基于用户的）</h3>
+<p>通常这些算法都可以总结成三步：</p>
 <ul>
 <li>首先，使用用户已有的评分来计算用户之间的相似度；</li>
 <li>然后，选择与目标用户相似度最高的K个用户，通常把这些用户称为邻居；</li>
 <li>最后，通过对邻居用户的评分的加权平均来预测目标用户的评分。</li>
 </ul>
-<h3 id="Item-CF（基于物品的）"><a href="#Item-CF（基于物品的）" class="headerlink" title="Item CF（基于物品的）"></a>Item CF（基于物品的）</h3><blockquote>
+<h3 id="item-cf基于物品的">Item CF（基于物品的）</h3>
+<blockquote>
 <p>基于物品的 CF 的原理和基于用户的 CF 类似，只是在计算邻居时采用物品本身，而不是从用户的角度，即基于用户对物品的偏好找到相似的物品，然后根据用户的历史偏好，推荐相似的物品给他。从计算的角度看，就是将所有用户对某个物品的偏好作为一个向量来计算物品之间的相似度，得到物品的相似物品后，根据用户历史的偏好预测当前用户还没有表示偏好的物品，计算得到一个排序的物品列表作为推荐。图 3 给出了一个例子，对于物品 A，根据所有用户的历史偏好，喜欢物品 A 的用户都喜欢物品 C，得出物品 A 和物品 C 比较相似，而用户 C 喜欢物品 A，那么可以推断出用户 C 可能也喜欢物品 C。</p>
 </blockquote>
 <p>主要分为两步：</p>
 <ul>
-<li><p>计算物品之间的相似度；</p>
-</li>
-<li><p>根据物品的相似度和用户的历史行为给用户生成推荐列表。</p>
-</li>
+<li><p>计算物品之间的相似度；</p></li>
+<li><p>根据物品的相似度和用户的历史行为给用户生成推荐列表。</p></li>
 </ul>
-<font color="blue">推荐项目集产生:目标用户的最近邻居集产生后,可以得出目标用户对未评分项的预测分,将分值按照高低排列,产生TOP-N的推荐项目集合</font>
-
+<p><font color="blue">推荐项目集产生:目标用户的最近邻居集产生后,可以得出目标用户对未评分项的预测分,将分值按照高低排列,产生TOP-N的推荐项目集合</font></p>
 <p><br></p>
-<h3 id="四、协同过滤算法的不足"><a href="#四、协同过滤算法的不足" class="headerlink" title="四、协同过滤算法的不足"></a>四、协同过滤算法的不足</h3><h3 id="1、数据稀疏性问题"><a href="#1、数据稀疏性问题" class="headerlink" title="1、数据稀疏性问题"></a>1、数据稀疏性问题</h3><p>数据稀疏性问题是协同协同过滤算法面临的最大挑战，在实际的商业推荐系统中，用户和项目的数量十分的庞大,而用户往往只在很少的项目上有评分记录，这就导致了评价矩阵是非常稀疏的。在数据稀疏的情况下,由于共同标注的数量过少，一方面难以找到最近邻居用户集，另一方面进行相似性计算的耗费也会很大。在有的推荐系统中,用户的数量远远少于项目的数量,这就导致了许多项目从未被标注过,从而无法对这些项目进行推荐。</p>
+<h3 id="四协同过滤算法的不足">四、协同过滤算法的不足</h3>
+<h3 id="数据稀疏性问题">1、数据稀疏性问题</h3>
+<p>数据稀疏性问题是协同协同过滤算法面临的最大挑战，在实际的商业推荐系统中，用户和项目的数量十分的庞大,而用户往往只在很少的项目上有评分记录，这就导致了评价矩阵是非常稀疏的。在数据稀疏的情况下,由于共同标注的数量过少，一方面难以找到最近邻居用户集，另一方面进行相似性计算的耗费也会很大。在有的推荐系统中,用户的数量远远少于项目的数量,这就导致了许多项目从未被标注过,从而无法对这些项目进行推荐。</p>
 <p>降维法解决这类问题的重要手段，常采用矩阵奇异值分解（SVD）和主成分分析（PCA）</p>
 <p><br></p>
-<h3 id="2、冷启动问题-cold-start-problem"><a href="#2、冷启动问题-cold-start-problem" class="headerlink" title="2、冷启动问题( cold start problem)"></a>2、冷启动问题( cold start problem)</h3><p>是数据稀疏问题的另外一种表现，也称为新用户问题(new user problem)或者新项目问题( new item problem),在实际的推荐系统中，用户和项目的数量的增长速度都较快，这就意味着不断的有新的用户和项目加入到系统中,当新用户或项目刚加入系统时，由于缺乏对应的标注信息，导致无法对这些用户或项目进行推荐。目前，在协同过滤的相关研究工作，已经存在着相当一部分工作来解决数据稀疏性的问题。</p>
+<h3 id="冷启动问题-cold-start-problem">2、冷启动问题( cold start problem)</h3>
+<p>是数据稀疏问题的另外一种表现，也称为新用户问题(new user problem)或者新项目问题( new item problem),在实际的推荐系统中，用户和项目的数量的增长速度都较快，这就意味着不断的有新的用户和项目加入到系统中,当新用户或项目刚加入系统时，由于缺乏对应的标注信息，导致无法对这些用户或项目进行推荐。目前，在协同过滤的相关研究工作，已经存在着相当一部分工作来解决数据稀疏性的问题。</p>
 <p><br></p>
-<h3 id="3、可扩展性问题"><a href="#3、可扩展性问题" class="headerlink" title="3、可扩展性问题"></a>3、可扩展性问题</h3><p>在许多实际应用中，用户和项目数量的增长速度都非常快，由于计算资源和计算速度的限制,传统协同过滤算法在用户和项目的数量增长到一定程度时，效率将大大降低，以至于无法满足实际应用的需求。时间开销的增大，影响了系统的实时性。</p>
+<h3 id="可扩展性问题">3、可扩展性问题</h3>
+<p>在许多实际应用中，用户和项目数量的增长速度都非常快，由于计算资源和计算速度的限制,传统协同过滤算法在用户和项目的数量增长到一定程度时，效率将大大降低，以至于无法满足实际应用的需求。时间开销的增大，影响了系统的实时性。</p>
 <p><br></p>
-<h3 id="4、鲁棒性问题"><a href="#4、鲁棒性问题" class="headerlink" title="4、鲁棒性问题"></a>4、鲁棒性问题</h3><p>推荐系统能否识别此种情况，去除恶意用户及异常数据，提高推荐系统的可靠性，这也是目前推荐系统鲁棒性方面所需要重点关注的问题。</p>
+<h3 id="鲁棒性问题">4、鲁棒性问题</h3>
+<p>推荐系统能否识别此种情况，去除恶意用户及异常数据，提高推荐系统的可靠性，这也是目前推荐系统鲁棒性方面所需要重点关注的问题。</p>
 <p><br></p>
-<h3 id="5、隐性喜好发现"><a href="#5、隐性喜好发现" class="headerlink" title="5、隐性喜好发现"></a>5、隐性喜好发现</h3>
+<h3 id="隐性喜好发现">5、隐性喜好发现</h3>
+
       </div>
       
       <footer class="post-footer">

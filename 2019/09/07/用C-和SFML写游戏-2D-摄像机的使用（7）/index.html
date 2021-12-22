@@ -16,10 +16,7 @@
 <meta name="description" content="用C++和SFML写游戏-2D 摄像机的使用（7）"/><meta name="keywords" content="SFML, 用C++和SFML写游戏, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/2019/09/07/用C-和SFML写游戏-2D-摄像机的使用（7）/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>用C++和SFML写游戏-2D 摄像机的使用（7） - sshpark</title>
@@ -141,7 +138,7 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、什么是摄像机"><span class="toc-text">一、什么是摄像机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、在-SFML-中使用摄像机"><span class="toc-text">二、在 SFML 中使用摄像机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、用-sf-View-操作摄像机"><span class="toc-text">三、用 sf::View 操作摄像机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、旋转和缩放-view"><span class="toc-text">四、旋转和缩放 view</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五、视口（viewport）"><span class="toc-text">五、视口（viewport）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#六、坐标转换"><span class="toc-text">六、坐标转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#七、OpenGL"><span class="toc-text">七、OpenGL</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#二在-sfml-中使用摄像机"><span class="toc-text">二、在 SFML 中使用摄像机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三用-sfview-操作摄像机"><span class="toc-text">三、用 sf::View 操作摄像机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四旋转和缩放-view"><span class="toc-text">四、旋转和缩放 view</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五视口viewport"><span class="toc-text">五、视口（viewport）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#六坐标转换"><span class="toc-text">六、坐标转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#七opengl"><span class="toc-text">七、OpenGL</span></a></li></ol>
     </div>
   </div><div class="post-content"><p>本文将会介绍怎么在程序中使用摄像机和 <strong>OpenGL</strong> 。对摄像机将会深入的介绍，而对于 <strong>OpenGL</strong>，我们这里只做简单的介绍。<strong>OpenGL</strong> 是一个很大的主题，一篇文章根本就不能够将它完全介绍清楚。</p>
 <p>本文将会介绍以下内容：</p>
@@ -149,30 +146,31 @@
 <li>什么是摄像机</li>
 <li>用 <code>sf::View</code> 操作摄像机</li>
 <li>什么是 <strong>OpenGL</strong></li>
-<li>在 <strong>SFML</strong> 中使用 <strong>OpenGL</strong><a id="more"></a>
-&lt;/br&gt;<h3 id="一、什么是摄像机"><a href="#一、什么是摄像机" class="headerlink" title="一、什么是摄像机"></a>一、什么是摄像机</h3></li>
+<li>在 <strong>SFML</strong> 中使用 <strong>OpenGL</strong> <a id="more"></a> </br> ### 一、什么是摄像机</li>
 </ul>
 <p>实际上，在游戏开发中不使用摄像机的可能性很小，它是游戏的基本组成部分。本质上来看，摄像机就是空间中的一个点，通过这个点你可以观察到游戏中的世界。摄像机有很多参数设置，但在本文，我们只关注 <strong>SFML</strong> 为我们提供的东西。</p>
 <p>在开始写代码之前，我们先直观的了解一下摄像机。由于 <strong>SFML</strong> 主要用于 <strong>2D</strong> 游戏开发。因此，它的 <strong>camera</strong> 类主要采用的是<strong><a href="https://baike.baidu.com/item/%E6%AD%A3%E4%BA%A4%E6%8A%95%E5%BD%B1" target="_blank" rel="noopener">正交投影（orthographic projection）</a></strong>。在这种投影下，物体看起来没有什么视觉上的变化。而在<strong><a href="https://baike.baidu.com/item/%E9%80%8F%E8%A7%86%E6%8A%95%E5%BD%B1" target="_blank" rel="noopener">透视投影（perspective projection）</a></strong>下，它采用了一种基于人眼看到事物的方式将物体在 <strong>2D</strong> 平面中展示出来（例如，距离的不同物体的大小也不同）。从下面的图片可以直观的了解一下这两种方式的区别：</p>
 <p><img src="http://sshpark.github.io/images/20190907212724.png" width="500px" /></p>
 <p>显然，在 <strong>2D</strong> 游戏中使用<strong>透视投影</strong>是没必要的，在 <strong>SFML</strong> 中甚至没有提供使用它的方式。使用 <strong>OpenGL</strong> 同样可以创建摄像机，这个将在后面介绍。</p>
-<p>&lt;/br&gt;</p>
-<h3 id="二、在-SFML-中使用摄像机"><a href="#二、在-SFML-中使用摄像机" class="headerlink" title="二、在 SFML 中使用摄像机"></a>二、在 SFML 中使用摄像机</h3><p>当然，我们也不是任何时候都适用摄像机。但是在一些有着庞大世界的 <strong>RPG</strong> 游戏中，我们就要用到了，因为屏幕的尺寸有限，不能完全的展示这个世界。</p>
+<p></br></p>
+<h3 id="二在-sfml-中使用摄像机">二、在 SFML 中使用摄像机</h3>
+<p>当然，我们也不是任何时候都适用摄像机。但是在一些有着庞大世界的 <strong>RPG</strong> 游戏中，我们就要用到了，因为屏幕的尺寸有限，不能完全的展示这个世界。</p>
 <p>想要修改 <strong>sf::Window</strong> 中的摄像机，需要先解决 <strong>sf::View</strong> 类。<strong>sf::View</strong> 的行为就像是摄像机，它限制了玩家能够看到的内容。<strong>sf::View</strong> 的创建和使用如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> wSize = window.getSize();</span><br><span class="line">sf::<span class="function">View <span class="title">view</span><span class="params">(sf::FloatRect(<span class="number">0</span>, <span class="number">0</span>, wSize.x, wSize.y))</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化 View</span></span><br><span class="line">window.setView(view);</span><br></pre></td></tr></table></figure>
 <p><strong>View</strong> 的构造函数参数 <strong>FloatRect</strong> 表示的是截取世界的一部分给玩家看。如果 <strong>FloatRect</strong> 的大小大于当前窗口，那么它将会压缩显示。</p>
-<p>&lt;/br&gt;</p>
-<h3 id="三、用-sf-View-操作摄像机"><a href="#三、用-sf-View-操作摄像机" class="headerlink" title="三、用 sf::View 操作摄像机"></a>三、用 sf::View 操作摄像机</h3><p>默认情况下，view 的中心是视图区域的中心，也就是说，如果我们当前窗口大小是（640，480），那么 view 的中心是（320，240）。这时候将物体渲染到 view 上的时候，物体将出现在左上角（0，0）。改变 view 的中心可以使用 <code>View::setCenter()</code> 或者 <code>View::move()</code> 方法。</p>
+<p></br></p>
+<h3 id="三用-sfview-操作摄像机">三、用 sf::View 操作摄像机</h3>
+<p>默认情况下，view 的中心是视图区域的中心，也就是说，如果我们当前窗口大小是（640，480），那么 view 的中心是（320，240）。这时候将物体渲染到 view 上的时候，物体将出现在左上角（0，0）。改变 view 的中心可以使用 <code>View::setCenter()</code> 或者 <code>View::move()</code> 方法。</p>
 <p>示例代码如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> wSize = window.getSize();</span><br><span class="line">sf::<span class="function">View <span class="title">view</span><span class="params">(sf::FloatRect(<span class="number">0</span>, <span class="number">0</span>, wSize.x, wSize.y))</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置 view 中心</span></span><br><span class="line">view.setCenter(sf::Vector2f(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">window.setView(view);</span><br><span class="line"></span><br><span class="line">sf::Vector2f spriteSize = sf::Vector2f(<span class="number">118</span>, <span class="number">114</span>);</span><br><span class="line">sf::<span class="function">Sprite <span class="title">sprite</span><span class="params">(AssetManager::GetTexture(<span class="string">"myTexture.png"</span>))</span></span>;</span><br><span class="line">sprite.setTextureRect(sf::IntRect(<span class="number">0</span>, <span class="number">0</span>, spriteSize.x, spriteSize.y));</span><br><span class="line">sprite.setOrigin(spriteSize * <span class="number">0.5f</span>);</span><br></pre></td></tr></table></figure>
 <p>上面的代码将 view 的中心设置为（0，0），那么世界中的该位置将会出现在屏幕中心。<strong>sprite</strong> 默认位置是（0，0），因此该精灵会出现在屏幕中心。</p>
 <p><img src="http://sshpark.github.io/images/20190909190909.png" width="450px" /></p>
 <p>通常，将 view 的中心设置在我们主要角色上是一个简单有效的方式去执行摄像机位置逻辑，同样，在每一帧更新的时候只需要一下两行代码：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">view.setCenter(sprite.getPosition());</span><br><span class="line">window.setView(view);</span><br></pre></td></tr></table></figure>
-<font color="red">需要注意的是，更新每一帧的时候需要再次调用 `RenderWindow::setView()`，因为**RenderWindow** 只保存 view 的副本，只更改旧的 view 不会影响存储在 **RenderWindow** 中的 view。</font>
-
-<p>&lt;/br&gt;</p>
-<h3 id="四、旋转和缩放-view"><a href="#四、旋转和缩放-view" class="headerlink" title="四、旋转和缩放 view"></a>四、旋转和缩放 view</h3><p>尽管这两个属性很少使用，但是当我们需要实现摄像机的一些特殊功能的时候会派上用场。</p>
+<p><font color="red">需要注意的是，更新每一帧的时候需要再次调用 <code>RenderWindow::setView()</code>，因为<strong>RenderWindow</strong> 只保存 view 的副本，只更改旧的 view 不会影响存储在 <strong>RenderWindow</strong> 中的 view。</font></p>
+<p></br></p>
+<h3 id="四旋转和缩放-view">四、旋转和缩放 view</h3>
+<p>尽管这两个属性很少使用，但是当我们需要实现摄像机的一些特殊功能的时候会派上用场。</p>
 <p>旋转的话有两个方法，<code>View::setRotation()</code> 和 <code>View::rotate()</code>。这两个方法的区别是 <code>View::setRotation()</code> 会将物体的旋转角度<strong>固定为给定的值</strong>，而 <code>View::rotate()</code> 则会在物体的当前旋转度上<strong>加上给定的值。</strong></p>
 <p>通过一个例子来看看，这里使用了四个精灵。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> wSize = window.getSize();</span><br><span class="line">sf::<span class="function">View <span class="title">view</span><span class="params">(sf::FloatRect(<span class="number">0</span>, <span class="number">0</span>, wSize.x, wSize.y))</span></span>;</span><br><span class="line">view.setCenter(sf::Vector2f(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line"><span class="comment">// 设置旋转 45 度</span></span><br><span class="line">view.setRotation(<span class="number">45</span>);</span><br><span class="line">window.setView(view);</span><br><span class="line"></span><br><span class="line">sf::Vector2f spriteSize = sf::Vector2f(<span class="number">118</span>, <span class="number">114</span>);</span><br><span class="line"><span class="keyword">auto</span>&amp; texture = AssetManager::GetTexture(<span class="string">"myTexture.png"</span>);</span><br><span class="line"></span><br><span class="line">sf::<span class="function">Sprite <span class="title">sprite1</span><span class="params">(texture)</span></span>;</span><br><span class="line">sprite1.setOrigin(spriteSize * <span class="number">0.5f</span>);</span><br><span class="line">sprite1.setPosition(sf::Vector2f(<span class="number">-100</span>, <span class="number">-100</span>));</span><br><span class="line"></span><br><span class="line">sf::<span class="function">Sprite <span class="title">sprite2</span><span class="params">(texture)</span></span>;</span><br><span class="line">sprite2.setOrigin(spriteSize * <span class="number">0.5f</span>);</span><br><span class="line">sprite2.setPosition(sf::Vector2f(<span class="number">100</span>, <span class="number">-100</span>));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sf::<span class="function">Sprite <span class="title">sprite3</span><span class="params">(texture)</span></span>;</span><br><span class="line">sprite3.setOrigin(spriteSize * <span class="number">0.5f</span>);</span><br><span class="line">sprite3.setPosition(sf::Vector2f(<span class="number">100</span>, <span class="number">100</span>));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sf::<span class="function">Sprite <span class="title">sprite4</span><span class="params">(texture)</span></span>;</span><br><span class="line">sprite4.setOrigin(spriteSize * <span class="number">0.5f</span>);</span><br><span class="line">sprite4.setPosition(sf::Vector2f(<span class="number">-100</span>, <span class="number">100</span>));</span><br></pre></td></tr></table></figure>
@@ -182,59 +180,60 @@
 <p>旋转视图（view）在游戏开发方面的用途有限。 它可以用于制作特定事件的动画 - 主角的死亡（随着旋转的慢速放大），受到伤害（相机略微抖动）。 我们也可以使用它来围绕一个居中的角色在一个自上而下的游戏中旋转世界。 通常，旋转很有用，但是使用场所有限。</p>
 <p>接下来是缩放，缩放的话可以使用 <code>View::zoom()</code>。传入的参数为 2 的话代表缩小 2 倍，传入 0.5 则是放大 2 倍。也可以通过 <code>View::setSize()</code> 改变 view 的大小实现缩放。</p>
 <p>需要注意的是，使用缩放的时候 view 存储的是当前 view 大小，也就是说，如果我们多次调用缩放函数，view 会基于上一次的 view 进行缩放。举个例子，两次使用 <code>zoom(2)</code> 的时候，view 的大小会是 <code>1/2*1/2*size = 1/4*size</code>。</p>
-<p>&lt;/br&gt;</p>
-<h3 id="五、视口（viewport）"><a href="#五、视口（viewport）" class="headerlink" title="五、视口（viewport）"></a>五、视口（viewport）</h3><p>每个视图（view）都有一个与之关联的视口（viewport）。 视口是显示视图的窗口区域。 该区域由矩形表示，该矩形使用标准化坐标<code>[0 ... 1]</code>。 默认情况下，视口等于视图的大小<code>（0,0,1,1）</code>。 我们可以通过调用<code>View::setViewport()</code>来改变它。 假设我们只想在屏幕的左上象限中渲染场景。 可以这么做：</p>
+<p></br></p>
+<h3 id="五视口viewport">五、视口（viewport）</h3>
+<p>每个视图（view）都有一个与之关联的视口（viewport）。 视口是显示视图的窗口区域。 该区域由矩形表示，该矩形使用标准化坐标<code>[0 ... 1]</code>。 默认情况下，视口等于视图的大小<code>（0,0,1,1）</code>。 我们可以通过调用<code>View::setViewport()</code>来改变它。 假设我们只想在屏幕的左上象限中渲染场景。 可以这么做：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> wSize = window.getSize();</span><br><span class="line">sf::<span class="function">View <span class="title">view</span><span class="params">(sf::Vector2f(<span class="number">0</span>, <span class="number">0</span>), sf::Vector2f(wSize.x, wSize.y))</span></span>;</span><br><span class="line"></span><br><span class="line">view.setViewport(sf::FloatRect(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0.5f</span>, <span class="number">0.5f</span>));</span><br><span class="line"></span><br><span class="line">window.setView(view);</span><br></pre></td></tr></table></figure>
 <p>运行后的结果如下：</p>
 <p><img src="http://sshpark.github.io/images/20190909221627.png" width="450px" /></p>
-<p>&lt;/br&gt;</p>
-<h3 id="六、坐标转换"><a href="#六、坐标转换" class="headerlink" title="六、坐标转换"></a>六、坐标转换</h3><p><code>RenderWindow::mapPixelToCoords()</code> 方法用于将目标坐标转换为世界坐标。一开始的时候，这两个坐标系下的物体坐标是对应的，但是当我们使用自定义 view 或者改变窗口大小的时候，这个对应关系就不存在了，这时候，需要调用这个方法获取物体的世界坐标。</p>
+<p></br></p>
+<h3 id="六坐标转换">六、坐标转换</h3>
+<p><code>RenderWindow::mapPixelToCoords()</code> 方法用于将目标坐标转换为世界坐标。一开始的时候，这两个坐标系下的物体坐标是对应的，但是当我们使用自定义 view 或者改变窗口大小的时候，这个对应关系就不存在了，这时候，需要调用这个方法获取物体的世界坐标。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sf::Event ev;</span><br><span class="line"><span class="keyword">while</span> (window.pollEvent(ev)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (ev.type == sf::Event::MouseButtonPressed) &#123;</span><br><span class="line">        sf::Vector2f sceneCoords = window.mapPixelToCoords(</span><br><span class="line">        sf::Vector2i(ev.mouseButton.x, ev.mouseButton.y));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>&lt;/br&gt;</p>
-<h3 id="七、OpenGL"><a href="#七、OpenGL" class="headerlink" title="七、OpenGL"></a>七、OpenGL</h3><p><strong>OpenGL</strong> 是一种跨平台的图形 API，用作与图形卡通信的接口。 任何图形 API 最重要的特性是它能够在屏幕上渲染对象。 虽然 <strong>OpenGL</strong> 确实如此，但是它还有许多其他有用的功能。</p>
+<p></br></p>
+<h3 id="七opengl">七、OpenGL</h3>
+<p><strong>OpenGL</strong> 是一种跨平台的图形 API，用作与图形卡通信的接口。 任何图形 API 最重要的特性是它能够在屏幕上渲染对象。 虽然 <strong>OpenGL</strong> 确实如此，但是它还有许多其他有用的功能。</p>
 <p>实际上，<strong>SFML</strong> 在内部使用 <strong>OpenGL</strong> 来实现功能。但是，由于 <strong>SFML</strong> 是一个高级库，因此使用它时将会存在性能损失。在大多数情况下，这部分性能并不是一个大问题，因为使用这样一个高级库的好处是它可以快速地开发应用。但是，有些情况只需要额外的性能来实现目标 FPS。在这种情况下，<strong>SFML</strong> 提供了一个简单的 <strong>OpenGL</strong> 代码集成，而不必担心太多事情。</p>
 <p>在我们开始使用任何OpenGL调用之前，我们需要先<strong>初始化图形上下文</strong>。 上下文保存了 <strong>OpenGL</strong> 运行时的数据（状态，默认帧缓冲等）。这在我们创建窗口实例时自动完成：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SFML/Window.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SFML/OpenGL.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    sf::ContextSettings settings;</span><br><span class="line">    settings.depthBits = <span class="number">24</span>;</span><br><span class="line">    settings.stencilBits = <span class="number">8</span>;</span><br><span class="line">    settings.majorVersion = <span class="number">3</span>;</span><br><span class="line">    settings.minorVersion = <span class="number">0</span>;</span><br><span class="line">    settings.antialiasingLevel = <span class="number">2</span>;</span><br><span class="line">    sf::<span class="function">Window <span class="title">window</span><span class="params">(sf::VideoMode(<span class="number">640</span>, <span class="number">480</span>), <span class="string">"OpenGL"</span>, sf::Style::Default, settings)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (window.isOpen()) &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>要使用 <strong>OpenGL</strong> 的话，我们需要包含 <strong><SFML/OpenGL.hpp></strong>，这是 <strong>SFML</strong> 为我们在所有平台上使用提供的通用头文件。 同样重要的是，如果我们要仅使用OpenGL渲染所有东西，我们就不需要使用熟悉的RenderWindow类。 Window类很适合我们。另一方面，如果出于某种原因我们想要将 <strong>OpenGL</strong> 与 <strong>Graphics 模块</strong>一起使用，那么我们可以回到 <strong>RenderWindow</strong>。 在这个例子中，我们只使用 <strong>Window模块</strong>。</p>
+<p>要使用 <strong>OpenGL</strong> 的话，我们需要包含 <strong>&lt;SFML/OpenGL.hpp&gt;</strong>，这是 <strong>SFML</strong> 为我们在所有平台上使用提供的通用头文件。 同样重要的是，如果我们要仅使用OpenGL渲染所有东西，我们就不需要使用熟悉的RenderWindow类。 Window类很适合我们。另一方面，如果出于某种原因我们想要将 <strong>OpenGL</strong> 与 <strong>Graphics 模块</strong>一起使用，那么我们可以回到 <strong>RenderWindow</strong>。 在这个例子中，我们只使用 <strong>Window模块</strong>。</p>
 <p>窗口采用ContextSettings的实例（可选参数）具有一下参数</p>
-<div class="table-container">
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>参数</th>
 <th>描述</th>
 <th>范围</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>depthBits</td>
 <td>深度缓冲器的每像素位数</td>
 <td>[0, 8, 16, 24, 32]</td>
 </tr>
-<tr>
+<tr class="even">
 <td>stencilBits</td>
 <td>模板缓冲区的每像素位数</td>
 <td>[0, 8]</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>majorVersion</td>
 <td>OpenGL的主要版本</td>
-<td>[1 … 4]</td>
+<td>[1 ... 4]</td>
 </tr>
-<tr>
+<tr class="even">
 <td>minorVersion</td>
 <td>OpenGL的次要版本</td>
-<td>[1 … 5]</td>
+<td>[1 ... 5]</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>antialiasingLevel</td>
 <td>多重采样级别</td>
-<td>[0 … 16]，通常使用 2 的幂次</td>
+<td>[0 ... 16]，通常使用 2 的幂次</td>
 </tr>
 </tbody>
 </table>
-</div>
 <p><strong>SFML</strong> 并不强制我们一定要使用上面的参数，它有默认值。</p>
 <p>当一切都准备好了以后，可以开始写主循环部分的代码了。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (window.isOpen()) &#123;</span><br><span class="line">    sf::Event ev;</span><br><span class="line">    <span class="keyword">while</span> (window.pollEvent(ev)) &#123;</span><br><span class="line">        <span class="comment">// 更新帧</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 设置清除色</span></span><br><span class="line">        glClearColor(<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 清除屏幕和深度缓冲区</span></span><br><span class="line">        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 绘制物体</span></span><br><span class="line">        window.display();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

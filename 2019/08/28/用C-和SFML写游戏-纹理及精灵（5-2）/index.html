@@ -16,10 +16,7 @@
 <meta name="description" content="用C++和SFML写游戏-纹理及精灵（5.2）"/><meta name="keywords" content="SFML, 用C++和SFML写游戏, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/2019/08/28/用C-和SFML写游戏-纹理及精灵（5-2）/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>用C++和SFML写游戏-纹理及精灵（5.2） - sshpark</title>
@@ -141,26 +138,30 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、什么是精灵"><span class="toc-text">一、什么是精灵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、Transformables-和-Drawables"><span class="toc-text">二、Transformables 和 Drawables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、Sprite-类的其他属性"><span class="toc-text">三、Sprite 类的其他属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、资源管理"><span class="toc-text">四、资源管理</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一什么是精灵"><span class="toc-text">一、什么是精灵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二transformables-和-drawables"><span class="toc-text">二、Transformables 和 Drawables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三sprite-类的其他属性"><span class="toc-text">三、Sprite 类的其他属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四资源管理"><span class="toc-text">四、资源管理</span></a></li></ol>
     </div>
   </div><div class="post-content"><p>上一篇<a href="http://www.sshpark.com.cn/2019/08/25/用C++和SFML写游戏-纹理及精灵（5.1）" target="_blank" rel="noopener">文章</a>介绍了纹理的使用。这一节将会介绍 <strong>精灵</strong> 以及资源管理。</p>
-<h3 id="一、什么是精灵"><a href="#一、什么是精灵" class="headerlink" title="一、什么是精灵"></a>一、什么是精灵</h3><p>在这之前你可能听说过<strong>精灵</strong>的概念。实际上，精灵是贴有纹理的<strong>“画布”</strong>。说到这里，有人可能会说，前面的 <code>Shpae</code>类不是也一样的吗？答案是的，但是精灵有一点不同。</p>
+<h3 id="一什么是精灵">一、什么是精灵</h3>
+<p>在这之前你可能听说过<strong>精灵</strong>的概念。实际上，精灵是贴有纹理的<strong>“画布”</strong>。说到这里，有人可能会说，前面的 <code>Shpae</code>类不是也一样的吗？答案是的，但是精灵有一点不同。</p>
 <p>最重要的不同点是，精灵总是绘制在纹理矩形中，而 <code>Shape</code> 可以不必这样，精灵总是与一个纹理关联的，它不能单独存在。除此之外， <code>Sprite</code>类有一个类似与 <code>Shape::setFillColor()</code>的函数 <code>Sprite::setColor()</code>。当它们都与一个纹理（Texture）相关联的时候，效果是一样的，但是如果 <code>Sprite</code> 没有与纹理（Texture）关联的话，它不会被指定的颜色绘制，相反的是 <code>Shape</code> 是可以被指定颜色绘制的。</p>
 <p>那么问题来了？为什么我们要使用精灵而不是 <code>Shape</code>呢？从上面的描述来看，精灵似乎是弱化版的<code>Shape</code>。真正的原因是因为精灵简单有用。</p>
 <a id="more"></a>
 <p>观察一下代码：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个带纹理的shape</span></span><br><span class="line">sf::<span class="function">RectangleShape <span class="title">rectShape</span><span class="params">(sf::Vector2f(<span class="number">100</span>, <span class="number">100</span>))</span></span>;</span><br><span class="line">rectShape.setTexture(&amp;texture);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建精灵</span></span><br><span class="line">sf::<span class="function">Sprite <span class="title">sp</span><span class="params">(texture)</span></span>;</span><br></pre></td></tr></table></figure>
-<p>可以很明显的看到创建一个精灵是一个更加简单的过程。实际上，这也是 <code>Sprite</code>类在 <strong>SFML </strong> 中被使用的主要目的——尽可能快速，轻松地在屏幕上渲染纹理。</p>
-<p>&lt;/br&gt;</p>
-<h3 id="二、Transformables-和-Drawables"><a href="#二、Transformables-和-Drawables" class="headerlink" title="二、Transformables 和 Drawables"></a>二、Transformables 和 Drawables</h3><p><code>Sprite</code> 类起源于这两个类 —— <code>Transformable</code> 和 <code>Drawable</code>。</p>
+<p>可以很明显的看到创建一个精灵是一个更加简单的过程。实际上，这也是 <code>Sprite</code>类在 <strong>SFML </strong> 中被使用的主要目的----尽可能快速，轻松地在屏幕上渲染纹理。</p>
+<p></br></p>
+<h3 id="二transformables-和-drawables">二、Transformables 和 Drawables</h3>
+<p><code>Sprite</code> 类起源于这两个类 ---- <code>Transformable</code> 和 <code>Drawable</code>。</p>
 <p><code>Drawable</code>类是一个接口，它有一个抽象方法 <code>Drawable::deaw()</code>，它的子类必须实现这个方法，进而使得子类是可以被绘制到画布上的（例如 <code>RenderWindow</code>）</p>
 <p><code>Transformable</code> 拥有位置、旋转、缩放以及原点等属性。可以通过<code>Transformable::setPosition()</code>，<code>Transformable::getPosition()</code>，<code>Transformable::move()</code> 等方法去访问这些属性。</p>
 <p>这些方法我们在 <code>Shape</code> 类中也使用过，因为 <code>Shape</code> 继承了这两个类。类似的，我们可以通过继承这两个类来实现自己的精灵。</p>
-<p>&lt;/br&gt;</p>
-<h3 id="三、Sprite-类的其他属性"><a href="#三、Sprite-类的其他属性" class="headerlink" title="三、Sprite 类的其他属性"></a>三、Sprite 类的其他属性</h3><p>在实现碰撞检测（Collision Detection）时，不可避免地需要知道场景中物体的尺寸或者边界。我们称之为“包围盒技术”（Bounding Box）。常见的包围盒有：Sphere、AABB、OBB、FDH等</p>
+<p></br></p>
+<h3 id="三sprite-类的其他属性">三、Sprite 类的其他属性</h3>
+<p>在实现碰撞检测（Collision Detection）时，不可避免地需要知道场景中物体的尺寸或者边界。我们称之为“包围盒技术”（Bounding Box）。常见的包围盒有：Sphere、AABB、OBB、FDH等</p>
 <p><code>Sprite</code> 使用了AABB包围盒<strong>（Axis-aligned bounding box）</strong>的方法。<code>Sprite::getLocalBounds()</code> 和 <code>Sprite::getGlobalBounds()</code> 都能够计算出 <code>Sprite</code> 的 AABB 属性。区别是 <code>Sprite::getLocalBounds()</code> 忽略了实体的变换属性（平移、旋转、缩放。。。），而 <code>Sprite::getGlobalBounds()</code> 考虑了这些属性。通过这两个方法返回的 <code>FloatRect</code> 可以用于碰撞检测。</p>
-<p>&lt;/br&gt;</p>
-<h3 id="四、资源管理"><a href="#四、资源管理" class="headerlink" title="四、资源管理"></a>四、资源管理</h3><p>无论是做游戏还是多媒体程序，准确、高效的管理好资源是很重要的。确保好资源<strong>不被意外的销毁</strong>以及<strong>不重复读取同一资源</strong>是我们构建一份健壮的代码的基本需求。</p>
+<p></br></p>
+<h3 id="四资源管理">四、资源管理</h3>
+<p>无论是做游戏还是多媒体程序，准确、高效的管理好资源是很重要的。确保好资源<strong>不被意外的销毁</strong>以及<strong>不重复读取同一资源</strong>是我们构建一份健壮的代码的基本需求。</p>
 <p>需要明白一个事实，<strong>C++</strong>里栈中的对象在不需要的会被自动清除。但是在某些编程语言中，对象存储在堆中（实现了内存管理）。因此，我们的程序要确保对象在被使用的时候是存活的。下面的例子展示了当函数退出的时候，纹理也被销毁了。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sf::<span class="function">Sprite <span class="title">createSprite</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; filename)</span> </span>&#123;</span><br><span class="line">    sf::Texture texture;</span><br><span class="line">    texture.loadFromFile(filename);</span><br><span class="line">    <span class="comment">// 函数返回时，texture 已经被销毁了</span></span><br><span class="line">    <span class="keyword">return</span> sf::Sprite(texture);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果我们使用上面的方法创建 <code>Sprite</code>，那么在绘制 <code>Sprite</code> 的时候将会是一片空白，<code>texture</code>不会被显示出来。</p>
@@ -177,7 +178,7 @@
 <p>最后，看看我们的资源管理器如何使用：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SFML/Graphics.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"AssetManager.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    sf::<span class="function">RenderWindow <span class="title">window</span><span class="params">(sf::VideoMode(<span class="number">640</span>, <span class="number">480</span>), <span class="string">"AssetManager"</span>)</span></span>;</span><br><span class="line">    AssetManager manager;</span><br><span class="line">    </span><br><span class="line">    sf::Sprite sprite1 = sf::Sprite(AssetManager::GetTexture(<span class="string">"1.png"</span>));</span><br><span class="line">    sf::Sprite sprite2 = sf::Sprite(AssetManager::GetTexture(<span class="string">"2.png"</span>));</span><br><span class="line">    sf::Sprite sprite3 = sf::Sprite(AssetManager::GetTexture(<span class="string">"1.png"</span>));</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (window.isOpen()) &#123;</span><br><span class="line">        <span class="comment">// Game loop</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// main 函数返回时，manager 被销毁</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>sprite3</strong> 不会从磁盘读取，而是从 <strong>texture</strong> 缓存中读取，提高了效率。</p>
-<p>&lt;/br&gt;</p>
+<p></br></p>
 <p>下一节将会介绍动画精灵😃。</p>
 
       </div>

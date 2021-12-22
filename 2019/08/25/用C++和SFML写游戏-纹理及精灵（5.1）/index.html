@@ -16,10 +16,7 @@
 <meta name="description" content="用C++和SFML写游戏-纹理及精灵（5.1）"/><meta name="keywords" content="SFML, 用C++和SFML写游戏, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/2019/08/25/用C++和SFML写游戏-纹理及精灵（5.1）/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>用C++和SFML写游戏-纹理及精灵（5.1） - sshpark</title>
@@ -141,7 +138,7 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、读取纹理"><span class="toc-text">一、读取纹理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、创建-images"><span class="toc-text">二、创建 images</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、创建-Textures"><span class="toc-text">三、创建 Textures</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、将纹理绘制在shape中"><span class="toc-text">四、将纹理绘制在shape中</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一读取纹理"><span class="toc-text">一、读取纹理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二创建-images"><span class="toc-text">二、创建 images</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三创建-textures"><span class="toc-text">三、创建 Textures</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四将纹理绘制在shape中"><span class="toc-text">四、将纹理绘制在shape中</span></a></li></ol>
     </div>
   </div><div class="post-content"><p>对于 <strong>2D</strong> 和 <strong>3D</strong> 游戏来说，纹理是一个很重要的东西，它能够将一张图片映射到我们程序中的对象里。而<strong>精灵</strong>可以看作是包含其他显示对象的容器。</p>
 <p>在这篇文章中，将会讲解一下内容：</p>
@@ -149,11 +146,12 @@
 <li>读取纹理</li>
 <li>将纹理绘制在shape中</li>
 <li>什么是精灵</li>
-<li>资源管理<a id="more"></a>
-&lt;/br&gt;</li>
+<li>资源管理 <a id="more"></a> </br></li>
 </ul>
-<h3 id="一、读取纹理"><a href="#一、读取纹理" class="headerlink" title="一、读取纹理"></a>一、读取纹理</h3><p>纹理是一个非常简单的对象。一个 <strong>2D</strong> 纹理本质上是一幅图片，通常存储在 <strong>GPU</strong> 中。<strong>SFML</strong> 使用 <strong>Image</strong> 类处理图片，使用 Texture 类绘制图片。</p>
-<h3 id="二、创建-images"><a href="#二、创建-images" class="headerlink" title="二、创建 images"></a>二、创建 images</h3><p>在介绍纹理之前，我们先看看如何创建和读取图片。<strong>Image</strong> 类中的很多方法在 <strong>Texture</strong> 都可以使用。例如，我们想要创建一个 50 x 50 且被红色填充的图片。</p>
+<h3 id="一读取纹理">一、读取纹理</h3>
+<p>纹理是一个非常简单的对象。一个 <strong>2D</strong> 纹理本质上是一幅图片，通常存储在 <strong>GPU</strong> 中。<strong>SFML</strong> 使用 <strong>Image</strong> 类处理图片，使用 Texture 类绘制图片。</p>
+<h3 id="二创建-images">二、创建 images</h3>
+<p>在介绍纹理之前，我们先看看如何创建和读取图片。<strong>Image</strong> 类中的很多方法在 <strong>Texture</strong> 都可以使用。例如，我们想要创建一个 50 x 50 且被红色填充的图片。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sf::Image image;</span><br><span class="line">image.create(<span class="number">50</span>, <span class="number">50</span>, sf::Color::Red);</span><br></pre></td></tr></table></figure>
 <p><code>create()</code> 方法第一个参数是图片的宽，第二个参数是高，第三个参数是图片的颜色（RGBA）</p>
 <p>除此之外，我们也可以使用像素数组来创建。数组每个元素是 <strong>Uint8</strong> 类型（一个字节）。一个像素的大小是 4 个字节，表示 <strong>RGBA</strong>。如下面的代码所示：</p>
@@ -163,25 +161,27 @@
 <p><strong>SFML</strong> 能够处理的图片格式包括：<strong>bmp, png, tga, gif, psd, hdr, pic 以及 jpg（不包括jpeg）</strong></p>
 <p>如果图片不存在， <code>loadFromFile()</code> 会返回 <code>false</code>，导致不必要的 bug。因此上面的代码改为:</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sf::Image image;</span><br><span class="line"><span class="keyword">if</span> (!image.loadFromFile(<span class="string">"myImage.png"</span>)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>&lt;/br&gt;</p>
+<p></br></p>
 <p>这里强烈推荐使用无损格式的图片，比如 <strong>png</strong> 格式。除非我们不关心图片质量或者内存有限的情况下，对图片恰当的进行压缩。</p>
 <p><strong>Image</strong> 类提供了一些常用的方法，</p>
 <ul>
 <li><code>Image::getPixel()</code> 和 <code>Image::setPixel()</code> 改变图片某个像素</li>
 <li><code>Image::getPixelPtr()</code> 获取所有的图片像素，它返回的事数组的起始地址，数组的定义跟前面我们使用的像素数组一眼。</li>
 </ul>
-<p>&lt;/br&gt;</p>
-<h3 id="三、创建-Textures"><a href="#三、创建-Textures" class="headerlink" title="三、创建 Textures"></a>三、创建 Textures</h3><p><strong>Texture</strong> 类跟 <strong>Image</strong> 类很多方法都是类似的，例如我们创建一个纹理：</p>
+<p></br></p>
+<h3 id="三创建-textures">三、创建 Textures</h3>
+<p><strong>Texture</strong> 类跟 <strong>Image</strong> 类很多方法都是类似的，例如我们创建一个纹理：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sf::Texture texture;</span><br><span class="line"><span class="keyword">if</span> (texture.loadFromFile(<span class="string">"myTexture.png"</span>))</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br></pre></td></tr></table></figure>
 <p><code>loadFromFile()</code> 还允许我们只截取图片的部分区域，代码如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sf::Texture texture;</span><br><span class="line"><span class="keyword">if</span> (texture.loadFromFile(<span class="string">"myTexture.png"</span>, sf::IntRect(<span class="number">0</span>, <span class="number">0</span>, <span class="number">32</span>, <span class="number">32</span>)))</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br></pre></td></tr></table></figure>
-<p>上面的代码截取图片 32<em>32 大小，<strong>原点坐标</strong>在图片的左上角。如果需要多次截取图片，我们可以用 <em>*Image</em></em> 读取图片一次，然后用这个图片去创建纹理。</p>
+<p>上面的代码截取图片 32*32 大小，<strong>原点坐标</strong>在图片的左上角。如果需要多次截取图片，我们可以用 <strong>Image</strong> 读取图片一次，然后用这个图片去创建纹理。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sf::Image image;</span><br><span class="line">image.create(<span class="number">50</span>, <span class="number">50</span>, sf::Color::Red);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sf::Texture texture;</span><br><span class="line">texture.loadFromFile(image);</span><br></pre></td></tr></table></figure>
-<p>&lt;/br&gt;</p>
-<h3 id="四、将纹理绘制在shape中"><a href="#四、将纹理绘制在shape中" class="headerlink" title="四、将纹理绘制在shape中"></a>四、将纹理绘制在shape中</h3><p>前面都是在介绍怎么创建或者读取图片，这里将介绍我们如何将图片显示出来。</p>
+<p></br></p>
+<h3 id="四将纹理绘制在shape中">四、将纹理绘制在shape中</h3>
+<p>前面都是在介绍怎么创建或者读取图片，这里将介绍我们如何将图片显示出来。</p>
 <p><strong>Texture</strong> 是像素的集合，它不能直接绘制到屏幕上，还需要设置它的位置，旋转角度等参数。<strong>Shape</strong> 类能够起到这么一个作用。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sf::Texture texture;</span><br><span class="line">texture.loadFromFile(<span class="string">"myTexture.png"</span>);</span><br><span class="line"></span><br><span class="line">sf::<span class="function">RectangleShape <span class="title">rectShape</span><span class="params">(sf::Vector2f(<span class="number">300</span>, <span class="number">150</span>))</span></span>;</span><br><span class="line">rectShape.setTexture(&amp;texture);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (window.isOpen()) &#123;</span><br><span class="line">    window.clear(sf::Color::Black);</span><br><span class="line">    window.draw(rectShape);</span><br><span class="line">    window.display();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码将 <strong>Texture</strong> 对象放入 <strong>RectangleShape</strong> 中。<strong>Texture</strong> 对象会适当的缩放自身使之适合 <strong>RectangleShape</strong> 的大小。例如，我们的 <strong>Texture</strong> 如果是 200 <em> 200 大小的，<strong> RectangleShape</strong> 是 300 </em> 150 大小的。那么 <strong> Texture</strong> 将会在 x 方向拉伸显示，而在 y 方向压缩显示。</p>
+<p>上面的代码将 <strong>Texture</strong> 对象放入 <strong>RectangleShape</strong> 中。<strong>Texture</strong> 对象会适当的缩放自身使之适合 <strong>RectangleShape</strong> 的大小。例如，我们的 <strong>Texture</strong> 如果是 200 * 200 大小的，** RectangleShape** 是 300 * 150 大小的。那么 ** Texture** 将会在 x 方向拉伸显示，而在 y 方向压缩显示。</p>
 <p><img alt="http://sshpark.github.io/images/20190824210710.png" width="500px" /></p>
 <p>一般来说，我们不希望看到这样的效果。。。</p>
 <p>为此，我们需要正确的设置 <strong>RectangleShape</strong> 的大小，可以使用 <code>Texture::getSize()</code> 获取我们 Texture 的大小。</p>
@@ -189,7 +189,7 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sf::Vector2u textureSize = texture.getSize();</span><br><span class="line"><span class="keyword">float</span> rectWidth = <span class="keyword">static_cast</span>&lt;<span class="keyword">float</span>&gt;(textureSize.x);</span><br><span class="line"><span class="keyword">float</span> rectHeight = <span class="keyword">static_cast</span>&lt;<span class="keyword">float</span>&gt;(textureSize.y);</span><br><span class="line"></span><br><span class="line">sf::<span class="function">RectangleShape <span class="title">rectShape</span><span class="params">(sf::Vector2f(rectWidth, rectHeight))</span></span>;</span><br><span class="line">rectShape.setTexture(&amp;texture);</span><br></pre></td></tr></table></figure>
 <p><img alt="http://sshpark.github.io/images/20190824211240.png" width="500px" /></p>
 <p>除此之外，<strong>Texture</strong> 对象还可以绘制到其他 <strong>Shape</strong> 当中，例如 <strong>CircleShape</strong> 和 <strong>ConvexShape</strong></p>
-<p>&lt;/br&gt;</p>
+<p></br></p>
 <p>某些时候，一张大图片可能由一张小图片多次出现组成，如下图所示。</p>
 <p><img src="http://sshpark.github.io/images/20190824214149.png" width="500px" /></p>
 <p>这时候，我们可以通过 <strong>SFML</strong> 实现，以减少空间的占用。 <strong>Texture</strong> 中有一个方法叫做 <code>Texture::setRepeated()</code>，设置为 <code>True</code> 的时候表示当前 <strong>Texture</strong> 对象是可重复的。</p>

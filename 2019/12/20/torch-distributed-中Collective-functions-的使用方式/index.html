@@ -16,10 +16,7 @@
 <meta name="description" content="使用 pytorch 中的分布式包可以轻松的实现并行计算，但是在官方文档中没有 Collective functions 的示例代码，而且网络上对这方面的介绍也比较少。对并行计算不熟悉的人使用起来可能会有点小问题，因此这里通过简单的代码展示了如何去使用 Collective functions。"/><meta name="keywords" content="PyTorch, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/2019/12/20/torch-distributed-中Collective-functions-的使用方式/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>torch.distributed 中 Collective functions 的使用方式 - sshpark</title>
@@ -141,38 +138,46 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#环境准备"><span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Collective-functions"><span class="toc-text">Collective functions</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#scatter"><span class="toc-text">scatter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gather"><span class="toc-text">gather</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reduce"><span class="toc-text">reduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Broadcast"><span class="toc-text">Broadcast</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#All-Reduce"><span class="toc-text">All-Reduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#All-Gather"><span class="toc-text">All-Gather</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#最后"><span class="toc-text">最后</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#环境准备"><span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#collective-functions"><span class="toc-text">Collective functions</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#scatter"><span class="toc-text">scatter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gather"><span class="toc-text">gather</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reduce"><span class="toc-text">reduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#broadcast"><span class="toc-text">Broadcast</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#all-reduce"><span class="toc-text">All-Reduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#all-gather"><span class="toc-text">All-Gather</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#最后"><span class="toc-text">最后</span></a></li></ol>
     </div>
   </div><div class="post-content"><blockquote>
-<p>  <code>Pytorch</code> 中的分布式包（<strong>torch.distributed</strong>）可以帮助研究人员或者从业人员轻松地跨进程或在计算机集群中实现并行计算。</p>
-<p>  <code>torch.distributed</code> 支持三种后端，分别是 <code>gloo, nccl</code> 以及 <code>mpi</code>。 不同的后端对应的功能不一样，可以根据实际情况选择。</p>
+<p><code>Pytorch</code> 中的分布式包（<strong>torch.distributed</strong>）可以帮助研究人员或者从业人员轻松地跨进程或在计算机集群中实现并行计算。</p>
+<p><code>torch.distributed</code> 支持三种后端，分别是 <code>gloo, nccl</code> 以及 <code>mpi</code>。 不同的后端对应的功能不一样，可以根据实际情况选择。</p>
 </blockquote>
-<h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><p>为了展示这几个函数的使用，我们这里通过 docker 创建三个容器模拟真实物理机，镜像使用的是 <strong>pytorch/pytorch</strong>。</p>
+<h1 id="环境准备">环境准备</h1>
+<p>为了展示这几个函数的使用，我们这里通过 docker 创建三个容器模拟真实物理机，镜像使用的是 <strong>pytorch/pytorch</strong>。</p>
 <p>使用下面命令创建三个 docker 容器：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --name device1 -v [这里填写项目的绝对路径]:/root pytorch/pytorch</span><br><span class="line"></span><br><span class="line">docker run -it --name device2 -v [这里填写项目的绝对路径]:/root pytorch/pytorch</span><br><span class="line"></span><br><span class="line">docker run -it --name device3 -v [这里填写项目的绝对路径]:/root pytorch/pytorch</span><br></pre></td></tr></table></figure>
 <p>这里需要开三个终端，每个终端对应一个容器。<code>-v</code> 参数是为了将本地目录映射到容器中，方便管理文件。如下图所示，我们创建了三个容器。</p>
-<p><img src="http://sshpark.github.io/images/20191219212717.png" alt="三个容器"></p>
+<figure>
+<img src="http://sshpark.github.io/images/20191219212717.png" alt="三个容器" /><figcaption>三个容器</figcaption>
+</figure>
 <p>然后需要获取三个容器的 ip 地址，使用下面的命令可以获取相应容器的 ip 地址：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect 容器ID | grep IPAddress</span><br></pre></td></tr></table></figure>
 <p>在我的电脑上<code>device1,device2,device3</code>对应的 ip 地址分别是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">172.17.0.2</span><br><span class="line">172.17.0.3</span><br><span class="line">172.17.0.4</span><br></pre></td></tr></table></figure>
 <p>我们指定 ip 地址为 <code>172.17.0.2</code> 的容器为 <code>rank=0</code>，初始化方法使用 tcp，main 函数代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    parser = argparse.ArgumentParser()</span><br><span class="line">    parser.add_argument(<span class="string">'--rank'</span>, type=int, default=<span class="number">0</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--world_size'</span>, type=int, default=<span class="number">2</span>)</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    dist.init_process_group(backend=<span class="string">'gloo'</span>, \</span><br><span class="line">        init_method=<span class="string">'tcp://172.17.0.2:8991'</span>, \</span><br><span class="line">        rank=args.rank, \</span><br><span class="line">        world_size=args.world_size)</span><br><span class="line">    run(dist.get_rank())</span><br></pre></td></tr></table></figure>
-<h1 id="Collective-functions"><a href="#Collective-functions" class="headerlink" title="Collective functions"></a>Collective functions</h1><p>在 <code>pytorch</code> 中目前有六种 <code>Collective functions</code> ，分别是 <code>Scatter,Gather,Reduce,All-Reduce,Broadcast,All-Gather</code>。来看看<a href="https://pytorch.org/tutorials/intermediate/dist_tuto.html" target="_blank" rel="noopener">官网</a>的一张图就可以直观的认识到这几个函数的作用。</p>
-<p><img src="http://sshpark.github.io/images/20191219211337.png" alt="Collective functions"></p>
-<h2 id="scatter"><a href="#scatter" class="headerlink" title="scatter"></a>scatter</h2><p><code>torch.distributed.scatter(tensor, scatter_list=None, src=0, group=\&lt;object object\&gt;, async_op=False)</code></p>
+<h1 id="collective-functions">Collective functions</h1>
+<p>在 <code>pytorch</code> 中目前有六种 <code>Collective functions</code> ，分别是 <code>Scatter,Gather,Reduce,All-Reduce,Broadcast,All-Gather</code>。来看看<a href="https://pytorch.org/tutorials/intermediate/dist_tuto.html" target="_blank" rel="noopener">官网</a>的一张图就可以直观的认识到这几个函数的作用。</p>
+<figure>
+<img src="http://sshpark.github.io/images/20191219211337.png" alt="Collective functions" /><figcaption>Collective functions</figcaption>
+</figure>
+<h2 id="scatter">scatter</h2>
+<p><code>torch.distributed.scatter(tensor, scatter_list=None, src=0, group=\&lt;object object\&gt;, async_op=False)</code></p>
 <p>这个函数的功能是将 <code>scatter_list</code> 列表中的第 <code>i</code> 个张量（tensor）发送到第 <code>i</code> 个进程中。代码如下所示：</p>
-<font color="red">注意：如果是接收方，那么scatter_list=[]</font>
-
+<p><font color="red">注意：如果是接收方，那么scatter_list=[]</font></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> torch.distributed <span class="keyword">as</span> dist</span><br><span class="line"></span><br><span class="line">weight = torch.zeros(<span class="number">1</span>)</span><br><span class="line">scatter_list = [torch.randn_like(weight) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>)]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(rank)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    数据分发</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">if</span> rank == <span class="number">0</span>:</span><br><span class="line">        dist.scatter(weight, scatter_list, <span class="number">0</span>)</span><br><span class="line">        print(scatter_list)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        dist.scatter(weight, [], <span class="number">0</span>)</span><br><span class="line">        print(<span class="string">'rank &#123;&#125; receiving data &#123;&#125; from -\</span></span><br><span class="line"><span class="string">            rank0'</span>.format( rank, weight ))</span><br><span class="line">        </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    parser = argparse.ArgumentParser()</span><br><span class="line">    parser.add_argument(<span class="string">'--rank'</span>, type=int, default=<span class="number">0</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--world_size'</span>, type=int, default=<span class="number">2</span>)</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    dist.init_process_group(backend=<span class="string">'gloo'</span>, \</span><br><span class="line">        init_method=<span class="string">'tcp://172.17.0.2:8991'</span>, \</span><br><span class="line">        rank=args.rank, \</span><br><span class="line">        world_size=args.world_size)</span><br><span class="line">    run(dist.get_rank())</span><br></pre></td></tr></table></figure>
 <p>device1运行指令 <code>python test.py --rank 0 --world_size 3</code>，device2 运行命令 <code>python test.py --rank 1 --world_size 3</code>，device3 运行命令 <code>python test.py --rank 2 --world_size 3</code>。结果如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[tensor([-1.2237]), tensor([-0.0276]), tensor([-0.9581])]</span><br><span class="line">rank 1 receiving data tensor([-0.0276]) from rank0</span><br><span class="line">rank 2 receiving data tensor([-0.9581]) from rank0</span><br></pre></td></tr></table></figure>
-<h2 id="gather"><a href="#gather" class="headerlink" title="gather"></a>gather</h2><p><code>torch.distributed.gather(tensor, gather_list=None, dst=0, group=\&lt;object object\&gt;, async_op=False)</code></p>
+<h2 id="gather">gather</h2>
+<p><code>torch.distributed.gather(tensor, gather_list=None, dst=0, group=\&lt;object object\&gt;, async_op=False)</code></p>
 <p>将所有进程的 tensor 值拷贝到 rank=dst 的进程中。代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> torch.distributed <span class="keyword">as</span> dist</span><br><span class="line">weight = torch.zeros(<span class="number">1</span>)</span><br><span class="line">gather_list = [torch.ones_like(weight) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>)]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(rank)</span>:</span></span><br><span class="line">    <span class="keyword">global</span> weight</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> rank == <span class="number">0</span>:</span><br><span class="line">        dist.gather(weight, gather_list, <span class="number">0</span>)</span><br><span class="line">        print(gather_list)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        weight = torch.randn(<span class="number">1</span>)</span><br><span class="line">        dist.gather(weight)</span><br><span class="line">        print(<span class="string">'rank &#123;&#125; is sending data &#123;&#125; to rank 0'</span>\</span><br><span class="line">            .format( rank, weight ))</span><br></pre></td></tr></table></figure>
 <p>结果如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[tensor([0.]), tensor([0.5088]), tensor([1.3696])]</span><br><span class="line">rank 1 is sending data tensor([0.5088]) to rank 0</span><br><span class="line">rank 2 is sending data tensor([1.3696]) to rank 0</span><br></pre></td></tr></table></figure>
-<h2 id="reduce"><a href="#reduce" class="headerlink" title="reduce"></a>reduce</h2><p><code>torch.distributed.reduce(tensor, dst, op=ReduceOp.SUM, group=\&lt;object object\&gt;, async_op=False)</code></p>
+<h2 id="reduce">reduce</h2>
+<p><code>torch.distributed.reduce(tensor, dst, op=ReduceOp.SUM, group=\&lt;object object\&gt;, async_op=False)</code></p>
 <p>将 tensor 发送到 dst 并执行相应的 op 操作。</p>
 <p>其中的 op 操作有：</p>
 <ul>
@@ -191,13 +196,17 @@
 <p><br></p>
 <p>后面的就不写样例展示了，知道了函数的功能之后相信大家都能够写得出来。</p>
 <p><br></p>
-<h2 id="Broadcast"><a href="#Broadcast" class="headerlink" title="Broadcast"></a>Broadcast</h2><p><code>torch.distributed.broadcast(tensor, src, group=\&lt;object object\&gt;, async_op=False)</code></p>
+<h2 id="broadcast">Broadcast</h2>
+<p><code>torch.distributed.broadcast(tensor, src, group=\&lt;object object\&gt;, async_op=False)</code></p>
 <p>将 tensor 从 src 发送到所有的进程</p>
-<h2 id="All-Reduce"><a href="#All-Reduce" class="headerlink" title="All-Reduce"></a>All-Reduce</h2><p><code>torch.distributed.all_reduce(tensor, op=ReduceOp.SUM, group=\&lt;object object\&gt;, async_op=False)</code></p>
+<h2 id="all-reduce">All-Reduce</h2>
+<p><code>torch.distributed.all_reduce(tensor, op=ReduceOp.SUM, group=\&lt;object object\&gt;, async_op=False)</code></p>
 <p>跟 reduce 的功能一样，只不过它是所有的进程都会进行 reduce 操作。</p>
-<h2 id="All-Gather"><a href="#All-Gather" class="headerlink" title="All-Gather"></a>All-Gather</h2><p><code>torch.distributed.all_gather(tensor_list, tensor, group=\&lt;object object\&gt;, async_op=False)</code></p>
+<h2 id="all-gather">All-Gather</h2>
+<p><code>torch.distributed.all_gather(tensor_list, tensor, group=\&lt;object object\&gt;, async_op=False)</code></p>
 <p>跟 gather 的功能一样，只不过它是所有的进程都会进行 gather 操作。</p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>其实代码可以再简洁点，可以使用 <code>torch.multiprocessing</code> 包，就不需要使用 docker 模拟了。然后 main 函数改为:</p>
+<h1 id="最后">最后</h1>
+<p>其实代码可以再简洁点，可以使用 <code>torch.multiprocessing</code> 包，就不需要使用 docker 模拟了。然后 main 函数改为:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.multiprocessing <span class="keyword">as</span> mp</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    mp.spawn(f, nprocs=<span class="number">3</span>, args=())</span><br></pre></td></tr></table></figure>
 
       </div>

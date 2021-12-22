@@ -16,10 +16,7 @@
 <meta name="description" content="数据结构：树状数组"/><meta name="keywords" content="数据结构, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/2018/02/03/数据结构：树状数组/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>数据结构：树状数组 - sshpark</title>
@@ -145,12 +142,15 @@
     </div>
   </div><div class="post-content"><p>先来一段来自<a href="https://baike.baidu.com/item/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/313739" target="_blank" rel="noopener">百度百科</a>的介绍</p>
 <blockquote>
-<p>树状数组(Binary Indexed Tree(B.I.T), Fenwick Tree)是一个查询和修改复杂度都为log(n)的数据结构。主要用于查询任意两位之间的所有元素之和，但是每次只能修改一个元素的值；经过简单修改可以在log(n)的复杂度下进行范围修改，但是这时只能查询其中一个元素的值(如果加入多个辅助数组则可以实现区间修改与区间查询)。<br><a id="more"></a><br>简单的说，它是一种树形数据结构，可以快速查询和修改值。<br>大概长这样子</p>
+<p>树状数组(Binary Indexed Tree(B.I.T), Fenwick Tree)是一个查询和修改复杂度都为log(n)的数据结构。主要用于查询任意两位之间的所有元素之和，但是每次只能修改一个元素的值；经过简单修改可以在log(n)的复杂度下进行范围修改，但是这时只能查询其中一个元素的值(如果加入多个辅助数组则可以实现区间修改与区间查询)。 <a id="more"></a> 简单的说，它是一种树形数据结构，可以快速查询和修改值。 大概长这样子</p>
 </blockquote>
-<p><img src="http://sshpark.github.io/images/20180203151767161169872.png" alt="树状数组"></p>
+<figure>
+<img src="http://sshpark.github.io/images/20180203151767161169872.png" alt="树状数组" /><figcaption>树状数组</figcaption>
+</figure>
 <p>常用的场景</p>
 <p>如果给你n个数，然后进行q次询问，每次询问一个区间[x,y]的和，相信很多人都会用前缀和数组：sum[i]=a[1]+a[2]+…+a[i]，复杂度O(n)。但是如果再进行q次的单点更改，前缀和数组就派不上用场了。这时候可以考虑用树状数组降低复杂度。</p>
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>从上面的图可以知道，a[i]代表原数组的值，c[i]代表树状数组（采用下标模拟树形结构）,c[i]表示a数组前i项和。</p>
+<h3 id="具体实现">具体实现</h3>
+<p>从上面的图可以知道，a[i]代表原数组的值，c[i]代表树状数组（采用下标模拟树形结构）,c[i]表示a数组前i项和。</p>
 <p>然后有：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">C[1] &#x3D; A[1]</span><br><span class="line">C[2] &#x3D; A[1] + A[2]</span><br><span class="line">C[3] &#x3D; A[3]</span><br><span class="line">C[4] &#x3D; C[2]+C[3]+A[4] &#x3D; A[1]+A[2]+A[3]+A[4]</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>按上图，现在如果我要查询前4项的和，有</p>
@@ -160,16 +160,16 @@
 <p>如果我要查询前7项的和，有</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sum[7] &#x3D; C[7]+C[6]+C[4] (111 + 110 + 100)</span><br></pre></td></tr></table></figure>
 <p>上面右侧括号里的是C数组下标二进制表示，因此，有大牛总结出了规律</p>
-<font color="red">对于sum[7]来说，它对应的C数组下标为当前下标减去最后一个二进制1，直到为0。是这样的，7（111），最后一个二进制1在第一位，减去第一位的1变成6（110），以此类推4（100），0（000）。</font>
-
-<p>对于如何求一个二进制最后一位1，有人给出了一个公式，具体证明可查阅相关资料</p>
-<script type="math/tex; mode=display">
-lowbit(x)=x\&(−x)</script><p>因此，如果想要求前x项和，只需要一个循环即可</p>
+<p><font color="red">对于sum[7]来说，它对应的C数组下标为当前下标减去最后一个二进制1，直到为0。是这样的，7（111），最后一个二进制1在第一位，减去第一位的1变成6（110），以此类推4（100），0（000）。</font></p>
+<p>对于如何求一个二进制最后一位1，有人给出了一个公式，具体证明可查阅相关资料 <span class="math display">\[
+lowbit(x)=x\&amp;(−x)
+\]</span> 因此，如果想要求前x项和，只需要一个循环即可</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = x; i &gt; <span class="number">0</span>; i -= lowbit(i));</span><br></pre></td></tr></table></figure>
 <p>如果想要更改某一点的值，不仅仅只更改一处，还要向上更改，例如更改上图的C[3]，与C[3]有关系的点还有C[4], C[8]。</p>
 <p>因为更改和查询互为逆过程，因此每次将当前坐标加上当前坐标最后一位1</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = x; i &lt;= n; i += lowbit(i));</span><br></pre></td></tr></table></figure>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>总结一下，树状数组有三个重要函数</p>
+<h3 id="总结">总结</h3>
+<p>总结一下，树状数组有三个重要函数</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取x最后一个二进制1</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">lowbit</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x &amp; (-x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 修改某一处的值</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = x; i &lt;= n; i += lowbit(i))</span><br><span class="line">        c[i] += val;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查询前x项和</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = x; i; i -= lowbit(i))</span><br><span class="line">        ans += c[i];</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>可以做做<a href="http://poj.org/problem?id=2352" target="_blank" rel="noopener">poj2352</a>题目练习一下</p>
 

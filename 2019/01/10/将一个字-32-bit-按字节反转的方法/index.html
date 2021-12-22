@@ -16,10 +16,7 @@
 <meta name="description" content="将一个字(32 bit)按字节反转的方法"/><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/2019/01/10/将一个字-32-bit-按字节反转的方法/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>将一个字(32 bit)按字节反转的方法 - sshpark</title>
@@ -141,26 +138,38 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一步-t-v-v-lt-lt-16-v-gt-gt-16-，得到"><span class="toc-text">第一步: t &#x3D; v ^ ((v &lt;&lt; 16) | (v &gt;&gt; 16))，得到</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二步-t-amp-0xff0000，得到"><span class="toc-text">第二步:t &amp;&#x3D; ~0xff0000，得到</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第三步-v-v-lt-lt-24-v-gt-gt-8"><span class="toc-text">第三步:v &#x3D; (v &lt;&lt; 24) | (v &gt;&gt; 8)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第四步-v-t-gt-gt-8"><span class="toc-text">第四步:v ^ (t &gt;&gt; 8)</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一步-t-v-v-16-v-16得到"><span class="toc-text">第一步: t &#x3D; v ^ ((v &lt;&lt; 16) | (v &gt;&gt; 16))，得到</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二步t-0xff0000得到"><span class="toc-text">第二步:t &amp;&#x3D; ~0xff0000，得到</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第四步v-t-8"><span class="toc-text">第四步:v ^ (t &gt;&gt; 8)</span></a></li></ol>
     </div>
   </div><div class="post-content"><p>什么意思呢？就是将 ABCD 变成 DCBA。这里的ABCD代表字节。</p>
-<p>这个方法是在<strong>嵌入式系统课程</strong>中学到的，效率很高，该方法只用了一个临时变量而且不使用循环语句。<br><a id="more"></a></p>
+<p>这个方法是在<strong>嵌入式系统课程</strong>中学到的，效率很高，该方法只用了一个临时变量而且不使用循环语句。 <a id="more"></a></p>
 <p>方法如下：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="title">func</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> t;</span><br><span class="line">    t = v ^ ((v &lt;&lt; <span class="number">16</span>) | (v &gt;&gt; <span class="number">16</span>));</span><br><span class="line">    t &amp;= ~<span class="number">0xff0000</span>;</span><br><span class="line">    v = (v &lt;&lt; <span class="number">24</span>) | (v &gt;&gt; <span class="number">8</span>); </span><br><span class="line">    <span class="keyword">return</span> v ^ (t &gt;&gt; <span class="number">8</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="第一步-t-v-v-lt-lt-16-v-gt-gt-16-，得到"><a href="#第一步-t-v-v-lt-lt-16-v-gt-gt-16-，得到" class="headerlink" title="第一步: t = v ^ ((v &lt;&lt; 16) | (v &gt;&gt; 16))，得到"></a>第一步: <code>t = v ^ ((v &lt;&lt; 16) | (v &gt;&gt; 16))</code>，得到</h4><script type="math/tex; mode=display">
-𝑣 = 𝐴𝐵𝐶𝐷、𝑡 = ABCD\oplus CDAB</script><h4 id="第二步-t-amp-0xff0000，得到"><a href="#第二步-t-amp-0xff0000，得到" class="headerlink" title="第二步:t &amp;= ~0xff0000，得到"></a>第二步:<code>t &amp;= ~0xff0000</code>，得到</h4><p>  <code>~0xff0000</code> 的结果为<code>f0ff</code>(字节为单位)，则有 </p>
-<script type="math/tex; mode=display">
-𝑣 = 𝐴𝐵𝐶𝐷、𝑡 = f0ff \& (ABCD\oplus CDAB)</script><p>​        即</p>
-<script type="math/tex; mode=display">
-𝑣 = 𝐴𝐵𝐶𝐷、𝑡 = (A\oplus𝐶，0，C\oplus A，𝐷\oplus𝐵)</script><h4 id="第三步-v-v-lt-lt-24-v-gt-gt-8"><a href="#第三步-v-v-lt-lt-24-v-gt-gt-8" class="headerlink" title="第三步:v = (v &lt;&lt; 24) | (v &gt;&gt; 8)"></a>第三步:<code>v = (v &lt;&lt; 24) | (v &gt;&gt; 8)</code></h4><p>  得到<code>v = D000 | 0ABC</code></p>
-<script type="math/tex; mode=display">
-v = DABC、𝑡 = \{A\oplus𝐶，0，C\oplus A，𝐷\oplus𝐵\}</script><h4 id="第四步-v-t-gt-gt-8"><a href="#第四步-v-t-gt-gt-8" class="headerlink" title="第四步:v ^ (t &gt;&gt; 8)"></a>第四步:<code>v ^ (t &gt;&gt; 8)</code></h4><p>  <code>t &gt;&gt;8</code>得到</p>
-<script type="math/tex; mode=display">
-𝑡 = \{0，A\oplus𝐶，0，C\oplus A\}</script><p>​    <code>v ^ (t &gt;&gt; 8)</code>得到</p>
-<script type="math/tex; mode=display">
-𝑣 = 𝐷𝐴𝐵𝐶\oplus\{0，A\oplus𝐶，0，C\oplus A\}</script><p>​    最后</p>
-<script type="math/tex; mode=display">
-v = DCBA</script><p>有关这方面的知识可以到<a href="http://graphics.stanford.edu/~seander/bithacks.html" target="_blank" rel="noopener">这里</a>了解，里面介绍了大量的位运算技巧</p>
+<h4 id="第一步-t-v-v-16-v-16得到">第一步: <code>t = v ^ ((v &lt;&lt; 16) | (v &gt;&gt; 16))</code>，得到</h4>
+<p><span class="math display">\[
+𝑣 = 𝐴𝐵𝐶𝐷、𝑡 = ABCD\oplus CDAB
+\]</span></p>
+<h4 id="第二步t-0xff0000得到">第二步:<code>t &amp;= ~0xff0000</code>，得到</h4>
+<p><code>~0xff0000</code> 的结果为<code>f0ff</code>(字节为单位)，则有 <span class="math display">\[
+𝑣 = 𝐴𝐵𝐶𝐷、𝑡 = f0ff \&amp; (ABCD\oplus CDAB)
+\]</span></p>
+<p>​ 即 <span class="math display">\[
+𝑣 = 𝐴𝐵𝐶𝐷、𝑡 = (A\oplus𝐶，0，C\oplus A，𝐷\oplus𝐵)
+\]</span></p>
+<p>####第三步:<code>v = (v &lt;&lt; 24) | (v &gt;&gt; 8)</code></p>
+<p>得到<code>v = D000 | 0ABC</code></p>
+<p><span class="math display">\[
+v = DABC、𝑡 = \{A\oplus𝐶，0，C\oplus A，𝐷\oplus𝐵\}
+\]</span></p>
+<h4 id="第四步v-t-8">第四步:<code>v ^ (t &gt;&gt; 8)</code></h4>
+<p><code>t &gt;&gt;8</code>得到</p>
+<p><span class="math display">\[
+𝑡 = \{0，A\oplus𝐶，0，C\oplus A\}
+\]</span> ​ <code>v ^ (t &gt;&gt; 8)</code>得到 <span class="math display">\[
+𝑣 = 𝐷𝐴𝐵𝐶\oplus\{0，A\oplus𝐶，0，C\oplus A\}
+\]</span> ​ 最后 <span class="math display">\[
+v = DCBA
+\]</span></p>
+<p>有关这方面的知识可以到<a href="http://graphics.stanford.edu/~seander/bithacks.html" target="_blank" rel="noopener">这里</a>了解，里面介绍了大量的位运算技巧</p>
 
       </div>
       

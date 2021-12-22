@@ -16,10 +16,7 @@
 <meta name="description" content="多思考，少跟风"/><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>sshpark</title>
@@ -138,7 +135,8 @@
         </div>
     </header>
 
-    <div class="post-content"><h1 id="1-背景-amp-动机"><a href="#1-背景-amp-动机" class="headerlink" title="1. 背景 &amp; 动机"></a>1. 背景 &amp; 动机</h1><p>联邦学习是一种以隐私保护方式进行分布式机器学习的范式。在参数服务器的训练架构下，客户端的数据将保存在本地而不上传到服务器中。在这种情况下，每个客户端的本地数据很可能是异构的（例如非独立同分布），这导致了使用联邦平均算法（FedAvg）训练出的全局模型存在准确率下降等问题。为了应对客户端之间的数据高度异构情况，近年来提出的个性化联邦学习引起了多数学者的兴趣。所谓个性化联邦学习，就是根据客户端本地数据分布的特点，为不同客户端提供一个本地模型而不是直接使用统一的全局模型。</p>
+    <div class="post-content"><h1 id="背景-动机">1. 背景 &amp; 动机</h1>
+<p>联邦学习是一种以隐私保护方式进行分布式机器学习的范式。在参数服务器的训练架构下，客户端的数据将保存在本地而不上传到服务器中。在这种情况下，每个客户端的本地数据很可能是异构的（例如非独立同分布），这导致了使用联邦平均算法（FedAvg）训练出的全局模型存在准确率下降等问题。为了应对客户端之间的数据高度异构情况，近年来提出的个性化联邦学习引起了多数学者的兴趣。所谓个性化联邦学习，就是根据客户端本地数据分布的特点，为不同客户端提供一个本地模型而不是直接使用统一的全局模型。</p>
           <div class="read-more">
             <a href="/2021/12/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-PartialFed-Cross-Domain-Personalized-Federated-Learning-via-Partial-Initialization/" class="read-more-link">阅读更多</a>
           </div>
@@ -160,32 +158,36 @@
     </header>
 
     <div class="post-content"><p>随着计算机硬件的不断发展，可用内存（RAM）也变得越来越大。此外，实模式下缺乏对内存的保护，这导致了由于非法内存访问而产生的一些未知错误。这些问题在保护模式下得到了一定的解决，其作用主要有以下两点：</p>
-<ol>
+<ol type="1">
 <li>支持更大的内存空间寻址</li>
 <li>区分系统程序和用户程序，对访问内存的地址加以限制，防止程序非法访问内存</li>
 </ol>
 <p>此外，我们的内存采用的是分段模型，要实现对内存的保护，就是要实现对段的保护。段的相关信息用一个称为<strong>段描述符</strong>的数据结构去维护，多个段描述符组成全局描述符表（GDT），它们都存放在<strong>内存</strong>中。</p>
-<h3 id="全局描述符表-GDT"><a href="#全局描述符表-GDT" class="headerlink" title="全局描述符表 GDT"></a>全局描述符表 GDT</h3><p>将CPU从 16 位实模式切换到 32 位保护模式的最困难部分是，我们必须在内存中准备一个称为全局描述符表（GDT）的复杂数据结构，该结构定义了内存段信息及其保护模式下的额外信息。而 GDT 则是由多个段描述符组成，一个段描述符由 8 bytes 组成，其组成部分有：</p>
+<h3 id="全局描述符表-gdt">全局描述符表 GDT</h3>
+<p>将CPU从 16 位实模式切换到 32 位保护模式的最困难部分是，我们必须在内存中准备一个称为全局描述符表（GDT）的复杂数据结构，该结构定义了内存段信息及其保护模式下的额外信息。而 GDT 则是由多个段描述符组成，一个段描述符由 8 bytes 组成，其组成部分有：</p>
 <ul>
 <li>段基址，它定义了段在物理内存中的起始位置</li>
 <li>段长度，定义了段的大小</li>
 <li>标识位，段是否可读写，可执行等</li>
 </ul>
 <p>段描述符结构如下图所示：</p>
-<p><img src="http://sshpark.github.io/images/2021-06-15.9.26.02.png" alt="2021-06-15.9.26.02"></p>
-<h3 id="切换步骤"><a href="#切换步骤" class="headerlink" title="切换步骤"></a>切换步骤</h3><ol>
+<figure>
+<img src="http://sshpark.github.io/images/2021-06-15.9.26.02.png" alt="2021-06-15.9.26.02" /><figcaption>2021-06-15.9.26.02</figcaption>
+</figure>
+<h3 id="切换步骤">切换步骤</h3>
+<ol type="1">
 <li>准备段描述符信息</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">; GDT</span><br><span class="line"></span><br><span class="line">gdt_start:</span><br><span class="line"></span><br><span class="line">gdt_null:   ; 第一个段描述符强制设置为 0</span><br><span class="line">    dd 0x0</span><br><span class="line">    dd 0x0</span><br><span class="line"></span><br><span class="line">gdt_code:   ; the code segment descriptor</span><br><span class="line">    ; base &#x3D; 0x0, limit &#x3D; 0xfffff</span><br><span class="line">    ; 1st flags: (present)1 (privilege)00 (descriptor type)1 -&gt; 1001b</span><br><span class="line">    ; type flags: (code )1 ( conforming )0 (readable )1 (accessed )0 -&gt; 1010b</span><br><span class="line">    ; 2nd flags: ( granularity )1 (32- bit default )1 (64- bit seg )0 (AVL )0 -&gt; 1100b</span><br><span class="line">    dw 0xffff       ; Limit (bits 0-15)</span><br><span class="line">    dw 0x0          ; Base  (bits 0-15)</span><br><span class="line">    db 0x0          ; Base  (bits 16-23)</span><br><span class="line">    db 10011010b    ; 1st flags , type flags</span><br><span class="line">    db 11001111b    ; 2nd flags , Limit (bits 16 -19)</span><br><span class="line">    db 0x0          ; Base (bits 24-31)</span><br><span class="line"></span><br><span class="line">gdt_data:   ;the data segment descriptor</span><br><span class="line">    ; Same as code segment expect for the type flags:</span><br><span class="line">    ; types flags: (code) 0 (expand down) 0 (writable) 1 (accessed) 0 -&gt; 0010 b</span><br><span class="line">    dw 0xffff       ; Limit (bits 0 -15)</span><br><span class="line">    dw 0x0          ; Base  (bits 0-15)</span><br><span class="line">    db 0x0          ; Base  (bits 16-23)</span><br><span class="line">    db 10010010b    ; 1st flags , type flags</span><br><span class="line">    db 11001111b    ; 2nd flags , Limit (bits 16 -19)</span><br><span class="line">    db 0x0          ; Base (bits 24-31)</span><br><span class="line"></span><br><span class="line">gdt_end:    ; The reason for putting a label at the end of the </span><br><span class="line">            ; GDT is so we can have the assembler calculate </span><br><span class="line">            ; the size of the GDT for the GDT decriptor (below)</span><br><span class="line"></span><br><span class="line">; GDT descriptor</span><br><span class="line">gdt_descriptor:</span><br><span class="line">    dw gdt_end - gdt_start - 1    ; Size of GDT</span><br><span class="line">    dd gdt_start                  ; Start address of our GDT</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">; 设置保护模式下要用到的段地址，代码段和数据段</span><br><span class="line">CODE_SEG equ gdt_code - gdt_start</span><br><span class="line">DATA_SEG equ gdt_data - gdt_start</span><br></pre></td></tr></table></figure>
-<ol>
+<ol start="2" type="1">
 <li>加载设置 GDTR 寄存器，使之指向全局段描述符表</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lgdt [ gdt_descriptor ]</span><br></pre></td></tr></table></figure>
-<ol>
+<ol start="3" type="1">
 <li>设置 CR0 寄存器，开启保护模式。</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mov eax, cr0 ; 为了使开关进入保护模式，我们将 CR0 的第一位（控制寄存器）置 1</span><br><span class="line">or eax, 0x1</span><br><span class="line">mov cr0, eax</span><br></pre></td></tr></table></figure>
-<ol>
+<ol start="4" type="1">
 <li>进行长跳转，加载 CS 段寄存器。</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmp CODE_SEG:init_pm</span><br></pre></td></tr></table></figure>
@@ -229,8 +231,10 @@
         </div>
     </header>
 
-    <div class="post-content"><h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在学堂云刷课的时候，不能离开这个页面，否则的话视频会暂停。</p>
-<h1 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h1><p>在当前页面调试，并将下面的 <code>js</code> 代码输入带控制台中执行，然后就可以离开页面播放了，同时也可以开<strong>多个页面</strong>刷视频。</p>
+    <div class="post-content"><h1 id="问题">问题</h1>
+<p>在学堂云刷课的时候，不能离开这个页面，否则的话视频会暂停。</p>
+<h1 id="解决方式">解决方式</h1>
+<p>在当前页面调试，并将下面的 <code>js</code> 代码输入带控制台中执行，然后就可以离开页面播放了，同时也可以开<strong>多个页面</strong>刷视频。</p>
 <p>代码写的很烂（边查边写），能用就好。。。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setInterval(<span class="function"><span class="params">()</span>=&gt;</span>&#123;<span class="built_in">document</span>.getElementById(<span class="string">'video'</span>).play()&#125;, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
 
@@ -272,8 +276,9 @@
         </div>
     </header>
 
-    <div class="post-content"><h1 id="1-Audio-模块概览"><a href="#1-Audio-模块概览" class="headerlink" title="1. Audio 模块概览"></a>1. Audio 模块概览</h1><p>到目前为止，我们已经用过的模块有 <strong>window，graphics 和 system</strong> 。<strong>window</strong> 模块主要用来操作窗口以及设置窗口的属性，<strong>graphics</strong> 模块为我们在屏幕绘制图形提供了一系列方便的api，在<strong>system</strong> 模块我们用到了  <code>Time</code> 类和 <code>Class</code> 类。</p>
-<p><strong>SFML</strong> 中还有两个模块 —- <strong>audio</strong> 以及 <strong>network</strong>，后续会会慢慢介绍。</p>
+    <div class="post-content"><h1 id="audio-模块概览">1. Audio 模块概览</h1>
+<p>到目前为止，我们已经用过的模块有 <strong>window，graphics 和 system</strong> 。<strong>window</strong> 模块主要用来操作窗口以及设置窗口的属性，<strong>graphics</strong> 模块为我们在屏幕绘制图形提供了一系列方便的api，在<strong>system</strong> 模块我们用到了 <code>Time</code> 类和 <code>Class</code> 类。</p>
+<p><strong>SFML</strong> 中还有两个模块 --- <strong>audio</strong> 以及 <strong>network</strong>，后续会会慢慢介绍。</p>
 <p>在 <strong>audio</strong> 模块中，我们必须掌握的两个类是 <code>Sf::Sound</code> 和 <code>sf::Music</code>。字面意思，两个类都是能够播放一个音频文件的。下面来简单介绍一下两者：</p>
           <div class="read-more">
             <a href="/2020/04/17/%E7%94%A8C-%E5%92%8CSFML%E5%86%99%E6%B8%B8%E6%88%8F-%E6%8E%A2%E7%B4%A2%E5%A3%B0%E9%9F%B3%E5%92%8C%E6%96%87%E6%9C%AC%E7%9A%84%E4%B8%96%E7%95%8C%EF%BC%888%EF%BC%89/" class="read-more-link">阅读更多</a>

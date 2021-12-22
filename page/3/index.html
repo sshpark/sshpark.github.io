@@ -16,10 +16,7 @@
 <meta name="description" content="多思考，少跟风"/><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/page/3/"/>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -51,7 +48,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
 </script>
 
     <title>sshpark</title>
@@ -169,12 +166,12 @@
 <p>在这个作业中我们将不会使用任何循环（for/while），除非它明确说明要<strong>显式</strong>的使用循环。</p>
 <p>将会学习到：</p>
 <ul>
-<li>建立一个学习算法的基本结构，它包括：<ul>
+<li>建立一个学习算法的基本结构，它包括：
+<ul>
 <li>初始化参数</li>
 <li>计算<strong>成本函数（cost function）</strong>以及它的<strong>梯度</strong></li>
-<li>使用优化算法 — <strong>梯度下降法（gradient descent）</strong></li>
-</ul>
-</li>
+<li>使用优化算法 -- <strong>梯度下降法（gradient descent）</strong></li>
+</ul></li>
 <li>将上面提到的三个函数放入我们的主函数 model 中</li>
 </ul>
           <div class="read-more">
@@ -224,7 +221,8 @@
     </header>
 
     <div class="post-content"><p>上一篇<a href="http://www.sshpark.com.cn/2019/08/25/用C++和SFML写游戏-纹理及精灵（5.1）" target="_blank" rel="noopener">文章</a>介绍了纹理的使用。这一节将会介绍 <strong>精灵</strong> 以及资源管理。</p>
-<h3 id="一、什么是精灵"><a href="#一、什么是精灵" class="headerlink" title="一、什么是精灵"></a>一、什么是精灵</h3><p>在这之前你可能听说过<strong>精灵</strong>的概念。实际上，精灵是贴有纹理的<strong>“画布”</strong>。说到这里，有人可能会说，前面的 <code>Shpae</code>类不是也一样的吗？答案是的，但是精灵有一点不同。</p>
+<h3 id="一什么是精灵">一、什么是精灵</h3>
+<p>在这之前你可能听说过<strong>精灵</strong>的概念。实际上，精灵是贴有纹理的<strong>“画布”</strong>。说到这里，有人可能会说，前面的 <code>Shpae</code>类不是也一样的吗？答案是的，但是精灵有一点不同。</p>
 <p>最重要的不同点是，精灵总是绘制在纹理矩形中，而 <code>Shape</code> 可以不必这样，精灵总是与一个纹理关联的，它不能单独存在。除此之外， <code>Sprite</code>类有一个类似与 <code>Shape::setFillColor()</code>的函数 <code>Sprite::setColor()</code>。当它们都与一个纹理（Texture）相关联的时候，效果是一样的，但是如果 <code>Sprite</code> 没有与纹理（Texture）关联的话，它不会被指定的颜色绘制，相反的是 <code>Shape</code> 是可以被指定颜色绘制的。</p>
 <p>那么问题来了？为什么我们要使用精灵而不是 <code>Shape</code>呢？从上面的描述来看，精灵似乎是弱化版的<code>Shape</code>。真正的原因是因为精灵简单有用。</p>
           <div class="read-more">
@@ -277,7 +275,7 @@
     <div class="post-content"><p>处理好来自用户的<strong>事件</strong>是一个很重要的话题。</p>
 <p>首先我们来认识一下什么是<strong>事件</strong>？</p>
 <p>一般来说，事件是在某些情况下被触发的<strong>对象</strong>。它们依赖于操作系统，但是 <strong>SFML</strong> 为我们提供了一个很好的对象来处理事件，它是独立于操作系统的方式。<strong>sf::Event</strong> 类，这个类包含了各种事件。</p>
-<p>建议阅读 <strong>SFML</strong> 官方文档去好好了解 <strong>SFML</strong> 事件的类型，地址是<a href="https://www.sfml-dev.org/tutorials/2.5/window-events.php。" target="_blank" rel="noopener">https://www.sfml-dev.org/tutorials/2.5/window-events.php。</a> 注意 <strong>sf::Event</strong> 是一个联合体（union），使用的时候要恰当的选择我们需要的事件类型。</p>
+<p>建议阅读 <strong>SFML</strong> 官方文档去好好了解 <strong>SFML</strong> 事件的类型，地址是https://www.sfml-dev.org/tutorials/2.5/window-events.php。 注意 <strong>sf::Event</strong> 是一个联合体（union），使用的时候要恰当的选择我们需要的事件类型。</p>
 <p>逻辑上，我们可以将事件分成四种类型：</p>
 <ul>
 <li>窗口</li>
@@ -306,7 +304,7 @@
     </header>
 
     <div class="post-content"><p>在上一节中，我们搭建了游戏的基本框架，用循环处理我们的游戏世界，还掌握了一些方法去解决因机器性能不同而引起的问题。在这一节中，我们将会学习：</p>
-<ol>
+<ol type="1">
 <li>创建 <strong>Player</strong> 类</li>
 <li>移动我们的 <strong>Player</strong>
           <div class="read-more">
@@ -336,7 +334,8 @@
 <li>Player类的创建</li>
 <li>事件管理器</li>
 </ul>
-<h3 id="Game类"><a href="#Game类" class="headerlink" title="Game类"></a>Game类</h3><p>在上一节中，我们用尽可能少的代码创建了一个基本游戏，它包括了：</p>
+<h3 id="game类">Game类</h3>
+<p>在上一节中，我们用尽可能少的代码创建了一个基本游戏，它包括了：</p>
 <ul>
 <li>窗口的创建</li>
 <li>图形的绘制</li>
@@ -363,17 +362,19 @@
         </div>
     </header>
 
-    <div class="post-content"><p><img src="http://sshpark.github.io/images/20190406001243.png" alt="MVP设计模式"></p>
+    <div class="post-content"><figure>
+<img src="http://sshpark.github.io/images/20190406001243.png" alt="MVP设计模式" /><figcaption>MVP设计模式</figcaption>
+</figure>
 <p>Android中的设计模式很多，常用的有 <strong>MVC、MVP和MVVM</strong>，MVP是目前比较流行的一种设计模式，全称为<strong>Model-View-Presenter</strong>。从上图可以看到，MVP 设计模式解除了Model和View的耦合。这种设计的优点是有效地降低View的复杂性，避免业务逻辑被塞入View中，使得View变得更为简单专一。不仅如此，MVP 还带来了良好的可拓展性、可测试性，保证系统整洁性、灵活性。对于一个复杂的应用来说，MVP模式是一种良好的架构模式，它可以非常好地组织应用结构，使得应用变得灵活，拥抱变化。</p>
 <p>MVP模式下，项目中会多出很多类和接口，这是为了实现Model和View的解耦，View和数据的交互通过接口来实现。虽然多出了这些类和接口，但是这样便于我们维护，使用MVP模式来写项目，可以说是<strong>面向接口编程</strong>，调用的方法基本都是抽象的，直接使用接口来调用，提高可维护性。在MVP模式中，一般我们都会将要调用的方法抽象成接口，Model、View、Presenter接口，在各实现类中，直接对接口进行操作。</p>
 <p>MVP设计模式的好处有以下几点</p>
-<ol>
+<ol type="1">
 <li>Activity只处理生命周期的任务，代码变得更加简洁</li>
 <li>视图逻辑和业务逻辑分别抽象到了View和Presenter的接口中去，提高代码的可阅读性</li>
 <li>Presenter 可以复用，一个 Presenter 可以用于多个 View，不用去改 Presenter</li>
 <li>利于单元测试。模块分明，那么我们编写单元测试就变得很方便了，而不用特别是特别搭平台，人工模拟用户操作等等耗时耗力的事情。</li>
 </ol>
-<p><strong>总之，使用了 MVP 设计模式能让代码逻辑更清晰，改动代码的时候更具目的性，而不是改动一片代码</strong><br>
+<p><strong>总之，使用了 MVP 设计模式能让代码逻辑更清晰，改动代码的时候更具目的性，而不是改动一片代码</strong>
           <div class="read-more">
             <a href="/2019/04/06/%E8%81%8A%E8%81%8AAndroid%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84MVP%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="read-more-link">阅读更多</a>
           </div>
@@ -398,13 +399,16 @@
 <p><img src="http://sshpark.github.io/images/20190404001749.png" width="500px" /></p>
 <p>这么一看学习 <strong>C++</strong> 确实是挺无聊的一件事，实际上 <strong>C++</strong> 能做的事情远比我们想象中的要多，它在游戏、科学计算、网络软件、分布式应用、操作系统、设备驱动程序和嵌入式系统等领域都有应用。应用领域非常广泛，但是缺点也很明显，开发效率低。</p>
 <p>这里我会写一个系列文章，通过 <strong>SFML（Simple and Fast Multimedia Library）</strong>来介绍 <strong>C++</strong> 在游戏方面的一些应用，以及如何用它来实现一个简单的游戏，文章内容大多数翻译自<strong>《SFML Essentials》</strong>(<del><strong>Maxime Barbier</strong>的<strong>《SFML Blueprints》，这本书写的有点复杂，换了一本入门书</strong></del>)，有兴趣的朋友可以搜一下这本书。</p>
-<h3 id="一、SFML是什么"><a href="#一、SFML是什么" class="headerlink" title="一、SFML是什么"></a>一、SFML是什么</h3><p><img src="http://sshpark.github.io/images/20190404004309.png" width="400px" /></p>
+<h3 id="一sfml是什么">一、SFML是什么</h3>
+<p><img src="http://sshpark.github.io/images/20190404004309.png" width="400px" /></p>
 <p><strong>SFML</strong> 是多媒体库，它为PC的各个组件提供简单的界面，用来简化游戏和多媒体应用程序的开发。 主要由五个模块组成，分别是：<strong>系统，窗口，图形，音频和网络。</strong></p>
 <p><strong>SFML</strong> 是跨平台的，通过 <strong>SFML</strong>，你的应用程序可以在最常见的操作系统上进行编译和运行：Windows，Linux，macOS以及Android和iOS。</p>
 <p><strong>SFML</strong> 支持多种语言，具体可以在<a href="https://www.sfml-dev.org/download/bindings.php" target="_blank" rel="noopener">官网</a>查看支持的语言。</p>
-<h3 id="二、安装-SFML"><a href="#二、安装-SFML" class="headerlink" title="二、安装 SFML"></a>二、安装 <strong>SFML</strong></h3><p>安装过程在这里就不详细说了，官网有很详细的<a href="https://sfml-dev.org/tutorials/2.5/" target="_blank" rel="noopener">过程</a>，根据你的平台选择对应的教程安装就好了。</p>
-<p><img src="http://sshpark.github.io/images/20190404173457.png" alt=""></p>
-<h3 id="三、一个简单的小例子"><a href="#三、一个简单的小例子" class="headerlink" title="三、一个简单的小例子"></a>三、一个简单的小例子</h3><p>当你把环境都配置好了以后，就可以敲一个简单的例子了。</p>
+<h3 id="二安装-sfml">二、安装 <strong>SFML</strong></h3>
+<p>安装过程在这里就不详细说了，官网有很详细的<a href="https://sfml-dev.org/tutorials/2.5/" target="_blank" rel="noopener">过程</a>，根据你的平台选择对应的教程安装就好了。</p>
+<p><img src="http://sshpark.github.io/images/20190404173457.png" /></p>
+<h3 id="三一个简单的小例子">三、一个简单的小例子</h3>
+<p>当你把环境都配置好了以后，就可以敲一个简单的例子了。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SFML/Window.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SFML/Graphics.hpp&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    sf::<span class="function">RenderWindow <span class="title">window</span><span class="params">(sf::VideoMode(<span class="number">400</span>, <span class="number">400</span>), <span class="string">"Circle"</span>)</span></span>;</span><br><span class="line">    window.setFramerateLimit(<span class="number">60</span>);</span><br><span class="line"></span><br><span class="line">    sf::<span class="function">CircleShape <span class="title">circle</span><span class="params">(<span class="number">150</span>)</span></span>;</span><br><span class="line">    circle.setFillColor(sf::Color::Blue);</span><br><span class="line">    circle.setPosition(<span class="number">10</span>, <span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (window.isOpen()) &#123;</span><br><span class="line">        sf::Event event;</span><br><span class="line">        <span class="keyword">while</span> (window.pollEvent(event)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (event.type == sf::Event::Closed</span><br><span class="line">                <span class="keyword">or</span> (event.type == sf::Event::KeyPressed </span><br><span class="line">                    <span class="keyword">and</span> event.key.code == sf::Keyboard::Escape) ) &#123;</span><br><span class="line">                window.close();</span><br><span class="line">            &#125;</span><br><span class="line">            window.clear();</span><br><span class="line">            window.draw(circle);</span><br><span class="line">            window.display();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运行之后的效果如<strong>图3.1</strong>所示，在一个窗口里面绘制出了一个圆。虽然是一个很简单的功能，但是我们已经脱离了<strong>黑框框！</strong>通过后面的学习，我们能做的事情会更多。</p>
 <p><img alt="http://sshpark.github.io/images/20190404201354.png" width="500px" /></p>
