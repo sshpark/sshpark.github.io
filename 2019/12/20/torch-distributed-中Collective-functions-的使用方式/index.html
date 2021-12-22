@@ -16,7 +16,10 @@
 <meta name="description" content="使用 pytorch 中的分布式包可以轻松的实现并行计算，但是在官方文档中没有 Collective functions 的示例代码，而且网络上对这方面的介绍也比较少。对并行计算不熟悉的人使用起来可能会有点小问题，因此这里通过简单的代码展示了如何去使用 Collective functions。"/><meta name="keywords" content="PyTorch, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://sshpark.com.cn/2019/12/20/torch-distributed-中Collective-functions-的使用方式/"/>
 
-
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\(','\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -48,7 +51,7 @@
       appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
     });
   </script><script>
-  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":false};
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
 </script>
 
     <title>torch.distributed 中 Collective functions 的使用方式 - sshpark</title>
