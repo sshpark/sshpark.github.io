@@ -124,6 +124,63 @@
         <div class="content-wrapper">
           <div id="content" class="content"><section id="posts" class="posts"><article class="post">
     <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2019/03/31/Offer%E6%94%B6%E5%89%B2-%E7%BC%96%E7%A8%8B%E7%BB%83%E4%B9%A0%E8%B5%9B98/">[Offer收割]编程练习赛98</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-03-31
+        </span><span class="post-visits"
+             data-url="/2019/03/31/Offer%E6%94%B6%E5%89%B2-%E7%BC%96%E7%A8%8B%E7%BB%83%E4%B9%A0%E8%B5%9B98/"
+             data-title="[Offer收割]编程练习赛98">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h3 id="题目1-推断上下级"><a href="#题目1-推断上下级" class="headerlink" title="题目1 : 推断上下级"></a>题目1 : 推断上下级</h3><p>时间限制:10000ms</p>
+<p>单点时限:1000ms</p>
+<p>内存限制:256MB</p>
+<h4 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h4><p>H公司包括CEO在内，一共有N名员工，编号1~N，其中CEO的编号是1。除了CEO之外，其他员工都有唯一一名直接上司，形成了一种树形的上下级关系。</p>
+<p>现在小Hi知道H公司所有的上下级关系，一共M对。换句话说，只要两名员工A和B之间存在上下级关系(直接或者间接)，那么A和B一定在这M对关系之中。  </p>
+<p>请你帮小Hi推断出每个人的直接上级是谁。</p>
+<h4 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h4><p>第一行包含两个整数N和M。  </p>
+<p>以下M行，每行包含两个整数Ai和Bi，代表Ai是Bi的上级。  </p>
+<p><strong>2 &lt;= N &lt;= 1000</strong> </p>
+<p><strong>1 &lt;= M &lt;= 499500</strong></p>
+<h4 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h4><p>输出N行，其中第i行包含一个整数Pi，代表i号员工的上级。(对CEO输出0)</p>
+<p><strong>样例输入</strong></p>
+<p><code>3 2 1 2 1 3</code></p>
+<p><strong>样例输出</strong></p>
+<p><code>0 1 1</code></p>
+<h4 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h4><p>不能<font color="red">直接套用</font>并查集去解，因为题目要求输出的是每一个员工的<font color="red">直接上级</font>。员工之间的关系是树形关系，不存在回路，使用拓扑排序就可以得到每个员工的直接上级。因为拓扑排序会从这个树形结构的根结点（CEO）开始，当弹出一个节点时，如果相邻节点此时入度为0，则<strong>此节点</strong>的直接上级就是<strong>弹出的节点</strong>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ll long long</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">1005</span>;</span><br><span class="line"><span class="keyword">int</span> in[maxn], fa[maxn];</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; p[maxn];</span><br><span class="line"><span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt; q;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n, m, a, b;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d %d"</span>, &amp;n, &amp;m);</span><br><span class="line">    <span class="built_in">memset</span>(in, <span class="number">0</span>, <span class="keyword">sizeof</span> in);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (m--) &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d %d"</span>, &amp;a, &amp;b);</span><br><span class="line">        p[a].push_back(b);</span><br><span class="line">        in[b]++;</span><br><span class="line">    &#125;</span><br><span class="line">    q.push(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">while</span> (!q.empty()) &#123;</span><br><span class="line">        <span class="keyword">int</span> top = q.front();</span><br><span class="line">        q.pop();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it : p[top]) &#123;</span><br><span class="line">            in[it]--;</span><br><span class="line">            <span class="keyword">if</span> (in[it] == <span class="number">0</span>) &#123;</span><br><span class="line">                fa[it] = top;</span><br><span class="line">                q.push(it);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"0\n"</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, fa[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h3 id="题目2-数组划分游戏"><a href="#题目2-数组划分游戏" class="headerlink" title="题目2 : 数组划分游戏"></a>题目2 : 数组划分游戏</h3><p>时间限制:10000ms</p>
+<p>单点时限:1000ms</p>
+<p>内存限制:256MB</p>
+<h4 id="描述-1"><a href="#描述-1" class="headerlink" title="描述"></a>描述</h4><p>小Hi在玩一个有关数组划分的游戏。给定一个整数K和一个长度为N的数组A=[A1, A2, … AN]，小Hi需要将它划分为K个连续子数组，并对每个子数组求和。</p>
+<p>不妨设这K个子数组的和依次是S1, S2, … SK，则小Hi的得分是其中的最小值即min(S1, S2, … SK)。  </p>
+<p>例如对于A=[1, 2, 3, 4]和K=2，小Hi可以划分成[1, 2]和[3, 4]，这样得分是3；也可以划分成[1, 2, 3]和[4]，这样得分是4。</p>
+<p>对于给定的K和数组A，你能帮助小Hi算出他最多能得多少分吗？</p>
+<h4 id="输入-1"><a href="#输入-1" class="headerlink" title="输入"></a>输入</h4><p>第一行包含两个整数N和K。  </p>
+<p>第二行包含N个整数A1, A2, … AN。  </p>
+<p>对于60%的数据，1 &lt;= N &lt;= 1000  </p>
+<p>对于100%的数据，1 &lt;= K &lt;= N &lt;= 100000  1 &lt;= Ai &lt;= 1000000</p>
+<h4 id="输出-1"><a href="#输出-1" class="headerlink" title="输出"></a>输出</h4><p>一个整数代表答案</p>
+<p><strong>样例输入</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">4 2</span><br><span class="line">1 2 3 4</span><br></pre></td></tr></table></figure>
+<p><strong>样例输出</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4</span><br></pre></td></tr></table></figure>
+<h4 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h4><p><strong>二分法</strong>解决，二分每块区域的<strong>最小值</strong>是多少。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ll long long</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">100005</span>;</span><br><span class="line"><span class="keyword">int</span> n, k;</span><br><span class="line"><span class="keyword">int</span> a[maxn];</span><br><span class="line">ll res = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">bool</span> <span class="title">ok</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    ll sum = <span class="number">0</span>, mina = <span class="number">0x7f7f7f</span>;</span><br><span class="line">    <span class="keyword">int</span> m = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        sum += a[i];</span><br><span class="line">        <span class="keyword">if</span> (sum &gt;= x) &#123;</span><br><span class="line">            mina = <span class="built_in">min</span>(sum, mina);</span><br><span class="line">            sum = <span class="number">0</span>;</span><br><span class="line">            m++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (m &gt;= k) res = <span class="built_in">max</span>(res, mina);</span><br><span class="line">    <span class="keyword">return</span> m &gt;= k;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ll sum = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d %d"</span>, &amp;n, &amp;k);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>, a+i);</span><br><span class="line">        sum += a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    ll l = <span class="number">1</span>, r = sum, mid;</span><br><span class="line">    <span class="keyword">while</span> (l &lt;= r) &#123;</span><br><span class="line">        mid = (l+r)&gt;&gt;<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (ok(mid)) l = mid+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> r = mid<span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lld\n"</span>, res);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+          <div class="read-more">
+            <a href="/2019/03/31/Offer%E6%94%B6%E5%89%B2-%E7%BC%96%E7%A8%8B%E7%BB%83%E4%B9%A0%E8%B5%9B98/" class="read-more-link">阅读更多</a>
+          </div>
+        </div></article>
+      <article class="post">
+    <header class="post-header">
       <h1 class="post-title"><a class="post-link" href="/2019/03/22/%E5%AF%B9%E5%9B%9E%E8%B0%83%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/">理解c语言中的回调函数</a>
         </h1>
 
@@ -334,29 +391,6 @@
 <li>HBase 1.4.8
           <div class="read-more">
             <a href="/2018/10/20/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85hadoop-hbase/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2018/02/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">数据结构：树状数组</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-02-03
-        </span><span class="post-visits"
-             data-url="/2018/02/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/"
-             data-title="数据结构：树状数组">
-          阅读次数 0
-        </span>
-        </div>
-    </header>
-
-    <div class="post-content"><p>先来一段来自<a href="https://baike.baidu.com/item/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/313739" target="_blank" rel="noopener">百度百科</a>的介绍</p>
-<blockquote>
-<p>树状数组(Binary Indexed Tree(B.I.T), Fenwick Tree)是一个查询和修改复杂度都为log(n)的数据结构。主要用于查询任意两位之间的所有元素之和，但是每次只能修改一个元素的值；经过简单修改可以在log(n)的复杂度下进行范围修改，但是这时只能查询其中一个元素的值(如果加入多个辅助数组则可以实现区间修改与区间查询)。<br>
-          <div class="read-more">
-            <a href="/2018/02/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/" class="read-more-link">阅读更多</a>
           </div>
         </div></article>
       <nav class="pagination"><a class="prev" href="/page/3/">

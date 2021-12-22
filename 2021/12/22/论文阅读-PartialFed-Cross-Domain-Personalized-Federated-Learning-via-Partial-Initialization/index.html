@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta charset="UTF-8"/>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="论文阅读 PartialFed: Cross-Domain Personalized Federated Learning via Partial Initialization"/><meta name="keywords" content="论文笔记, 联邦学习, 边缘计算, Non-IID, sshpark" /><link rel="alternate" href="/atom.xml" title="sshpark"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://sshpark.com.cn/2021/12/22/论文阅读-PartialFed-Cross-Domain-Personalized-Federated-Learning-via-Partial-Initialization/"/>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?df6c0480b02517594e4a02db8f89fbcb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz",
+      appKey: "Hc4f0RfAVP3HQwmQkkDfgImA"
+    });
+  </script><script>
+  window.config = {"leancloud":{"app_id":"jMG2YYii7aWm9mTVyeeNa3fi-gzGzoHsz","app_key":"Hc4f0RfAVP3HQwmQkkDfgImA"},"toc":true,"fancybox":false,"pjax":"","latex":true};
+</script>
+
+    <title>论文阅读 PartialFed: Cross-Domain Personalized Federated Learning via Partial Initialization - sshpark</title>
+  <meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="sshpark" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="mobile-header-logo">
+    <a href="/." class="logo">sshpark</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">sshpark</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/links/">
+            友链
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">论文阅读 PartialFed: Cross-Domain Personalized Federated Learning via Partial Initialization
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2021-12-22
+        </span><span class="post-visits"
+             data-url="/2021/12/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-PartialFed-Cross-Domain-Personalized-Federated-Learning-via-Partial-Initialization/"
+             data-title="论文阅读 PartialFed: Cross-Domain Personalized Federated Learning via Partial Initialization">
+          阅读次数 0
+        </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-背景-amp-动机"><span class="toc-text">1. 背景 &amp; 动机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-方法"><span class="toc-text">2. 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-PartialFed-Adaptive"><span class="toc-text">2.1 PartialFed-Adaptive</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-训练流程"><span class="toc-text">2.2 训练流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-实验"><span class="toc-text">3. 实验</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-总结"><span class="toc-text">4. 总结</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="1-背景-amp-动机"><a href="#1-背景-amp-动机" class="headerlink" title="1. 背景 &amp; 动机"></a>1. 背景 &amp; 动机</h1><p>联邦学习是一种以隐私保护方式进行分布式机器学习的范式。在参数服务器的训练架构下，客户端的数据将保存在本地而不上传到服务器中。在这种情况下，每个客户端的本地数据很可能是异构的（例如非独立同分布），这导致了使用联邦平均算法（FedAvg）训练出的全局模型存在准确率下降等问题。为了应对客户端之间的数据高度异构情况，近年来提出的个性化联邦学习引起了多数学者的兴趣。所谓个性化联邦学习，就是根据客户端本地数据分布的特点，为不同客户端提供一个本地模型而不是直接使用统一的全局模型。</p>
+<h1 id="2-方法"><a href="#2-方法" class="headerlink" title="2. 方法"></a>2. 方法</h1><p>得益于一些在multi-domain learning以及multi-task learning的研究，本文提出在训练过程中客户端使用 ”全局模型+本地模型“的混合初始化代替以往的 ”全局模型“ 初始化方式，以此达到客户端可以在契合本地数据分布的情况下，有选择性的初始化本地模型进行后续训练。图 1 展示了这一流程：</p>
+<p><img src="http://sshpark.github.io/images/image1.png" alt="图 1"></p>
+<p>在l联邦学习的每个迭代中，中心服务器会将全局模型发送给所有的客户端。然后，每个客户端将通过部分初始化将服务器的全局参数与自身的局部参数混合起来，用于下一次的局部训练。</p>
+<h2 id="2-1-PartialFed-Adaptive"><a href="#2-1-PartialFed-Adaptive" class="headerlink" title="2.1 PartialFed-Adaptive"></a>2.1 PartialFed-Adaptive</h2><p>作者提出了两种方式，一种是依据人类专家知识的方式手动选择哪些全局参数需要被读取，但是这种方式是很低效率的。因此，这里提出了一种能够自适应选择参数的算法。具体来说，我们需要优化一下目标：</p>
+<script type="math/tex; mode=display">
+\min _{A_{t}^{c}} \min _{W_{t}^{c}} L_{\text {train }}\left(D_{c}, W_{t}^{c} \mid W_{t, \text { init }}^{c}=A_{t}^{c}\left(W_{t}, W_{t-1}^{c}\right)\right)</script><p>其中，$A<em>{t}^{c}$ 是初始化策略（也就是如何选择），它是一个大小为 [k, 2] 的向量，k 是神经网络的层数。其中的每个元素 $\alpha</em>{t}^{c} \in A<em>{t}^{c}$ 为 0 或 1，同一行的元素之和为 1，1 表示需要读取这一层神经网络的参数。$W</em>{t}^{c}$ 是待优化的本地模型，$W<em>{t, init}^{c}$ 是混合后的本地初始化模型,  $W</em>{t}$ 是全局模型，$W<em>{t-1}^{c}$ 是上一轮本地模型。$D</em>{c}$ 客户端的本地数据。</p>
+<p>由于初始化策略 $A_{t}^{c}$ 做的是离散决策，因此这里无法使用反向传播算法进行优化。为了解决这问题，作者使用重参数化技巧（<a href="https://www.cnblogs.com/initial-h/p/9468974.html" target="_blank" rel="noopener">Gumbel-Softmax</a>），将离散向量转换成连续向量，如下图所示：</p>
+<p><img src="http://sshpark.github.io/images/image2.png" alt="图 2"></p>
+<p>采样策略由四个步骤组成。</p>
+<ol>
+<li><p>从 Gumbel 分布中取样；</p>
+</li>
+<li><p>将取样值添加到未归一化策略 logits 中，控制加载全局和局部参数的概率；</p>
+</li>
+<li><p>通过带温度控制的 softmax 得到一个软策略；</p>
+</li>
+<li><p>使用硬取样技巧将软策略离散化。采样后的策略被用来混合全局和局部参数。最后，合并后的参数用于ResNet-18 的前向传递。整个过程是可分的，实现了端到端的训练。</p>
+</li>
+</ol>
+<h2 id="2-2-训练流程"><a href="#2-2-训练流程" class="headerlink" title="2.2 训练流程"></a>2.2 训练流程</h2><p>整个训练流程总结在图3的算法描述中。模型参数 $W<em>{t}^{c}$ 和策略参数 $A</em>{t}^{c}$ 通过 EM 算法进行迭代更新。更新频率表示为 $f<em>m$ 和$f_s$。在每个训练步骤中，通过 Gumbel-Softmax 对一个离散的批处理策略进行采样，用以混合全局和局部参数。混合后的参数用于计算损失，并在每个训练步骤中交替更新自身参数 $W</em>{t}^{c}$ 和策略参数 $A_{t}^{c}$ 。公式中的温度参数 $\tau$ 被初始化为 5.0，并逐步退火接近 0。因此采样策略也会不断接近原始离散分布，在 $\tau$ 接近零极限的时候。</p>
+<p><img src="http://sshpark.github.io/images/image3.png" alt="图 3"></p>
+<h1 id="3-实验"><a href="#3-实验" class="headerlink" title="3. 实验"></a>3. 实验</h1><p>在 Office-Home 数据集上进行跨域图像分类，共 65 类物体。此外共有 4 个域，每个域平均有 3k 张图片。</p>
+<p>如图 4 所示，平均而言，它比原始FedAvg 和 FedBN 分别提升了 5.43% 和 2.09%。</p>
+<p><img src="http://sshpark.github.io/images/image4.png" alt="图 4" style="zoom:67%;" /></p>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><p>文中展示了一种简单而新颖的个性化联邦学习方法。方法的核心是混合初始化，它部分地利用了 FedAvg 给出的全局模型参数。受前人工作的启发，作者开发了一套手动的混合策略，并验证了它们的可靠性。更进一步，作者开发了一个基于数据感知的策略，它是通过模型参数自适应学习的。实验表明，所提出的两种策略，PartialFed-Fix和 PartialFed-Adaptive，在包括物体分类和检测在内的跨域联邦实验中的表现超过了一系列最先进的方法。</p>
+<p>虽然自适应学习策略在学习客户端特定的策略方面具有优势，它可以缓解客户端由于数据分布变化引起的负面影响。但是，它也有不完全训练的风险，要么欠拟合，要么过拟合。例如，文中发现在一个50层的 ResNet 上搜索策略变得很难训练。 如何提高策略学习的效率与神经结构搜索（NAS）有关，它考虑了探索和利用之间的平衡。基于数据感知的方法也忽略了元信息，如数据集的基数。解决这个问题的一个可能的方法是将人类的先验纳入自适应算法，这是由 PartialFed-Fix 和 PartialFed-Adaptive 组合而成的。</p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/">论文笔记</a>
+            <a href="/tags/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/">联邦学习</a>
+            <a href="/tags/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97/">边缘计算</a>
+            <a href="/tags/Non-IID/">Non-IID</a>
+            </div>
+        
+        <nav class="post-nav"><a class="next" href="/2021/05/26/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A16%E4%BD%8D%E5%AE%9E%E6%A8%A1%E5%BC%8F%E8%BD%AC32%E4%BD%8D%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F/">
+        <span class="next-text nav-default">操作系统：16位实模式转32位保护模式</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="utterances-container"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:sshpark@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/sshpark" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    粤ICP备17102498号
+  </span>
+
+  <span class="copyright-year">&copy;2017 - 2021<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Sshpark</span>
+
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script>
+    var container = document.getElementById('utterances-container')
+    var script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.setAttribute('repo', 'sshpark/MASM')
+    script.setAttribute('issue-term', 'title')
+    script.setAttribute('theme', 'github-light')
+    script.setAttribute('label', 'utterances')
+    script.crossorigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
